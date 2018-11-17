@@ -1,0 +1,2 @@
+#!/bin/bash
+ssh -t ec2-user@ec2-35-178-183-145.eu-west-2.compute.amazonaws.com 'ping https://www.bitmex.com/api/v1'

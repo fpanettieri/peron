@@ -1,0 +1,2 @@
+#!/bin/bash
+ssh -t ec2-user@ec2-52-56-229-240.eu-west-2.compute.amazonaws.com 'curl -o /dev/null -s -w \'Total: %{time_total}\\n\' https://www.bitmex.com/api/v1'
