@@ -1,0 +1,4 @@
+#!/bin/bash
+ssh ec2-user@ec2-35-178-201-111.eu-west-2.compute.amazonaws.com # a
+# ssh ec2-user@ec2-35-178-183-145.eu-west-2.compute.amazonaws.com # b
+# ssh ec2-user@ec2-52-56-229-240.eu-west-2.compute.amazonaws.com # c
