@@ -1,13 +1,19 @@
+------------
   TODO
 ------------
-. Test latency on different subnets
-.
-.
-.
-.
+. deploy hello world script
+. check market maker code
+. open public socket
+. authenticate
+. listen to long / short messages
+. calculate BB
+. calculate ror
+. set SL
+. open position
 .
 
-
-  DONE
+------------
+DONE
 ------------
 . Create repository
+. Test latency on different subnets
