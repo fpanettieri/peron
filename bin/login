@@ -1,3 +1,4 @@
 #!/bin/bash
 source cfg/aws
+source auth
 ssh ${!AWS_SERVER}

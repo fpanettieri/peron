@@ -8,4 +8,4 @@ AWS_EUW_C=ec2-user@ec2-3-8-19-147.eu-west-2.compute.amazonaws.com
 AWS_SERVER=AWS_EUW_${1:-A}
 
 # security group
-AWS_SG=platita-bitmex-sg
+AWS_SG=sg-066c37d90319bbf39

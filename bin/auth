@@ -1,3 +1,4 @@
 #!/bin/bash
+source cfg/aws
 IP=$(curl -s v4.ifconfig.co | awk '{ print $0 "/32" }')
-aws ec2 authorize-security-group-ingress --group-name $AWS_SG --protocol tcp --port 22 --cidr $IP
+aws ec2 authorize-security-group-ingress --group-id $AWS_SG --protocol tcp --port 22 --cidr $IP
