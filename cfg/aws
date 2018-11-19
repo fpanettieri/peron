@@ -1,0 +1,11 @@
+#!/bin/bash
+# public dns
+AWS_EUW_A=ec2-user@ec2-35-178-201-111.eu-west-2.compute.amazonaws.com
+AWS_EUW_B=ec2-user@ec2-35-178-73-213.eu-west-2.compute.amazonaws.com
+AWS_EUW_C=ec2-user@ec2-3-8-19-147.eu-west-2.compute.amazonaws.com
+
+# default server
+AWS_SERVER=AWS_EUW_${1:-A}
+
+# security group
+AWS_SG=platita-bitmex-sg

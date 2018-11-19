@@ -1,6 +1,3 @@
 #!/bin/bash
-EUWA=ec2-user@ec2-35-178-201-111.eu-west-2.compute.amazonaws.com
-EUWB=ec2-user@ec2-35-178-201-111.eu-west-2.compute.amazonaws.com
-EUWC=ec2-user@ec2-35-178-201-111.eu-west-2.compute.amazonaws.com
-
-rsync -av src $EUWA:peron
+source cfg/aws
+rsync -av src ${!AWS_SERVER}:peron

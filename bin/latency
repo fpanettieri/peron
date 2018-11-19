@@ -1,6 +1,9 @@
 #!/bin/bash
-CMD="ping www.bitmex.com"
+source cfg/aws
+CMD="ping -t 100 -i 0.2 -w 3 www.bitmex.com"
 
-ssh -t ec2-user@ec2-35-178-201-111.eu-west-2.compute.amazonaws.com $CMD
-ssh -t ec2-user@ec2-35-178-183-145.eu-west-2.compute.amazonaws.com $CMD
-ssh -t ec2-user@ec2-52-56-229-240.eu-west-2.compute.amazonaws.com $CMD
+for i in A B C; do
+  SERVER=AWS_EUW_$i
+  echo "checking $SERVER"
+	ssh -t -i ~/.aws/platita-eu2.pem ${!SERVER} $CMD
+done
