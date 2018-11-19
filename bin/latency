@@ -1,5 +1,5 @@
 #!/bin/bash
-source cfg/aws
+source auth
 CMD="ping -t 100 -i 0.2 -w 3 www.bitmex.com"
 
 for i in A B C; do

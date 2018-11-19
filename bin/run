@@ -1,4 +1,4 @@
 #!/bin/bash
-source cfg/aws
+source auth
 CMD="cd peron; python hello.py"
 ssh -t -i ~/.aws/platita-eu2.pem ${!AWS_SERVER} $CMD
