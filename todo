@@ -1,8 +1,18 @@
 ------------
   TODO
 ------------
-. deploy hello world script
 . check market maker code
+. create testnet user
+. calculate basic BB
+. calculate Heikin Ashi
+. minimalist long / short strategy
+. calculate leverage based on current volatility
+. open long / short
+. set SL
+
+------------
+  CLIENT
+------------
 . open public socket
 . authenticate
 . listen to long / short messages
@@ -10,10 +20,11 @@
 . calculate ror
 . set SL
 . open position
-.
 
 ------------
-DONE
+  DONE
 ------------
 . Create repository
 . Test latency on different subnets
+. deploy hello world script
+. tools for managing
