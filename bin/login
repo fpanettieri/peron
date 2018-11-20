@@ -1,3 +1,5 @@
 #!/bin/bash
-source auth
+source ./auth
+
+echo "Running ssh ${!AWS_SERVER}"
 ssh ${!AWS_SERVER}

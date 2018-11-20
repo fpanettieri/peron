@@ -1,3 +1,6 @@
 #!/bin/bash
-source auth
+source ./auth
+
+echo "Deploying new version"
 rsync -av src ${!AWS_SERVER}:peron
+echo "New version deployed"
