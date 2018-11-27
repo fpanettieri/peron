@@ -8,9 +8,10 @@ CC_DEFINES="-DINTERNAL"
 
 FLAGS="$CC_WARNINGS $CC_OPTIM $CC_DEFINES"
 
-INC_PATH="-I../inc"
+SSL_PATH="/usr/local/opt/libressl"
+INC_PATH="-I ../inc -I $SSL_PATH/include"
 SRC_PATH="../src"
-LIB_PATH=""
+LIB_PATH="-L $SSL_PATH/lib"
 LIBS="-ltls -lssl -lcrypto"
 
 rm -rf *
