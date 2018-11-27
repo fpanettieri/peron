@@ -16,7 +16,9 @@ int init_tls (struct tls** tls, struct tls_config** cfg)
   // TLS config
   if ((*cfg = tls_config_new()) == NULL) { goto tls_err; }
   if (tls_config_set_ciphers(*cfg, "secure") != 0) { goto tls_err; }
-  if (tls_config_set_ca_file(*cfg, "peron.pem") != 0) { goto tls_err; }
+  //if (tls_config_set_ca_file(*cfg, "peron.pem") != 0) { goto tls_err; }
+  tls_config_insecure_noverifycert(*cfg);
+	tls_config_insecure_noverifyname(*cfg);
   if (tls_configure(*tls, *cfg) != 0) { goto tls_err; }
 
   // Test TLS
@@ -47,9 +49,6 @@ int main (void)
 
   init_tls(&tls, &cfg);
 
-
-
-
-  printf("Hello World!\n");
+  printf("Hello TLS!\n");
   return 0;
 }
