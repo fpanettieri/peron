@@ -4,9 +4,15 @@ Trading bot
 
 # Libraries
 
+## LibreSSL
+
+
+### Troubleshooting
+https://medium.com/@timmykko/using-openssl-library-with-macos-sierra-7807cfd47892
+clang -x c -v -E /dev/null
+
 ## LWS
 ### Building
-brew install openssl
 mkdir build
 cd build
 
