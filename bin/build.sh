@@ -17,5 +17,6 @@ LIBS="-ltls -lssl -lcrypto"
 rm -rf *
 
 cc $FLAGS $INC_PATH $SRC_PATH/hello.c $LIB_PATH $LIBS -o hello
+cp ../cfg/peron.pem ./
 
 popd > /dev/null

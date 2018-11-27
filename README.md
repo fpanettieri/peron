@@ -3,13 +3,11 @@
 Trading bot
 
 # Libraries
-
 ## LibreSSL
+brew install libressl
 
-
-### Troubleshooting
-https://medium.com/@timmykko/using-openssl-library-with-macos-sierra-7807cfd47892
-clang -x c -v -E /dev/null
+### generate pem cert
+openssl req -newkey rsa:4096 -nodes -sha512 -x509 -days 3650 -nodes -out peron.pem -keyout peron.pk
 
 ## LWS
 ### Building
