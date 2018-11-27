@@ -19,9 +19,19 @@ int init_tls (struct tls** tls, struct tls_config** cfg)
   if (tls_config_set_ca_file(*cfg, "peron.pem") != 0) { goto tls_err; }
   if (tls_configure(*tls, *cfg) != 0) { goto tls_err; }
 
-  // if (tls_connect(tls, "google.com", "443") != 0)  { goto tls_err; }
+  // Test TLS
+  ssize_t written, read;
+	char buf[4096];
 
+  if (tls_connect(*tls, "google.com", "443") != 0) { goto tls_err; }
+  if ((written = tls_write(*tls, "GET /\r\n", 7)) < 0) { goto tls_err; }
+  if ((read = tls_read(*tls, buf, sizeof(buf))) < 0) { goto tls_err; }
 
+  buf[read - 1] = '\0';
+	puts(buf);
+
+  // TLS cleanup
+  if (tls_close(*tls) != 0) { goto tls_err; }
 
   return 0;
 
