@@ -13,7 +13,7 @@ typedef struct {
   bool initialized;
 } Memory;
 
-const char* mem_human(U64 size, char* output);
+const char* mem_human(U64 size, SZT max, char* output);
 void  mem_debug(Memory* memory);
 
 void  mem_init (Memory* mem, U64 perm, U64 tmp);

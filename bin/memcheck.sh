@@ -1,5 +1,5 @@
 build.sh
 
 pushd build > /dev/null
-leaks -nocontext -nostacks -quiet -atExit -exclude tls_init -- ./hello
+leaks -nocontext -nostacks -quiet -atExit -- ./hello
 popd > /dev/null

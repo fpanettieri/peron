@@ -18,8 +18,10 @@ typedef unsigned long long  U64;
 typedef float               F32;
 typedef double              F64;
 
+typedef size_t              SZT;
+
 #ifndef bool
-  typedef signed char         bool;
+  typedef signed char       bool;
 # define true  1
 # define false 0
 #endif

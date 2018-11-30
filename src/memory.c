@@ -3,13 +3,13 @@
 #include <sys/mman.h>
 
 # ifdef INTERNAL
-const char* mem_human (U64 size, char* output)
+const char* mem_human (U64 size, SZT max, char* output)
 {
-  if      (size > Terabytes(1)){ snprintf(output, sizeof(output), "%.02f TB", (F64)size / Terabytes(1)); }
-  else if (size > Gigabytes(1)){ snprintf(output, sizeof(output), "%.02f GB", (F64)size / Gigabytes(1)); }
-  else if (size > Megabytes(1)){ snprintf(output, sizeof(output), "%.02f MB", (F64)size / Megabytes(1)); }
-  else if (size > Kilobytes(1)){ snprintf(output, sizeof(output), "%.02f KB", (F64)size / Kilobytes(1)); }
-  else { snprintf(output, sizeof(output), "%llu B", size); }
+  if      (size > Terabytes(1)){ snprintf(output, max, "%.02f TB", (F64)size / Terabytes(1)); }
+  else if (size > Gigabytes(1)){ snprintf(output, max, "%.02f GB", (F64)size / Gigabytes(1)); }
+  else if (size > Megabytes(1)){ snprintf(output, max, "%.02f MB", (F64)size / Megabytes(1)); }
+  else if (size > Kilobytes(1)){ snprintf(output, max, "%.02f KB", (F64)size / Kilobytes(1)); }
+  else { snprintf(output, max, "%llu B", size); }
 
 	return output;
 }
@@ -22,10 +22,6 @@ void mem_debug (Memory* memory)
 {
   assert(memory && memory->initialized);
 
-  U32 permanent_used = (U32)sizeof(memory->permanent);
-  U32 permanent_size = memory->permanent_size;
-  F32 permanent_percentage = (F32)permanent_used / (F32)permanent_size * 100.0f;
-
   U32 transient_used = (U8*)memory->marker - (U8*)memory->transient;
   U32 transient_size = memory->transient_size;
   F32 transient_percentage = (F32)transient_used / (F32)transient_size * 100.0f;
@@ -35,9 +31,10 @@ void mem_debug (Memory* memory)
   F32 frame_percentage = (F32)frame_used / (F32)frame_size * 100.0f;
 
   char used[12], size[12];
-  printf("MEM [P: %s / %s (%.2f%%)", mem_human(permanent_used, used), mem_human(permanent_size, size), permanent_percentage);
-  printf(" | T: %s / %s (%.2f%%)", mem_human(transient_used, used), mem_human(transient_size, size), transient_percentage);
-  printf(" | F: %s / %s (%.2f%%)]\n", mem_human(frame_used, used), mem_human(frame_size, size), frame_percentage);
+  printf("MEM [ %s", mem_human(memory->total_size, sizeof(size), size));
+  printf(" | P: %s", mem_human(memory->permanent_size, sizeof(size), size));
+  printf(" | T: %s / %s (%.2f%%)", mem_human(transient_used, sizeof(size), used), mem_human(transient_size, sizeof(size), size), transient_percentage);
+  printf(" | F: %s / %s (%.2f%%)]\n", mem_human(frame_used, sizeof(size), used), mem_human(frame_size, sizeof(size), size), frame_percentage);
 }
 # else
 #   define mem_debug(expr)

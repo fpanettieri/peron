@@ -21,7 +21,7 @@ void foo(Memory* mem)
 int main (void)
 {
   Memory mem;
-  mem_init(&mem, Megabytes(2), Megabytes(64));
+  mem_init(&mem, Megabytes(2), Megabytes(62));
   mem_debug(&mem);
 
   App* app = (App*) mem.permanent;
