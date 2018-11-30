@@ -1,0 +1,14 @@
+{
+  "name": "peron-http-server",
+  "version": "1.0.0",
+  "description": "Minimalist HTTP server used to test Peron's http library",
+  "author": "Fabio Panettieri",
+  "private": true,
+  "dependencies": {
+    "express": "4.16.4"
+  },
+  "scripts": {
+    "start": "DEBUG=* node server.js",
+    "cert": "openssl req -x509 -newkey rsa:2048 -keyout keytmp.pem -out cert.pem -days 365 && openssl rsa -in keytmp.pem -out key.pem"
+  }
+}

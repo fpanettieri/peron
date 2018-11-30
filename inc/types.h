@@ -21,6 +21,7 @@ typedef float               F32;
 typedef double              F64;
 
 typedef size_t              SZT;
+typedef ssize_t             SSZT;
 
 #ifndef bool
   typedef signed char       bool;

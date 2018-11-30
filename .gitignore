@@ -1,4 +1,7 @@
-.envrc
+# peron files and folders
 build
 peron.pem
 peron.pk
+
+# dotenv environment variables file
+.envrc

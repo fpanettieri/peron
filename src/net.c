@@ -48,21 +48,104 @@ void net_write(Net* net, const void* buf, SZT buf_len, SZT* write_len)
   assert(net && net->client && net->initialized);
   assert(buf && buf_len && write_len);
 
-  (*write_len) = tls_write(net->client, buf, buf_len);
+  while (buf_len > 0) {
+    printf("buf_len %ld\n", buf_len);
+
+    SSZT ret = tls_write(net->client, buf, buf_len);
+    if (ret == TLS_WANT_POLLIN || ret == TLS_WANT_POLLIN){ continue; }
+    if (ret < 0) {
+      fprintf(stderr, "net_write: %s", tls_error(net->client));
+    }
+
+    *write_len += ret;
+    buf_len -= ret;
+  }
 }
 
 void net_destroy(Net* net)
 {
   assert(net && net->initialized);
-
-  return;
   assert(net->client && net->cfg);
 
   U8 error = tls_close(net->client);
+
+  fprintf(stderr, "%s\n", tls_error(net->client));
   assert(error == 0);
+
+  return;
 
   tls_free(net->client);
   tls_config_free(net->cfg);
 
   net->initialized = false;
 }
+
+# ifdef INTERNAL
+
+#include <time.h>
+void net_debug(Net* net, const char* name)
+{
+  const char* p;
+	time_t time;
+	struct tm *tm;
+
+	if (tls_peer_cert_provided(net->client) == 1) {
+		printf("tls_peer_cert_provided: YES\n");
+	} else {
+		printf("tls_peer_cert_provided: NO\n");
+		return;
+	}
+
+	if (tls_peer_cert_contains_name(net->client, name) == 1) {
+		printf("tls_peer_cert_contains_name: %s\n", name);
+	} else {
+		printf("tls_peer_cert_contains_name: invalid\n");
+  }
+
+	if ((p = tls_peer_cert_issuer(net->client)) == NULL) {
+    printf("tls_peer_cert_issuer: %s", tls_error(net->client));
+  } else {
+    printf("tls_peer_cert_issuer: %s\n", p);
+  }
+
+	if ((p = tls_peer_cert_subject(net->client)) == NULL) {
+    printf("tls_peer_cert_subject: %s", tls_error(net->client));
+  } else {
+    printf("tls_peer_cert_subject: %s\n", p);
+  }
+
+	if ((p = tls_peer_cert_hash(net->client)) == NULL) {
+    printf("tls_peer_cert_hash: %s", tls_error(net->client));
+  } else {
+    printf("tls_peer_cert_hash: %s\n", p);
+  }
+
+	if ((time = tls_peer_cert_notbefore(net->client)) < 0) {
+    printf("tls_peer_cert_notbefore: %s", tls_error(net->client));
+  } else {
+    tm = localtime(&time);
+  	printf("tls_peer_cert_notbefore: %04d/%02d/%02d %02d:%02d:%02d\n", 1900 + tm->tm_year, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
+  }
+
+	if ((time = tls_peer_cert_notafter(net->client)) < 0) {
+    printf("tls_peer_cert_notafter: %s", tls_error(net->client));
+  } else {
+    tm = localtime(&time);
+  	printf("tls_peer_cert_notafter: %04d/%02d/%02d %02d:%02d:%02d\n", 1900 + tm->tm_year, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
+  }
+
+	if ((p = tls_conn_version(net->client)) == NULL) {
+    printf("tls_conn_version: %s", tls_error(net->client));
+  } else {
+    printf("tls_conn_version: %s\n", p);
+  }
+
+	if ((p = tls_conn_cipher(net->client)) == NULL) {
+    printf("tls_conn_cipher: %s", tls_error(net->client));
+  } else {
+    printf("tls_conn_cipher: %s\n", p);
+  }
+}
+# else
+#   define net_debug(net, name)
+# endif
