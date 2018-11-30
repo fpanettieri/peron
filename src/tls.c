@@ -20,15 +20,15 @@ int init_tls (struct tls** tls, struct tls_config** cfg)
   if (tls_configure(*tls, *cfg) != 0) { goto tls_err; }
 
   // Test TLS
-  ssize_t written, read;
-  char buf[4096];
-
-  if (tls_connect(*tls, "testnet.bitmex.com", "443") != 0) { goto tls_err; }
-  if ((written = tls_write(*tls, "GET /\r\n", 7)) < 0) { goto tls_err; }
-  if ((read = tls_read(*tls, buf, sizeof(buf))) < 0) { goto tls_err; }
-
-  buf[read - 1] = '\0';
-  puts(buf);
+  // ssize_t written, read;
+  // char buf[4096];
+  //
+  // if (tls_connect(*tls, "testnet.bitmex.com", "443") != 0) { goto tls_err; }
+  // if ((written = tls_write(*tls, "GET /\r\n", 7)) < 0) { goto tls_err; }
+  // if ((read = tls_read(*tls, buf, sizeof(buf))) < 0) { goto tls_err; }
+  //
+  // buf[read - 1] = '\0';
+  // puts(buf);
 
   // TLS cleanup
   if (tls_close(*tls) != 0) { goto tls_err; }

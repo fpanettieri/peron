@@ -1,6 +1,6 @@
-#include <stdio.h>
+// #include <stdio.h>
 
-#include "tls.c"
+// #include "tls.c"
 
 int main (void)
 {
@@ -9,6 +9,6 @@ int main (void)
 
   // init_tls(&tls, &cfg);
 
-  printf("Hello TLS!\n");
+  // printf("Hello TLS!\n");
   return 0;
 }
