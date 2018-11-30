@@ -35,6 +35,13 @@ void net_connect(Net* net, const char* host, const char* port)
   assert(error == 0);
 }
 
+void net_handshake(Net* net)
+{
+  assert(net && net->initialized);
+  U8 error = tls_handshake(net->client);
+  assert(error == 0);
+}
+
 void net_read(Net* net, void* buf, SZT buf_len, SZT* read_len)
 {
   assert(net && net->initialized);

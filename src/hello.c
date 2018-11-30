@@ -23,8 +23,11 @@ int main (void)
 
   net_connect(net, "localhost", "3000");
 
+  net_handshake(net);
+  net_debug(net, "localhost:3000");
+
   SZT len = 0;
-  const char* req = "GET / HTTP/1.1\nHost: www.google.com\n";
+  const char* req = "GET / HTTP/1.1\r\nHost: google.com\r\n";
   net_write(net, req, strnlen(req, 8192), &len);
   printf("written: %lu\n\n", len);
 
@@ -35,14 +38,14 @@ int main (void)
     printf("\nITERATION %d:\n", i++);
     net_read(net, buf, sizeof(buf), &len);
 
+    printf("\nPOST READ\n");
+
     if (len) {
       fwrite(buf, sizeof(char), len, stdout);
     }
   } while (len > 0);
 
   printf("\n\nWoooohooooo\n\n");
-
-  net_debug(net, "google.com");
 
   net_destroy(net);
   return 0;
