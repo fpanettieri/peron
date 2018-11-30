@@ -5,5 +5,5 @@ typedef struct {
   const char* version;
 } App;
 
-void app_init(Memory* mem);
-void app_debug(Memory* mem);
+void app_init(App* app);
+void app_debug(App* app);

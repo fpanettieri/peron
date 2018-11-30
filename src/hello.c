@@ -14,8 +14,9 @@ int main (void)
   mem_init(&mem, Megabytes(2), Megabytes(62));
   mem_debug(&mem);
 
-  app_init(&mem);
-  app_debug(&mem);
+  App* app = (App*)mem.permanent;
+  app_init(app);
+  app_debug(app);
 
   // struct tls* tls;
   // struct tls_config* cfg;
