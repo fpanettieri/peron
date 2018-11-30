@@ -24,5 +24,9 @@ sudo update_dyld_shared_cache
 
 ## Troubleshooting
 
-### Mem check
-valgrind --leak-check=full ./program
+### Missing leaks .dylib
+dyld: could not load inserted library '/usr/local/lib/libLeaksAtExit.dylib' because image not found
+
+make a symlink to it:
+
+cd /usr/local/lib sudo ln -s /Applications/Xcode.app//Contents/Developer/usr/lib/libLeaksAtExit.dylib

@@ -1,3 +1,3 @@
 pushd build > /dev/null
-valgrind --leak-check=full ./hello
+leaks -atExit -- ./hello
 popd > /dev/null
