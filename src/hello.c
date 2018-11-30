@@ -5,8 +5,8 @@
 #include "types.h"
 
 #include "memory.c"
+#include "net.c"
 #include "app.c"
-// #include "tls.c"
 
 int main (void)
 {
@@ -18,10 +18,7 @@ int main (void)
   app_init(app);
   app_debug(app);
 
-  // struct tls* tls;
-  // struct tls_config* cfg;
-
-  // init_tls(&tls, &cfg);
+  net_init(app->net);
 
   // printf("Hello TLS!\n");
   return 0;

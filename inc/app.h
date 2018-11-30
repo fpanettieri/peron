@@ -3,6 +3,8 @@
 typedef struct {
   const char* name;
   const char* version;
+
+  Net* net;
 } App;
 
 void app_init(App* app);
