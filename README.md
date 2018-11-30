@@ -23,3 +23,6 @@ sudo make install
 sudo update_dyld_shared_cache
 
 ## Troubleshooting
+
+### Mem check
+valgrind --leak-check=full ./program
