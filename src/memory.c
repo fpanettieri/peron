@@ -3,7 +3,7 @@
 #include <sys/mman.h>
 
 # ifdef INTERNAL
-const char* mem_human (U64 size, SZT max, char* output)
+const char* mem_human(U64 size, SZT max, char* output)
 {
   if      (size > Terabytes(1)){ snprintf(output, max, "%.02f TB", (F64)size / Terabytes(1)); }
   else if (size > Gigabytes(1)){ snprintf(output, max, "%.02f GB", (F64)size / Gigabytes(1)); }
@@ -18,7 +18,7 @@ const char* mem_human (U64 size, SZT max, char* output)
 # endif
 
 # ifdef INTERNAL
-void mem_debug (Memory* memory)
+void mem_debug(Memory* memory)
 {
   assert(memory && memory->initialized);
 
@@ -40,7 +40,7 @@ void mem_debug (Memory* memory)
 #   define mem_debug(expr)
 # endif
 
-void mem_init (Memory* mem, U64 perm, U64 tmp)
+void mem_init(Memory* mem, U64 perm, U64 tmp)
 {
   mem->permanent_size = perm;
   mem->transient_size = tmp;

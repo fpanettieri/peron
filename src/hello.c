@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stddef.h>
 
 #include "assert.h"
 #include "types.h"
@@ -21,5 +20,7 @@ int main (void)
   net_init(app->net);
 
   // printf("Hello TLS!\n");
+
+  net_destroy(app->net);
   return 0;
 }
