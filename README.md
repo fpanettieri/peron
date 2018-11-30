@@ -2,25 +2,18 @@
 
 Trading bot
 
+# Building
+There are 2 methods of building this app:
+
+Modular build: Used to double check dependencies are properly defined
+Unity build: Fast and simple compilation strategy
+
 # Libraries
 ## LibreSSL
 brew install libressl
 
 ### generate pem cert
 openssl req -newkey rsa:4096 -nodes -sha512 -x509 -days 3650 -nodes -out peron.pem -keyout peron.pk
-
-## LWS
-### Building
-mkdir build
-cd build
-
-export OPENSSL_ROOT_DIR=/usr/local/opt/openssl/
-cmake .. -DLIB_SUFFIX=64
-make -j4
-sudo make install
-
-# update the libraries cache
-sudo update_dyld_shared_cache
 
 ## Troubleshooting
 
