@@ -17,12 +17,13 @@ int main (void)
   app_init(app);
   app_debug(app);
 
-  // net_init(app->net);
+  Net* net = &app->net;
+  net_init(net);
 
-  // net_connect(app->net, "google.com", "443");
+  net_connect(net, "google.com", "443");
 
   // SZT len = 0;
-  // net_write(app->net, "GET / \n", 8, &len);
+  // net_write(net, "GET / \n", 8, &len);
   // printf("written: %lu\n\n", len);
 
 
@@ -32,6 +33,6 @@ int main (void)
 	// buf[read - 1] = '\0';
 	// puts(buf);
 
-  // net_destroy(app->net);
+  // net_destroy(net);
   return 0;
 }
