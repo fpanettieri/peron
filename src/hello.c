@@ -15,12 +15,16 @@ int main (void)
 
   App* app = (App*)mem.permanent;
   app_init(app);
-  app_debug(app);
+  // app_debug(app);
 
-  net_init(app->net);
+  // net_init(app->net);
 
-  // printf("Hello TLS!\n");
+  // net_connect(app->net, "google.com", "443");
 
-  net_destroy(app->net);
+  // SZT len = 0;
+  // net_write(app->net, "GET / \n", 8, &len);
+  // printf("written: %lu\n\n", len);
+
+  // net_destroy(app->net);
   return 0;
 }

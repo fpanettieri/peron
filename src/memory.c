@@ -31,7 +31,7 @@ void mem_debug(Memory* memory)
   F32 frame_percentage = (F32)frame_used / (F32)frame_size * 100.0f;
 
   char used[12], size[12];
-  printf("MEM [ %s", mem_human(memory->total_size, sizeof(size), size));
+  printf("MEM [%s", mem_human(memory->total_size, sizeof(size), size));
   printf(" | P: %s", mem_human(memory->permanent_size, sizeof(size), size));
   printf(" | T: %s / %s (%.2f%%)", mem_human(transient_used, sizeof(size), used), mem_human(transient_size, sizeof(size), size), transient_percentage);
   printf(" | F: %s / %s (%.2f%%)]\n", mem_human(frame_used, sizeof(size), used), mem_human(frame_size, sizeof(size), size), frame_percentage);

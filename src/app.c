@@ -8,5 +8,5 @@ void app_init(App* app)
 
 void app_debug(App* app)
 {
-  printf("%s %s\n", app->name, app->version);
+  printf("%s v%s\n", app->name, app->version);
 }

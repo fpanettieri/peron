@@ -33,16 +33,22 @@ void net_connect(Net* net, const char* host, const char* port)
   assert(error == 0);
 }
 
-void net_read(Net* net, void* buf, SZT buflen, SZT* read)
+void net_read(Net* net, void* buf, SZT buf_len, SZT* read_len)
 {
   assert(net && net->initialized);
-  assert(buf && buflen && read);
+  assert(buf && buf_len && read_len);
+
+  (*read_len) = tls_read(net->client, buf, buf_len);
+  assert(*read_len);
 }
 
-void net_write(Net* net, const void* buf, SZT buflen, SZT* written)
+void net_write(Net* net, const void* buf, SZT buf_len, SZT* write_len)
 {
-  assert(net && net->initialized);
-  assert(buf && buflen && written);
+  assert(net && net->client && net->initialized);
+  assert(buf && buf_len && write_len);
+
+  (*write_len) = tls_write(net->client, buf, buf_len);
+  assert(*write_len);
 }
 
 void net_destroy(Net* net)
