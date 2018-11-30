@@ -15,7 +15,7 @@ int main (void)
 
   App* app = (App*)mem.permanent;
   app_init(app);
-  // app_debug(app);
+  app_debug(app);
 
   // net_init(app->net);
 
@@ -24,6 +24,13 @@ int main (void)
   // SZT len = 0;
   // net_write(app->net, "GET / \n", 8, &len);
   // printf("written: %lu\n\n", len);
+
+
+  // if ((read = tls_read(tls, buf, sizeof(buf))) < 0)
+		// goto err;
+
+	// buf[read - 1] = '\0';
+	// puts(buf);
 
   // net_destroy(app->net);
   return 0;

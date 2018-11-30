@@ -2,12 +2,18 @@
 
 void net_init(Net* net)
 {
+  printf("net addr: %p\n\n", (void*)net);
+
+  return;
+
   U8 error = 0;
   error = tls_init();
   assert(error == 0);
 
   net->client = tls_client();
   assert(net->client);
+
+  return;
 
   net->cfg = tls_config_new();
   assert(net->cfg);
@@ -21,7 +27,7 @@ void net_init(Net* net)
   tls_config_insecure_noverifyname(net->cfg);
 
   error = tls_configure(net->client, net->cfg);
-  assert(error);
+  assert(error == 0);
 
   net->initialized = true;
 }
