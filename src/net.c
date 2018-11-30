@@ -41,7 +41,6 @@ void net_read(Net* net, void* buf, SZT buf_len, SZT* read_len)
   assert(buf && buf_len && read_len);
 
   (*read_len) = tls_read(net->client, buf, buf_len);
-  assert(*read_len);
 }
 
 void net_write(Net* net, const void* buf, SZT buf_len, SZT* write_len)
@@ -50,12 +49,13 @@ void net_write(Net* net, const void* buf, SZT buf_len, SZT* write_len)
   assert(buf && buf_len && write_len);
 
   (*write_len) = tls_write(net->client, buf, buf_len);
-  assert(*write_len);
 }
 
 void net_destroy(Net* net)
 {
   assert(net && net->initialized);
+
+  return;
   assert(net->client && net->cfg);
 
   U8 error = tls_close(net->client);

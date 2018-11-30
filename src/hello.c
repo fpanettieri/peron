@@ -22,17 +22,25 @@ int main (void)
 
   net_connect(net, "google.com", "443");
 
-  // SZT len = 0;
-  // net_write(net, "GET / \n", 8, &len);
-  // printf("written: %lu\n\n", len);
+  SZT len = 0;
+  const char* req = "GET / \n";
+  net_write(net, req, sizeof(req), &len);
+  printf("written: %lu\n\n", len);
 
+  len = 0;
+  char buf[4096];
+  int i = 0;
+  do {
+    printf("\nITERATION %d:\n", i++);
+    net_read(net, buf, sizeof(buf), &len);
 
-  // if ((read = tls_read(tls, buf, sizeof(buf))) < 0)
-		// goto err;
+    if (len) {
+      fwrite(buf, sizeof(char), len, stdout);
+    }
+  } while (len > 0);
 
-	// buf[read - 1] = '\0';
-	// puts(buf);
+  printf("\n\nWoooohooooo\n\n");
 
-  // net_destroy(net);
+  net_destroy(net);
   return 0;
 }
