@@ -21,12 +21,13 @@ int main (void)
 
   Net* net = &app->net;
   net_init(net);
-  net_connect(net, "echo.websocket.org", "443");
+  net_connect(net, "echo.websocket.org", "80");
 
   SZT len = 0;
-  const char* req = "GET /?encoding=text HTTP/1.1\nhost: echo.websocket.org\nupgrade: websocket\nconnection: upgrade\nsec-websocket-key: dGhlIHNhbXBsZSBub25jZd==\norigin: https://peron.getplatita.com\nsec-websocket-protocol: platita\nsec-websocket-version: 1\n\n";
+  // const char* req = "GET wss://echo.websocket.org/?encoding=text HTTP/1.1\nhost: echo.websocket.org\nupgrade: websocket\nconnection: upgrade\nsec-websocket-key: dGhlIHNhbXBsZSBub25jZQ==\norigin: http://localhost:3000\nsec-websocket-protocol: chat, superchat\nsec-websocket-version: 13\n\n";
+  const char* req = "GET wss://echo.websocket.org/?encoding=text HTTP/1.1\nHost: echo.websocket.org\nConnection: Upgrade\nUpgrade: websocket\nOrigin: https://peron.getplatita.com\nSec-WebSocket-Version: 13\nSec-WebSocket-Key: +swGYf0e+rThyDBr37JbgA==\n\n";
   net_write(net, req, strnlen(req, 8192), &len);
-  // 
+
   // char buf[8192];
   // do {
   //   len = 0;
