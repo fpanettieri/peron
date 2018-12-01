@@ -20,12 +20,12 @@ int main (void)
 
   Net* net = &app->net;
   net_init(net);
-  net_connect(net, "prosky.co", "443");
+  net_connect(net, "www.google.com", "443");
 
-  ws_handshake(net);
+  // ws_handshake(net);
 
   SZT len = 0;
-  const char* req = "GET / HTTP/1.1\nHOST: prosky.co\nConnection: close\n\n";
+  const char* req = "GET / HTTP/1.1\nHOST: www.google.com\nConnection: close\n\n";
   net_write(net, req, strnlen(req, 8192), &len);
 
   char buf[8192];

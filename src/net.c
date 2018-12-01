@@ -70,9 +70,8 @@ void net_destroy(Net* net)
   assert(net && net->initialized);
   assert(net->client && net->cfg);
 
-  U8 error = tls_close(net->client);
-  assert(error == 0);
-
+  // TODO: error was explicitly ignored on the google test
+  tls_close(net->client);
   tls_free(net->client);
   tls_config_free(net->cfg);
 
