@@ -75,11 +75,7 @@ void net_destroy(Net* net)
   assert(net->client && net->cfg);
 
   U8 error = tls_close(net->client);
-
-  fprintf(stderr, "%s\n", tls_error(net->client));
   assert(error == 0);
-
-  return;
 
   tls_free(net->client);
   tls_config_free(net->cfg);

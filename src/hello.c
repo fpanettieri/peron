@@ -20,11 +20,7 @@ int main (void)
 
   Net* net = &app->net;
   net_init(net);
-
   net_connect(net, "localhost", "3000");
-
-  net_handshake(net);
-  // net_debug(net, "localhost:3000");
 
   SZT len = 0;
   const char* req = "GET / HTTP/1.1\nHOST: localhost:3000\nConnection: close\n\n";
