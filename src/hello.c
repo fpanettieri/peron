@@ -21,21 +21,21 @@ int main (void)
   Net* net = &app->net;
   net_init(net);
 
-  net_connect(net, "localhost", "3000");
+  net_connect(net, "en.wikipedia.org", "443");
 
   net_handshake(net);
-  net_debug(net, "localhost:3000");
+  // net_debug(net, "localhost:3000");
 
   SZT len = 0;
-  const char* req = "GET / HTTP/1.1\r\nHost: google.com\r\n";
+  const char* req = "GET /wiki/Main_Page HTTP/1.1\nHOST: en.wikipedia.org\nConnection: close\n\n";
   net_write(net, req, strnlen(req, 8192), &len);
   printf("written: %lu\n\n", len);
 
-  len = 0;
-  char buf[4096];
+  char buf[8192];
   int i = 0;
   do {
     printf("\nITERATION %d:\n", i++);
+    len = 0;
     net_read(net, buf, sizeof(buf), &len);
 
     printf("\nPOST READ\n");
