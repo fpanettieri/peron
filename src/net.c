@@ -56,13 +56,9 @@ void net_write(Net* net, const void* buf, SZT buf_len, SZT* write_len)
   assert(buf && buf_len && write_len);
 
   while (buf_len > 0) {
-    printf("buf_len %ld\n", buf_len);
-
     SSZT ret = tls_write(net->client, buf, buf_len);
     if (ret == TLS_WANT_POLLIN || ret == TLS_WANT_POLLIN){ continue; }
-    if (ret < 0) {
-      fprintf(stderr, "net_write: %s", tls_error(net->client));
-    }
+    if (ret < 0) { fprintf(stderr, "net_write: %s", tls_error(net->client)); }
 
     *write_len += ret;
     buf_len -= ret;

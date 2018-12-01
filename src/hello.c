@@ -20,28 +20,18 @@ int main (void)
 
   Net* net = &app->net;
   net_init(net);
-  net_connect(net, "localhost", "3000");
+  net_connect(net, "prosky.co", "443");
 
   SZT len = 0;
-  const char* req = "GET / HTTP/1.1\nHOST: localhost:3000\nConnection: close\n\n";
+  const char* req = "GET / HTTP/1.1\nHOST: prosky.co\nConnection: close\n\n";
   net_write(net, req, strnlen(req, 8192), &len);
-  printf("written: %lu\n\n", len);
 
   char buf[8192];
-  int i = 0;
   do {
-    printf("\nITERATION %d:\n", i++);
     len = 0;
     net_read(net, buf, sizeof(buf), &len);
-
-    printf("\nPOST READ\n");
-
-    if (len) {
-      fwrite(buf, sizeof(char), len, stdout);
-    }
+    if (len) { fwrite(buf, sizeof(char), len, stdout); }
   } while (len > 0);
-
-  printf("\n\nWoooohooooo\n\n");
 
   net_destroy(net);
   return 0;
