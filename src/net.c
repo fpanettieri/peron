@@ -58,7 +58,7 @@ void net_write(Net* net, const void* buf, SZT buf_len, SZT* write_len)
   while (buf_len > 0) {
     SSZT ret = tls_write(net->client, buf, buf_len);
     if (ret == TLS_WANT_POLLIN || ret == TLS_WANT_POLLOUT){ continue; }
-    if (ret < 0) { fprintf(stderr, "net_write: %s", tls_error(net->client)); }
+    if (ret < 0) { fprintf(stderr, "net_write: %s\n", tls_error(net->client)); return ; }
 
     *write_len += ret;
     buf_len -= ret;
@@ -70,7 +70,7 @@ void net_destroy(Net* net)
   assert(net && net->initialized);
   assert(net->client && net->cfg);
 
-  // TODO: error was explicitly ignored on the google test
+  // TODO: error handling was explicitly ignored during the google test
   tls_close(net->client);
   tls_free(net->client);
   tls_config_free(net->cfg);

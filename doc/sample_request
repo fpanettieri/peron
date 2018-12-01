@@ -25,3 +25,7 @@ Date: Sat, 01 Dec 2018 01:04:37 GMT
 Sec-WebSocket-Accept: OzhLHI36VzQcPlJGyurT9IbQEfY=
 Server: Kaazing Gateway
 Upgrade: websocket
+
+
+
+GET /?encoding=text HTTP/1.1\nhost: echo.websocket.org\nupgrade: websocket\nconnection: upgrade\nsec-websocket-key: dGhlIHNhbXBsZSBub25jZd==\norigin: https://peron.getplatita.com\nsec-websocket-protocol: platita\nsec-websocket-version: 1\n
