@@ -21,7 +21,8 @@ int main (void)
 
   Net* net = &app->net;
   net_init(net);
-  net_connect(net, "testnet.bitmex.com", "443");
+  // net_connect(net, "testnet.bitmex.com", "443");
+  net_connect(net, "localhost", "8443");
 
   // TODO: run on it's own thread. Have a method for queueing messages, and another for handling messages
   SZT len = 0;
@@ -32,9 +33,6 @@ int main (void)
   do {
     len = 0;
     net_read(net, buf, sizeof(buf), &len);
-    printf("\nlen %lu\n%s\n", len, buf);
-    
-    if (len) { fwrite(buf, sizeof(char), len, stdout); }
   } while (len > 0);
 
   net_destroy(net);
