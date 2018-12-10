@@ -1,0 +1,11 @@
+{
+  "name": "peron-ws-server",
+  "version": "1.0.0",
+  "description": "Minimalist WS server used to test Peron's ws library",
+  "author": "Fabio Panettieri",
+  "private": true,
+  "scripts": {
+    "start": "DEBUG=* node server.js",
+    "cert": "openssl req -x509 -newkey rsa:2048 -keyout keytmp.pem -out cert.pem -days 365 && openssl rsa -in keytmp.pem -out key.pem"
+  }
+}

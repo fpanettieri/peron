@@ -5,7 +5,7 @@ Connection: Upgrade
 Upgrade: websocket
 Origin: https://peron.getplatita.com
 Sec-WebSocket-Version: 13
-Sec-WebSocket-Key: +swGYf0e+rThyDBr37JbgA==
+Sec-WebSocket-Key: +swGYf0e+rThydBr37JbgA==
 
 HTTP/1.1 101 Web Socket Protocol Handshake
 Access-Control-Allow-Credentials: true
