@@ -1,7 +1,11 @@
 #pragma once
 
 typedef struct {
-  char* method;
-  char* url;
-  char* protocol;
+  const char* method;
+  const char* url;
+  const char* protocol;
 } HttpRequest;
+
+typedef struct {
+  U8 status;
+} HttpResponse;

@@ -28,13 +28,20 @@ int main (void)
   {
     void* mem_marker = mem.marker;
 
-    HttpRequest* req = (HttpRequest*) mem_alloc(&mem, sizeof(HttpRequest));
-    req->method = "GET";
-    req->url = "localhost";
-    req->protocol = "HTTP/1.1";
-    // req.header[0][0] = Conn
+    // HttpRequest* req = (HttpRequest*) mem_alloc(&mem, sizeof(HttpRequest));
+    // http_init(req, "GET", "localhost", "HTTP/1.1");
+    // http_header(req, "Host", "www.codecademy.com");
+    //
+    // HttpResponse* rsp = (HttpResponse*) mem_alloc(&mem, sizeof(HttpResponse));
+    // http_send(req, net, mem, rsp);
 
-    // http_get(net, req)
+
+
+    HttpRequest* req = http_init("GET", "localhost", "HTTP/1.1", &mem);
+    http_header(req, "Host", "www.codecademy.com", &mem);
+    HttpResponse* rsp = http_send(req, net, &mem);
+
+    assert(rsp);
 
     /*
 
