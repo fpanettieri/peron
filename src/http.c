@@ -7,6 +7,7 @@ HttpRequest* http_init(char* method, char* target, char* version, Memory* mem)
   req->target = target;
   req->version = version;
   req->headers = NULL;
+  req->body = NULL;
   return req;
 }
 
@@ -32,27 +33,35 @@ HttpResponse* http_send(HttpRequest* req, Net* net, Memory* mem)
     char* raw = (char*) mem_alloc(mem, 8000);
     U32 offset = 0;
 
-    // TODO: implement this str_append method
-    str_append(req->method, 8, raw, &offset);
-    str_append(" ", 7, raw, &offset);
-    str_append(req->target, 2048, raw, &offset);
-    str_append(" ", 7, raw, &offset);
-    str_append(req->version, 8, raw, &offset);
-    str_append("\r\n", 7, raw, &offset);
+    str_append(raw, req->method, 8, &offset);
+    str_append(raw, " ", 7, &offset);
+    str_append(raw, req->target, 2048, &offset);
+    str_append(raw, " ", 7, &offset);
+    str_append(raw, req->version, 8, &offset);
+    str_append(raw, "\r\n", 2, &offset);
+
+    HttpHeader* header = req->headers;
+    while (header) {
+      str_append(raw, header->name, 1024, &offset);
+      str_append(raw, ": ", 2, &offset);
+      str_append(raw, header->value, 1024, &offset);
+      str_append(raw, "\r\n", 2, &offset);
+      header = header->next;
+    }
+
+    if (!str_empty(req->body)){
+      str_append(raw, req->body, 4096, &offset);
+      str_append(raw, "\r\n", 2, &offset);
+    }
 
     printf("\nRaw Query: %lu bytes\n%s\n", strnlen(raw, 8000), raw);
   }
 
 
-
-  // memcpy(&destination[position], temp, strnlen(temp));
-
-  // char req[ SOME_SUITABLE_SIZE ];
-  // snprintf("%s %s %s\r\n", SOME_SUITABLE_SIZE, req->method, req->url, req->protocol);
-
-  // TODO: build the query
-  // send it
-  // read and package the response
+  // TODO:
+  // -. build the query
+  // 1. send it
+  // 2. read and package the response
 
   // TODO: append headers to req
   // HttpHeader* header = req.headers;

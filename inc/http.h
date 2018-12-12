@@ -11,6 +11,7 @@ typedef struct {
   char* target;
   char* version;
   HttpHeader* headers;
+  char* body;
 } HttpRequest;
 
 typedef struct {
