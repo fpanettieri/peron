@@ -9,10 +9,13 @@ typedef struct HttpHeader_st {
 typedef struct {
   const char* method;
   const char* target;
-  const char* protocol;
+  const char* version;
   HttpHeader* headers;
 } HttpRequest;
 
 typedef struct {
-  U8 status;
+  const char* version;
+  const char* status;
+  const char* reason;
+  HttpHeader* headers;
 } HttpResponse;

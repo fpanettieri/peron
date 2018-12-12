@@ -1,11 +1,11 @@
 #include "http.h"
 
-HttpRequest* http_init(const char* method, const char* target, const char* protocol, Memory* mem)
+HttpRequest* http_init(const char* method, const char* target, const char* version, Memory* mem)
 {
   HttpRequest* req = (HttpRequest*) mem_alloc(mem, sizeof(HttpRequest));
   req->method = method;
   req->target = target;
-  req->protocol = protocol;
+  req->version = version;
   req->headers = NULL;
   return req;
 }
@@ -49,10 +49,10 @@ HttpResponse* http_send(HttpRequest* req, Net* net, Memory* mem)
 
   raw[offset++] = ' ';
 
-  len = strnlen(req->protocol, 2048);
-  memcpy(&raw[offset], req->protocol, len);
+  len = strnlen(req->version, 2048);
+  memcpy(&raw[offset], req->version, len);
   offset += len;
-  printf("%u\t%s\n", len, req->protocol);
+  printf("%u\t%s\n", len, req->version);
 
   raw[offset++] = '\r';
   raw[offset++] = '\n';
