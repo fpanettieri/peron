@@ -29,8 +29,8 @@ int main (void)
     void* mem_marker = mem.marker;
 
     HttpRequest* req = http_init("GET", "localhost", "HTTP/1.1", &mem);
-    http_header(req, "Host", "testnet.bitmex.com", &mem);
-    http_header(req, "User-Agent", "peron 0.1", &mem);
+    http_add_header(req, "Host", "testnet.bitmex.com", &mem);
+    http_add_header(req, "User-Agent", "peron 0.1", &mem);
     HttpResponse* rsp = http_send(req, net, &mem);
 
     // TODO: detect if it's a good answer

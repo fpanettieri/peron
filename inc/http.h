@@ -8,7 +8,7 @@ typedef struct HttpHeader_st {
 
 typedef struct {
   const char* method;
-  const char* url;
+  const char* target;
   const char* protocol;
   HttpHeader* headers;
 } HttpRequest;

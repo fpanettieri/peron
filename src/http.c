@@ -1,16 +1,16 @@
 #include "http.h"
 
-HttpRequest* http_init(const char* method, const char* url, const char* protocol, Memory* mem)
+HttpRequest* http_init(const char* method, const char* target, const char* protocol, Memory* mem)
 {
   HttpRequest* req = (HttpRequest*) mem_alloc(mem, sizeof(HttpRequest));
   req->method = method;
-  req->url = url;
+  req->target = target;
   req->protocol = protocol;
   req->headers = NULL;
   return req;
 }
 
-void http_header(HttpRequest* req, const char* name, const char* value, Memory* mem)
+void http_add_header(HttpRequest* req, const char* name, const char* value, Memory* mem)
 {
   assert(req && name && value && mem);
   HttpHeader* header = (HttpHeader*) mem_alloc(mem, sizeof(HttpHeader));
@@ -26,6 +26,45 @@ void http_header(HttpRequest* req, const char* name, const char* value, Memory* 
 HttpResponse* http_send(HttpRequest* req, Net* net, Memory* mem)
 {
   assert(req && net && mem);
+
+  // TODO: alloc enough space
+  char* raw = (char*) mem_alloc(mem, 8000);
+  U16 offset = 0;
+  U16 len = 0;
+
+  // offset += http_append(raw, "User-Agent", "peron 0.1", &mem);
+
+  // TODO: extract to method
+  len = strnlen(req->method, 8);
+  memcpy(&raw[offset], req->method, len);
+  offset += len;
+  printf("%u\t%s\n", len, req->method);
+
+  raw[offset++] = ' ';
+
+  len = strnlen(req->target, 2048);
+  memcpy(&raw[offset], req->target, len);
+  offset += len;
+  printf("%u\t%s\n", len, req->target);
+
+  raw[offset++] = ' ';
+
+  len = strnlen(req->protocol, 2048);
+  memcpy(&raw[offset], req->protocol, len);
+  offset += len;
+  printf("%u\t%s\n", len, req->protocol);
+
+  raw[offset++] = '\r';
+  raw[offset++] = '\n';
+  raw[offset++] = '\0';
+
+
+  printf("\nRaw Query: %lu bytes\n%s\n", strnlen(raw, 8000), raw);
+
+
+
+
+  // memcpy(&destination[position], temp, strnlen(temp));
 
   // char req[ SOME_SUITABLE_SIZE ];
   // snprintf("%s %s %s\r\n", SOME_SUITABLE_SIZE, req->method, req->url, req->protocol);
