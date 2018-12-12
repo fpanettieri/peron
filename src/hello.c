@@ -28,12 +28,18 @@ int main (void)
   {
     void* mem_marker = mem.marker;
 
-    HttpRequest* req = http_init("GET", "localhost", "HTTP/1.1", &mem);
-    http_add_header(req, "Host", "testnet.bitmex.com", &mem);
+    HttpRequest* req = http_init("GET", "/", "HTTP/1.1", &mem);
+    http_add_header(req, "Host", "localhost:8443", &mem);
+    http_add_header(req, "Upgrade", "websocket", &mem);
+    http_add_header(req, "Connection", "Upgrade", &mem);
+    http_add_header(req, "Sec-WebSocket-Key", "dGhlIHNhbXBsZSBub25jZQ==", &mem);
+    http_add_header(req, "Sec-WebSocket-Version", "13", &mem);
+    http_add_header(req, "Origin", "peron.getplatita.com", &mem);
     http_add_header(req, "User-Agent", "peron 0.1", &mem);
+
     HttpResponse* rsp = http_send(req, net, &mem);
 
-    // TODO: detect if it's a good answer
+    // TODO: detect if it's a good answer (aka status == 101)
 
     assert(rsp);
     mem.marker = mem_marker;

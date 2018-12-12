@@ -58,15 +58,23 @@ HttpResponse* http_send(HttpRequest* req, Net* net, Memory* mem)
     raw[offset++] = '\0';
 
     printf("\nRaw Query: %lu bytes (%lu offset)\n%s\n", strnlen(raw, 8000), offset, raw);
-  // }
+  // } Build http message
 
   SZT written = 0;
   net_write(net, raw, offset, &written);
 
+  SZT read = 0;
+  char read_buf[8192];
+  do {
+    read = 0;
+    net_read(net, read_buf, sizeof(read_buf), &read);
+    //if (len) { fwrite(buf, sizeof(char), len, stdout); }
+  } while (read > 0);
+
 
   // TODO:
   // -. build the query
-  // 1. send it
+  // -. send it
   // 2. read and package the response
 
   // TODO: append headers to req
@@ -80,10 +88,6 @@ HttpResponse* http_send(HttpRequest* req, Net* net, Memory* mem)
   /*
 
   // TODO: run on it's own thread. Have a method for queueing messages, and another for handling messages
-  SZT len = 0;
-  const char* req = "GET wss://testnet.bitmex.com/realtime HTTP/1.1\r\nHost: testnet.bitmex.com\r\nConnection: Upgrade\r\nUpgrade: websocket\r\nOrigin: https://peron.getplatita.com\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: +swGYf0e+rThyDBr37JbgA==\r\n\r\n";
-  net_write(net, req, strnlen(req, 8192), &len);
-
   char buf[8192];
   do {
     len = 0;
