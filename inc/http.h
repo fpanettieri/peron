@@ -1,21 +1,21 @@
 #pragma once
 
 typedef struct HttpHeader_st {
-  const char* name;
-  const char* value;
+  char* name;
+  char* value;
   struct HttpHeader_st* next;
 } HttpHeader;
 
 typedef struct {
-  const char* method;
-  const char* target;
-  const char* version;
+  char* method;
+  char* target;
+  char* version;
   HttpHeader* headers;
 } HttpRequest;
 
 typedef struct {
-  const char* version;
-  const char* status;
-  const char* reason;
+  char* version;
+  char* status;
+  char* reason;
   HttpHeader* headers;
 } HttpResponse;

@@ -1,10 +1,10 @@
 #include <stdio.h>
-#include <string.h>
 
 #include "assert.h"
 #include "types.h"
 
 #include "memory.c"
+#include "str.c"
 #include "net.c"
 #include "http.c"
 #include "ws.c"

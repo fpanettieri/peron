@@ -1,6 +1,6 @@
 #include "http.h"
 
-HttpRequest* http_init(const char* method, const char* target, const char* version, Memory* mem)
+HttpRequest* http_init(char* method, char* target, char* version, Memory* mem)
 {
   HttpRequest* req = (HttpRequest*) mem_alloc(mem, sizeof(HttpRequest));
   req->method = method;
@@ -10,7 +10,7 @@ HttpRequest* http_init(const char* method, const char* target, const char* versi
   return req;
 }
 
-void http_add_header(HttpRequest* req, const char* name, const char* value, Memory* mem)
+void http_add_header(HttpRequest* req, char* name, char* value, Memory* mem)
 {
   assert(req && name && value && mem);
   HttpHeader* header = (HttpHeader*) mem_alloc(mem, sizeof(HttpHeader));
@@ -27,40 +27,21 @@ HttpResponse* http_send(HttpRequest* req, Net* net, Memory* mem)
 {
   assert(req && net && mem);
 
-  // TODO: alloc enough space
-  char* raw = (char*) mem_alloc(mem, 8000);
-  U16 offset = 0;
-  U16 len = 0;
+  { // TODO: Extract to its own method
+    // TODO: calculate how much space is needed
+    char* raw = (char*) mem_alloc(mem, 8000);
+    U32 offset = 0;
 
-  // offset += http_append(raw, "User-Agent", "peron 0.1", &mem);
+    // TODO: implement this str_append method
+    str_append(req->method, 8, raw, &offset);
+    str_append(" ", 7, raw, &offset);
+    str_append(req->target, 2048, raw, &offset);
+    str_append(" ", 7, raw, &offset);
+    str_append(req->version, 8, raw, &offset);
+    str_append("\r\n", 7, raw, &offset);
 
-  // TODO: extract to method
-  len = strnlen(req->method, 8);
-  memcpy(&raw[offset], req->method, len);
-  offset += len;
-  printf("%u\t%s\n", len, req->method);
-
-  raw[offset++] = ' ';
-
-  len = strnlen(req->target, 2048);
-  memcpy(&raw[offset], req->target, len);
-  offset += len;
-  printf("%u\t%s\n", len, req->target);
-
-  raw[offset++] = ' ';
-
-  len = strnlen(req->version, 2048);
-  memcpy(&raw[offset], req->version, len);
-  offset += len;
-  printf("%u\t%s\n", len, req->version);
-
-  raw[offset++] = '\r';
-  raw[offset++] = '\n';
-  raw[offset++] = '\0';
-
-
-  printf("\nRaw Query: %lu bytes\n%s\n", strnlen(raw, 8000), raw);
-
+    printf("\nRaw Query: %lu bytes\n%s\n", strnlen(raw, 8000), raw);
+  }
 
 
 
