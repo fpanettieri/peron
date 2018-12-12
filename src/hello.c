@@ -28,37 +28,14 @@ int main (void)
   {
     void* mem_marker = mem.marker;
 
-    // HttpRequest* req = (HttpRequest*) mem_alloc(&mem, sizeof(HttpRequest));
-    // http_init(req, "GET", "localhost", "HTTP/1.1");
-    // http_header(req, "Host", "www.codecademy.com");
-    //
-    // HttpResponse* rsp = (HttpResponse*) mem_alloc(&mem, sizeof(HttpResponse));
-    // http_send(req, net, mem, rsp);
-
-
-
     HttpRequest* req = http_init("GET", "localhost", "HTTP/1.1", &mem);
-    http_header(req, "Host", "www.codecademy.com", &mem);
+    http_header(req, "Host", "testnet.bitmex.com", &mem);
+    http_header(req, "User-Agent", "peron 0.1", &mem);
     HttpResponse* rsp = http_send(req, net, &mem);
 
+    // TODO: detect if it's a good answer
+
     assert(rsp);
-
-    /*
-
-    // TODO: run on it's own thread. Have a method for queueing messages, and another for handling messages
-    SZT len = 0;
-    const char* req = "GET wss://testnet.bitmex.com/realtime HTTP/1.1\r\nHost: testnet.bitmex.com\r\nConnection: Upgrade\r\nUpgrade: websocket\r\nOrigin: https://peron.getplatita.com\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: +swGYf0e+rThyDBr37JbgA==\r\n\r\n";
-    net_write(net, req, strnlen(req, 8192), &len);
-
-    char buf[8192];
-    do {
-      len = 0;
-      net_read(net, buf, sizeof(buf), &len);
-      //if (len) { fwrite(buf, sizeof(char), len, stdout); }
-    } while (len > 0);
-
-    */
-
     mem.marker = mem_marker;
   }
 
