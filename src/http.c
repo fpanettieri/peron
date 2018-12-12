@@ -28,10 +28,10 @@ HttpResponse* http_send(HttpRequest* req, Net* net, Memory* mem)
 {
   assert(req && net && mem);
 
-  { // TODO: Extract to its own method
+  // { // TODO: Extract to its own method
     // TODO: calculate how much space is needed
     char* raw = (char*) mem_alloc(mem, 8000);
-    U32 offset = 0;
+    SZT offset = 0;
 
     str_append(raw, req->method, 8, &offset);
     str_append(raw, " ", 7, &offset);
@@ -54,8 +54,14 @@ HttpResponse* http_send(HttpRequest* req, Net* net, Memory* mem)
       str_append(raw, "\r\n", 2, &offset);
     }
 
-    printf("\nRaw Query: %lu bytes\n%s\n", strnlen(raw, 8000), raw);
-  }
+    // avoid mem reuse bugs
+    raw[offset++] = '\0';
+
+    printf("\nRaw Query: %lu bytes (%lu offset)\n%s\n", strnlen(raw, 8000), offset, raw);
+  // }
+
+  SZT written = 0;
+  net_write(net, raw, offset, &written);
 
 
   // TODO:
