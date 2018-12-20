@@ -73,6 +73,12 @@ void net_write(Net* net, const void* buf, SZT buf_len, SZT* write_len)
   printf("net_write\n");
   printf("writting %lu bytes\n", buf_len);
 
+  char* raw = (char*)buf;
+  for (U32 i = 0; i < buf_len; i++) {
+    printf("%d\t%c\t%d\n", i, raw[i], raw[i]);
+  }
+  printf("\n");
+
   int i = 0;
 
   *write_len = 0;

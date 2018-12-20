@@ -54,8 +54,10 @@ HttpResponse* http_send(HttpRequest* req, Net* net, Memory* mem)
       str_append(raw, "\r\n", 2, &offset);
     }
 
+    str_append(raw, "\r\n", 2, &offset);
+
     // avoid mem reuse bugs
-    raw[offset++] = '\0';
+    raw[offset] = '\0';
 
     printf("\nRaw Query: %lu bytes (%lu offset)\n%s\n", strnlen(raw, 8000), offset, raw);
   // } Build http message
