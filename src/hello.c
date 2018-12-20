@@ -22,18 +22,21 @@ int main (void)
 
   Net* net = &app->net;
   net_init(net);
-  net_connect(net, "localhost", "8443");
+
+  char* host = "localhost";
+  char* port = "3000";
+  net_connect(net, host, port);
 
   // Store
   {
     void* mem_marker = mem.marker;
 
     HttpRequest* req = http_init("GET", "/", "HTTP/1.1", &mem);
-    http_add_header(req, "Host", "localhost:8443", &mem);
-    http_add_header(req, "Upgrade", "websocket", &mem);
-    http_add_header(req, "Connection", "Upgrade", &mem);
-    http_add_header(req, "Sec-WebSocket-Key", "dGhlIHNhbXBsZSBub25jZQ==", &mem);
-    http_add_header(req, "Sec-WebSocket-Version", "13", &mem);
+    http_add_header(req, "Host", host, &mem);
+    // http_add_header(req, "Upgrade", "websocket", &mem);
+    // http_add_header(req, "Connection", "Upgrade", &mem);
+    // http_add_header(req, "Sec-WebSocket-Key", "dGhlIHNhbXBsZSBub25jZQ==", &mem);
+    // http_add_header(req, "Sec-WebSocket-Version", "13", &mem);
     http_add_header(req, "Origin", "peron.getplatita.com", &mem);
     http_add_header(req, "User-Agent", "peron 0.1", &mem);
 
