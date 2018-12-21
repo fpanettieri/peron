@@ -31,14 +31,14 @@ U32 http_get_request_size(HttpRequest* req)
 
   U32 len = 0;
   len += strnlen(req->method, 8);
-  len += strnlen(req->target, 8);
+  len += strnlen(req->target, Kilobytes(2));
   len += strnlen(req->version, 8);
   len += 4;
 
   HttpHeader* header = req->headers;
   while (header) {
-    len += strnlen(header->name, 1024);
-    len += strnlen(header->value, 1024);
+    len += strnlen(header->name, Kilobytes(1));
+    len += strnlen(header->value, Kilobytes(1));
     len += 4;
     header = header->next;
   }
@@ -61,17 +61,17 @@ String* http_request_to_string(HttpRequest* req, Memory* mem)
 
   String* str = str_new(size, mem);
   str_append(str, req->method, 8);
-  str_append(str, " ", 7);
-  str_append(str, req->target, 2048);
-  str_append(str, " ", 7);
+  str_append(str, " ", 1);
+  str_append(str, req->target, Kilobytes(2));
+  str_append(str, " ", 1);
   str_append(str, req->version, 8);
   str_append(str, "\r\n", 2);
 
   HttpHeader* header = req->headers;
   while (header) {
-    str_append(str, header->name, 1024);
+    str_append(str, header->name, Kilobytes(1));
     str_append(str, ": ", 2);
-    str_append(str, header->value, 1024);
+    str_append(str, header->value, Kilobytes(1));
     str_append(str, "\r\n", 2);
     header = header->next;
   }
