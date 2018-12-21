@@ -4,7 +4,7 @@ String* str_new(U32 buflen, Memory* mem)
 {
   String* str = (String*) mem_alloc(mem, sizeof(String));
   str->buf = (char*) mem_alloc(mem, buflen);
-  str->len = 0;
+  str->len = buflen;
   str->offset = 0;
   return str;
 }
@@ -12,7 +12,7 @@ String* str_new(U32 buflen, Memory* mem)
 void str_append(String* str, char* src, U32 maxlen)
 {
   U32 len = strnlen(src, maxlen);
-  assert(str->offset + len < str->len);
+  assert(str->offset + len <= str->len);
   memcpy(&str->buf[str->offset], src, len);
   str->offset += len;
 }

@@ -47,7 +47,7 @@ U32 http_get_request_size(HttpRequest* req)
     len += strnlen(req->body, Kilobytes(64));
     len += 2;
   }
-  len += 2;
+  len += 3;
 
   return len;
 }
@@ -57,9 +57,10 @@ String* http_request_to_string(HttpRequest* req, Memory* mem)
   assert(req && mem);
 
   U32 size = http_get_request_size(req);
-  printf("Calculated Request Size: %u", size);
+  printf("Calculated Request Size: %u\n", size);
 
   String* str = str_new(size, mem);
+
   str_append(str, req->method, 8);
   str_append(str, " ", 1);
   str_append(str, req->target, Kilobytes(2));
@@ -81,10 +82,8 @@ String* http_request_to_string(HttpRequest* req, Memory* mem)
     str_append(str, "\r\n", 2);
   }
 
-  str_append(str, "\r\n", 2);
-
+  str_append(str, "\r\n\0", 3);
   // avoid mem reuse bugs
-  str->buf[str->offset] = '\0';
 
   printf("\nRaw Query: %lu bytes (%u offset)\n%s\n", strnlen(str->buf, 8000), str->offset, str->buf);
 
