@@ -1,7 +1,8 @@
 #include "http.h"
 
-HttpRequest* http_init(char* method, char* target, char* version, Memory* mem)
+HttpRequest* http_new_request(char* method, char* target, char* version, Memory* mem)
 {
+  assert(method && target && version && mem);
   HttpRequest* req = (HttpRequest*) mem_alloc(mem, sizeof(HttpRequest));
   req->method = method;
   req->target = target;
@@ -24,47 +25,82 @@ void http_add_header(HttpRequest* req, char* name, char* value, Memory* mem)
   *last = header;
 }
 
+U32 http_get_request_size(HttpRequest* req)
+{
+  assert(req);
+
+  U32 len = 0;
+  len += strnlen(req->method, 8);
+  len += strnlen(req->target, 8);
+  len += strnlen(req->version, 8);
+  len += 4;
+
+  HttpHeader* header = req->headers;
+  while (header) {
+    len += strnlen(header->method, 1024);
+    len += strnlen(header->value, 1024);
+    len += 4;
+    header = header->next;
+  }
+
+  if (!str_empty(req->body)){
+    len += strnlen(req->body, Kilobytes(64));
+    len += 2;
+  }
+  len += 2;
+
+  return len;
+}
+
+void http_request_to_string(HttpRequest* req, String* str)
+{
+  assert(req && mem);
+
+  U32 size = http_get_request_size(req);
+  printf("Calculated Request Size: %lu", size);
+
+  String* str = str_new(size, mem);
+  str_append(str, req->method, 8);
+  str_append(str, " ", 7);
+  str_append(str, req->target, 2048);
+  str_append(str, " ", 7);
+  str_append(str, req->version, 8);
+  str_append(str, "\r\n", 2);
+
+  HttpHeader* header = req->headers;
+  while (header) {
+    str_append(str, header->name, 1024);
+    str_append(str, ": ", 2);
+    str_append(str, header->value, 1024);
+    str_append(str, "\r\n", 2);
+    header = header->next;
+  }
+
+  if (!str_empty(req->body)){
+    str_append(str, req->body, Kilobytes(64));
+    str_append(str, "\r\n", 2);
+  }
+
+  str_append(str, "\r\n", 2);
+
+  // avoid mem reuse bugs
+  str->buf[str->offset] = '\0';
+
+  printf("\nRaw Query: %lu bytes (%lu offset)\n%s\n", strnlen(str->buf, 8000), str->offset, str->buf);
+}
+
 HttpResponse* http_send(HttpRequest* req, Net* net, Memory* mem)
 {
   assert(req && net && mem);
 
-  // { // TODO: Extract to its own method
-    // TODO: calculate how much space is needed
-    char* raw = (char*) mem_alloc(mem, 8000);
-    SZT offset = 0;
-
-    str_append(raw, req->method, 8, &offset);
-    str_append(raw, " ", 7, &offset);
-    str_append(raw, req->target, 2048, &offset);
-    str_append(raw, " ", 7, &offset);
-    str_append(raw, req->version, 8, &offset);
-    str_append(raw, "\r\n", 2, &offset);
-
-    HttpHeader* header = req->headers;
-    while (header) {
-      str_append(raw, header->name, 1024, &offset);
-      str_append(raw, ": ", 2, &offset);
-      str_append(raw, header->value, 1024, &offset);
-      str_append(raw, "\r\n", 2, &offset);
-      header = header->next;
-    }
-
-    if (!str_empty(req->body)){
-      str_append(raw, req->body, 4096, &offset);
-      str_append(raw, "\r\n", 2, &offset);
-    }
-
-    str_append(raw, "\r\n", 2, &offset);
-
-    // avoid mem reuse bugs
-    raw[offset] = '\0';
-
-    printf("\nRaw Query: %lu bytes (%lu offset)\n%s\n", strnlen(raw, 8000), offset, raw);
-  // } Build http message
+  String* str = http_request_to_string(req);
+  assert(str && str->len);
 
   SZT written = 0;
-  net_write(net, raw, offset, &written);
+  net_write(net, msg->buf, msg->len, &written);
+  assert(written);
 
+  // TODO: implement proper net_read
   SZT read = 0;
   char read_buf[8192];
   do {
@@ -102,7 +138,3 @@ HttpResponse* http_send(HttpRequest* req, Net* net, Memory* mem)
   HttpResponse* rsp = (HttpResponse*) mem_alloc(mem, sizeof(HttpResponse));
   return rsp;
 }
-
-
-// char req[ SOME_SUITABLE_SIZE ];
-// sprintf( req, HTTP_GET_MSG, host, path );

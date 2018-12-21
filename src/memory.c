@@ -81,9 +81,11 @@ void* mem_tmp_alloc(Memory* memory, U32 size) {
   assert(memory && memory->initialized);
   assert((U8*)memory->frame - size > (U8*)memory->marker);
   memory->frame = (void*)((U8*)memory->frame - size);
+  mem_debug(memory);
   return memory->frame;
 }
 
 void mem_tmp_clear(Memory* memory) {
   memory->frame = (void*)((U8*)memory->permanent + memory->total_size);
+  mem_debug(memory);
 }

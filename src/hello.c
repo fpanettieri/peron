@@ -31,7 +31,7 @@ int main (void)
   {
     void* mem_marker = mem.marker;
 
-    HttpRequest* req = http_init("GET", "/", "HTTP/1.1", &mem);
+    HttpRequest* req = http_new_request(req, "GET", "/", "HTTP/1.1", &mem);
     http_add_header(req, "Host", host, &mem);
     // http_add_header(req, "Upgrade", "websocket", &mem);
     // http_add_header(req, "Connection", "Upgrade", &mem);

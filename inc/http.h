@@ -20,3 +20,7 @@ typedef struct {
   char* reason;
   HttpHeader* headers;
 } HttpResponse;
+
+HttpRequest* http_request(char* method, char* target, char* version, Memory* mem);
+void http_add_header(HttpRequest* req, char* name, char* value, Memory* mem);
+HttpResponse* http_send(HttpRequest* req, Net* net, Memory* mem);
