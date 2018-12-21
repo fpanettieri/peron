@@ -37,7 +37,7 @@ U32 http_get_request_size(HttpRequest* req)
 
   HttpHeader* header = req->headers;
   while (header) {
-    len += strnlen(header->method, 1024);
+    len += strnlen(header->name, 1024);
     len += strnlen(header->value, 1024);
     len += 4;
     header = header->next;
@@ -52,12 +52,12 @@ U32 http_get_request_size(HttpRequest* req)
   return len;
 }
 
-void http_request_to_string(HttpRequest* req, String* str)
+String* http_request_to_string(HttpRequest* req, Memory* mem)
 {
   assert(req && mem);
 
   U32 size = http_get_request_size(req);
-  printf("Calculated Request Size: %lu", size);
+  printf("Calculated Request Size: %u", size);
 
   String* str = str_new(size, mem);
   str_append(str, req->method, 8);
@@ -86,18 +86,20 @@ void http_request_to_string(HttpRequest* req, String* str)
   // avoid mem reuse bugs
   str->buf[str->offset] = '\0';
 
-  printf("\nRaw Query: %lu bytes (%lu offset)\n%s\n", strnlen(str->buf, 8000), str->offset, str->buf);
+  printf("\nRaw Query: %lu bytes (%u offset)\n%s\n", strnlen(str->buf, 8000), str->offset, str->buf);
+
+  return str;
 }
 
 HttpResponse* http_send(HttpRequest* req, Net* net, Memory* mem)
 {
   assert(req && net && mem);
 
-  String* str = http_request_to_string(req);
+  String* str = http_request_to_string(req, mem);
   assert(str && str->len);
 
   SZT written = 0;
-  net_write(net, msg->buf, msg->len, &written);
+  net_write(net, str->buf, str->len, &written);
   assert(written);
 
   // TODO: implement proper net_read

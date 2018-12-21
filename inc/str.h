@@ -8,5 +8,6 @@ typedef struct {
   char* buf;
 } String;
 
-void str_append(char* dst, char* src, U32 maxlen, SZT* offset);
+String* str_new(U32 buflen, Memory* mem);
+void str_append(String* str, char* src, U32 maxlen);
 bool str_empty(char* src);
