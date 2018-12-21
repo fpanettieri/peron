@@ -91,7 +91,9 @@ HttpResponse* http_send(HttpRequest* req, Net* net, Memory* mem)
   assert(str && str->len);
 
   SZT written = 0;
-  net_write(net, str->buf, str->len, &written);
+  net_write(net, str->buf, str->len - 1, &written);
+
+  printf("written: %lu\n", written);
   assert(written);
 
   // TODO: implement proper net_read

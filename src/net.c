@@ -53,14 +53,15 @@ void net_read(Net* net, void* buf, SZT buf_len, SZT* read_len)
 
   (*read_len) = tls_read(net->client, buf, buf_len);
 
-  printf("%lu RAW BYTES: \n", (*read_len));
-  char* raw = (char*)buf;
-  for (U32 i = 0; i < (*read_len); i++) {
-    printf("%d\t%c\t%d\n", i, raw[i], raw[i]);
-  }
-  printf("\n");
+  // printf("%lu RAW BYTES: \n", (*read_len));
+  // char* raw = (char*)buf;
+  // for (U32 i = 0; i < (*read_len); i++) {
+  //   printf("%d\t%c\t%d\n", i, raw[i], raw[i]);
+  // }
+  // printf("\n");
 
   printf("read %lu bytes\n", *read_len);
+  printf("%s\n", (char*)buf);
   printf("================================================\n");
 }
 
@@ -69,26 +70,16 @@ void net_write(Net* net, const void* buf, SZT buf_len, SZT* write_len)
   assert(net && net->client && net->initialized);
   assert(buf && buf_len && write_len);
 
-  printf("================================================\n");
-  printf("net_write\n");
-  printf("writting %lu bytes\n", buf_len);
-
-  // FIXME: used to debug write iterations
-  int i = 0;
-
   *write_len = 0;
   while (buf_len > 0) {
-    printf("iteration %d\n", i++);
-
     SSZT ret = tls_write(net->client, buf, buf_len);
+
     if (ret == TLS_WANT_POLLIN || ret == TLS_WANT_POLLOUT){ continue; }
     if (ret < 0) { fprintf(stderr, "net_write: %s\n", tls_error(net->client)); return; }
 
     *write_len += ret;
     buf_len -= ret;
   }
-
-  printf("================================================\n");
 }
 
 void net_destroy(Net* net)
