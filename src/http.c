@@ -92,8 +92,6 @@ HttpResponse* http_send(HttpRequest* req, Net* net, Memory* mem)
 
   SZT written = 0;
   net_write(net, str->buf, str->len - 1, &written);
-
-  printf("written: %lu\n", written);
   assert(written);
 
   // TODO: implement proper net_read
@@ -102,6 +100,7 @@ HttpResponse* http_send(HttpRequest* req, Net* net, Memory* mem)
   do {
     read = 0;
     net_read(net, read_buf, sizeof(read_buf), &read);
+    read_buf[read] = '\0';
     //if (len) { fwrite(buf, sizeof(char), len, stdout); }
   } while (read > 0);
 
@@ -110,26 +109,6 @@ HttpResponse* http_send(HttpRequest* req, Net* net, Memory* mem)
   // -. build the query
   // -. send it
   // 2. read and package the response
-
-  // TODO: append headers to req
-  // HttpHeader* header = req.headers;
-  // while (header) {
-  //  last = last->next
-  // }
-  // last = header;
-
-
-  /*
-
-  // TODO: run on it's own thread. Have a method for queueing messages, and another for handling messages
-  char buf[8192];
-  do {
-    len = 0;
-    net_read(net, buf, sizeof(buf), &len);
-    //if (len) { fwrite(buf, sizeof(char), len, stdout); }
-  } while (len > 0);
-
-  */
 
   HttpResponse* rsp = (HttpResponse*) mem_alloc(mem, sizeof(HttpResponse));
   return rsp;
