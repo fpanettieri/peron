@@ -95,14 +95,16 @@ HttpResponse* http_send(HttpRequest* req, Net* net, Memory* mem)
   assert(written);
 
   // TODO: implement proper net_read
-  SZT read = 0;
-  char read_buf[8192];
-  do {
-    read = 0;
-    net_read(net, read_buf, sizeof(read_buf), &read);
-    read_buf[read] = '\0';
-    //if (len) { fwrite(buf, sizeof(char), len, stdout); }
-  } while (read > 0);
+  
+  // SZT read = 0;
+  // char read_buf[8192];
+  // do {
+  //   read = 0;
+  //   (*read_len) = tls_read(net->client, buf, buf_len);
+  //   net_read(net, read_buf, sizeof(read_buf), &read);
+  //   read_buf[read] = '\0';
+  //   //if (len) { fwrite(buf, sizeof(char), len, stdout); }
+  // } while (read > 0);
 
 
   // TODO:
