@@ -6,5 +6,8 @@
   "private": true,
   "dependencies": {
     "ws": "6.1.2"
+  },
+  "scripts": {
+    "start": "node peron.js"
   }
 }
