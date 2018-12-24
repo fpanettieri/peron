@@ -8,6 +8,7 @@
     "ws": "6.1.2"
   },
   "scripts": {
-    "start": "node peron.js"
+    "start": "node peron.js",
+    "debug": "node inspect peron.js"
   }
 }
