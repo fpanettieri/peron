@@ -14,32 +14,20 @@ function init (_ws, _log) {
   log = _log;
 }
 
+function auth () {
+  const expires = Date.now() + 24 * 60 * 60 * 1000;
+  const signature = crypto.createHmac('sha256', process.env.BITMEX_SECRET).update('GET/realtime' + expires).digest('hex');
+  const auth_params = {
+    op: 'authKeyExpires',
+    args: [ process.env.BITMEX_KEY, expires, signature ]
+  }
+  ws.send(JSON.stringify(auth_params));
+}
+
 function open () {
   log.info('connection established');
   log.log(process.env.BITMEX_SECRET, process.env.BITMEX_KEY);
-
-  // { // auth
-  //   const expires = Date.now() + 24 * 60 * 60 * 1000;
-  //   const signature = crypto.createHmac('sha256', process.env.BITMEX_SECRET).update('GET/realtime' + expires).digest('hex');
-  //   const auth_params = {
-  //     op: 'authKeyExpires',
-  //     args: [
-  //       process.env.BITMEX_KEY,
-  //       expires,
-  //       signature
-  //     ]
-  //   }
-  //
-  //   ws.send(auth_params, (a, b, c) => {
-  //     log.log('CALLBACK', a, b, c);
-  //   });
-  // }
-  // TODO:
-  // . auth
-  // . fetch open positions
-  // . start keepalive
-  // . fetch orderbook & price
-  // . $$$
+  auth();
 }
 
 function dispatch (data) {
@@ -49,13 +37,21 @@ function dispatch (data) {
   if ('error' in json) {
     log.error(json.error);
 
-  } else if ('success' in json) {
-    log.log(json);
-
   } else if ('info' in json) {
     if ('limit' in json) {
       limit = json.limit.remaining;
       log.info('limit updated', limit);
+    }
+
+  } else if ('success' in json) {
+    log.log(json);
+
+    switch(json.request.op) {
+      case 'authKeyExpires': {
+        console.log('manso');
+      } break;
+
+      // case ...
     }
   }
 }
@@ -67,6 +63,13 @@ function close (code, reason) {
 function error (err) {
   log.error(err);
 }
+
+// TODO: algo
+// - auth
+// . fetch open positions
+// . start keepalive
+// . fetch orderbook & price
+// . $$$
 
 module.exports = {
   init: init,
