@@ -1,8 +1,5 @@
 'use strict';
 
-const logger = require('./logger');
-const log = new logger(`[BitMEX/Peron]`);
-
 let ws = null;
 let log = null;
 
@@ -36,6 +33,7 @@ function error (err) {
 }
 
 module.exports = {
+  init: init,
   open: open,
   dispatch: dispatch,
   close: close,
