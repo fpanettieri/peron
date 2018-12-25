@@ -14,6 +14,12 @@ function init (_ws, _log) {
   log = _log;
 }
 
+function open () {
+  log.info('connection established');
+  log.log(process.env.BITMEX_SECRET, process.env.BITMEX_KEY);
+  auth();
+}
+
 function auth () {
   const expires = Date.now() + 24 * 60 * 60 * 1000;
   const signature = crypto.createHmac('sha256', process.env.BITMEX_SECRET).update('GET/realtime' + expires).digest('hex');
@@ -24,10 +30,17 @@ function auth () {
   ws.send(JSON.stringify(auth_params));
 }
 
-function open () {
-  log.info('connection established');
-  log.log(process.env.BITMEX_SECRET, process.env.BITMEX_KEY);
-  auth();
+function subscribe () {
+  // TODO: continue here;
+  // subscribe
+  // Check open positions
+  // {"op": "subscribe", "args": ["trade:XBTUSD","instrument:XBTUSD"]}
+  //
+  const sub_params = {
+    op: 'authKeyExpires',
+    args: [ 'wallet' ]
+  }
+  ws.send(JSON.stringify(sub_params));
 }
 
 function dispatch (data) {
@@ -48,7 +61,7 @@ function dispatch (data) {
 
     switch(json.request.op) {
       case 'authKeyExpires': {
-        console.log('manso');
+        subscribe();
       } break;
 
       // case ...
