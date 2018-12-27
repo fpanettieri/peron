@@ -2,6 +2,9 @@
 
 const crypto = require('crypto');
 
+const DMS_INTERVAL = 15 * 1000;
+const DMS_TIMEOUT = 60 * 1000;
+
 let ws = null;
 let log = null;
 
@@ -21,13 +24,20 @@ function open () {
 }
 
 function auth () {
-  const expires = Date.now() + 24 * 60 * 60 * 1000;
+  const expires = ~~(Date.now() / 1000 + 24 * 60 * 60);
+  log.log('GET/realtime' + expires);
+
   const signature = crypto.createHmac('sha256', process.env.BITMEX_SECRET).update('GET/realtime' + expires).digest('hex');
   const auth_params = {
     op: 'authKeyExpires',
     args: [ process.env.BITMEX_KEY, expires, signature ]
   }
   ws.send(JSON.stringify(auth_params));
+}
+
+function dms () {
+  ws.send(JSON.stringify({op: 'cancelAllAfter', args: DMS_TIMEOUT}));
+  setTimeout(dms, DMS_INTERVAL);
 }
 
 function subscribe () {
@@ -37,15 +47,19 @@ function subscribe () {
   // {"op": "subscribe", "args": ["trade:XBTUSD","instrument:XBTUSD"]}
   //
   const sub_params = {
-    op: 'authKeyExpires',
-    args: [ 'wallet' ]
+    op: 'subscribe',
+    // args: [ 'funding:XBTUSD' ]
+    args: [ 'trade:XBTUSD' ]
+    // args: [ 'instrument:XBTUSD' ]
+    // args: [ 'wallet', 'instrument:XBTUSD' ]
   }
   ws.send(JSON.stringify(sub_params));
+  // log.log('subscribe request!');
 }
 
 function dispatch (data) {
   const json = JSON.parse(data);
-  log.log('msg received', data);
+  // log.log('msg received', data);
 
   if ('error' in json) {
     log.error(json.error);
@@ -62,10 +76,14 @@ function dispatch (data) {
     switch(json.request.op) {
       case 'authKeyExpires': {
         subscribe();
+        dms();
       } break;
 
       // case ...
     }
+  } else if ('table' in json) {
+    log.log(json);
+    // log.log(json.table, json.action, Object.keys(json.data[0]).length, Date.now());
   }
 }
 
