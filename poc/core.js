@@ -48,16 +48,20 @@ function subscribe () {
   //
   const sub_params = {
     op: 'subscribe',
+    args: [ 'quoteBin1m:XBTUSD' ]
+    // args: [ 'quote:XBTUSD' ]
+    // args: [ 'orderBookL2_25:XBTUSD' ]
     // args: [ 'liquidation' ]
     // args: [ 'funding:XBTUSD' ]
     // args: [ 'trade:XBTUSD' ]
     // args: [ 'instrument:XBTUSD' ]
-    args: [ 'wallet' ]
+    // args: [ 'wallet' ]
   }
   ws.send(JSON.stringify(sub_params));
   // log.log('subscribe request!');
 }
 
+let i = 0;
 function dispatch (data) {
   const json = JSON.parse(data);
   // log.log('msg received', data);
@@ -83,7 +87,7 @@ function dispatch (data) {
       // case ...
     }
   } else if ('table' in json) {
-    log.log(json);
+    log.log(i++, Date.now(), json.data.length, '\n', json);
     // log.log(json.table, json.action, Object.keys(json.data[0]).length, Date.now());
   }
 }
