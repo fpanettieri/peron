@@ -1,3 +1,5 @@
+// Instrument overview
+
 { table: 'instrument',
   action: 'partial',
   keys: [ 'symbol' ],

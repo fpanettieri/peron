@@ -48,10 +48,11 @@ function subscribe () {
   //
   const sub_params = {
     op: 'subscribe',
+    // args: [ 'liquidation' ]
     // args: [ 'funding:XBTUSD' ]
-    args: [ 'trade:XBTUSD' ]
+    // args: [ 'trade:XBTUSD' ]
     // args: [ 'instrument:XBTUSD' ]
-    // args: [ 'wallet', 'instrument:XBTUSD' ]
+    args: [ 'wallet' ]
   }
   ws.send(JSON.stringify(sub_params));
   // log.log('subscribe request!');
