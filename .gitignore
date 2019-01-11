@@ -5,3 +5,4 @@ peron.pk
 
 # dotenv environment variables file
 .envrc
+node_modules
