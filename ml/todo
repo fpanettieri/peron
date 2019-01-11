@@ -3,7 +3,11 @@
 ------------
 . download historical dataset
 . persist historical dataset
-
+. read 'on machine based trading'
+. hello tensorflow 2
+. train
+. listen to updates in realtime
+. use trained core to detect good oportunities
 
 ------------
   DONE
