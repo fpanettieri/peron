@@ -1,0 +1,14 @@
+{
+  "name": "peron-ml",
+  "version": "0.1.0",
+  "description": "Machine Learning prototype",
+  "author": "Fabio Panettieri",
+  "private": true,
+  "dependencies": {
+    "ws": "6.1.2"
+  },
+  "scripts": {
+    "start": "node peron.js",
+    "debug": "node inspect peron.js"
+  }
+}

@@ -5,10 +5,10 @@ const crypto = require('crypto');
 const DMS_INTERVAL = 15 * 1000;
 const DMS_TIMEOUT = 60 * 1000;
 
+const db = {};
+
 let ws = null;
 let log = null;
-
-let limit = 1;
 
 function noop () {}
 
@@ -48,14 +48,13 @@ function subscribe () {
   //
   const sub_params = {
     op: 'subscribe',
-    args: [ 'quoteBin1m:XBTUSD' ]
     // args: [ 'quote:XBTUSD' ]
-    // args: [ 'orderBookL2_25:XBTUSD' ]
+    args: [ 'orderBookL2_25:XBTUSD' ]
     // args: [ 'liquidation' ]
     // args: [ 'funding:XBTUSD' ]
     // args: [ 'trade:XBTUSD' ]
     // args: [ 'instrument:XBTUSD' ]
-    // args: [ 'wallet' ]
+    // args: [ 'wallet', 'position', 'instrument:XBTUSD', 'orderBookL2_25:XBTUSD' ]
   }
   ws.send(JSON.stringify(sub_params));
   // log.log('subscribe request!');
@@ -64,27 +63,26 @@ function subscribe () {
 let i = 0;
 function dispatch (data) {
   const json = JSON.parse(data);
-  // log.log('msg received', data);
 
   if ('error' in json) {
     log.error(json.error);
 
   } else if ('info' in json) {
     if ('limit' in json) {
-      limit = json.limit.remaining;
-      log.info('limit updated', limit);
+      db.limit = json.limit.remaining;
+      log.info('limit updated', db.limit);
     }
 
   } else if ('success' in json) {
-    log.log(json);
-
     switch(json.request.op) {
       case 'authKeyExpires': {
         subscribe();
         dms();
       } break;
 
-      // case ...
+      default: {
+        log.warn('Unexpected success msg:', json);
+      }
     }
   } else if ('table' in json) {
     log.log(i++, Date.now(), json.data.length, '\n', json);
@@ -102,8 +100,8 @@ function error (err) {
 
 // TODO: algo
 // - auth
-// . fetch open positions
-// . start keepalive
+// - fetch open positions
+// - start keepalive
 // . fetch orderbook & price
 // . $$$
 
