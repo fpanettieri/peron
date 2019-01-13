@@ -4,11 +4,11 @@
   "description": "Machine Learning prototype",
   "author": "Fabio Panettieri",
   "private": true,
-  "dependencies": {
-    "ws": "6.1.2"
-  },
   "scripts": {
     "start": "node main.js",
     "debug": "node inspect main.js"
+  },
+  "dependencies": {
+    "deribit-api": "1.0.2"
   }
 }
