@@ -4,6 +4,10 @@ const https = require('https');
 
 async function send (url, data, opts)
 {
+  log.log('url', url);
+  log.log('data', data);
+  log.log('opts', opts);
+
   return new Promise(function(resolve, reject) {
     const req = https.request(url, opts);
     req.on('error', reject);
@@ -40,6 +44,7 @@ async function post (url, data, opts)
 }
 
 module.exports = {
+  send: send,
   get: get,
   post: post
 }
