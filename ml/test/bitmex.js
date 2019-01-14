@@ -7,14 +7,15 @@ const log = new logger(`[test/https]`);
 
 (async () => {
   try {
-    const rsp = await bitmex.req({
+    const rsp = await bitmex.api({
       api: 'trade/bucketed',
+      testnet: true,
+    }, {
       symbol: 'XBTUSD',
       binSize: '1m',
       count: 3,
       startTime: 0,
       partial: false,
-      testnet: true
     });
 
     log.log(rsp);
