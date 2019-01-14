@@ -6,14 +6,16 @@ const logger = require('./logger');
 
 const log = new logger(`[lib/https]`);
 
-async function get (url, opts)
+async function get (_url, opts)
 {
+  const u = url.parse(_url);
+  log.log('parsed url', u);
   const req = https.request(options);
   return {a: 'a'};
 }
 
 
-async function post (url,)
+async function post (url, data, opts)
 {
 
 }
