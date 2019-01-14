@@ -14,7 +14,7 @@ const log = new logger(`[test/https]`);
     }, {
       symbol: 'XBTUSD',
       binSize: '1m',
-      count: 3,
+      count: 10,
       startTime: 0,
       partial: false,
     });
