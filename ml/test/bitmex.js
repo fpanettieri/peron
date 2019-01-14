@@ -10,7 +10,7 @@ const log = new logger(`[test/https]`);
     const rsp = await bitmex.api({
       method: 'GET',
       api: 'trade/bucketed',
-      testnet: true
+      testnet: false
     }, {
       symbol: 'XBTUSD',
       binSize: '1m',
