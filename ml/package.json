@@ -7,8 +7,5 @@
   "scripts": {
     "start": "node main.js",
     "debug": "node inspect main.js"
-  },
-  "dependencies": {
-    "deribit-api": "1.0.2"
   }
 }
