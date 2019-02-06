@@ -88,6 +88,7 @@ function onMessage (data)
   } else if ('success' in json) {
     switch(json.request.op) {
       case 'authKeyExpires': {
+        bb.emit('SocketConnected');
         dms();
       } break;
 
@@ -119,7 +120,8 @@ function onSyncAccount ()
   log.log('syncing account');
   const sub_params = {
     op: 'subscribe',
-    args: [ 'position' ]
+    // args: [ 'position' ]
+    args: [ 'wallet' ]
     // args: [ 'wallet', 'position', 'margin', 'order' ]
   }
   send(sub_params);
