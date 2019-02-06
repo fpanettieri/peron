@@ -11,6 +11,10 @@ log.info('peronizando');
 const ev = new events();
 ws.init('wss://testnet.bitmex.com/realtime', ev);
 
+
+ev.on('BalanceUpdated', (d) => {
+  console.log(d);
+})
 // TODO: Sync modules through the event emitter
 
 // todo: listen to core events
