@@ -26,9 +26,6 @@ async function api (opts, params)
   const host = `https://${opts.testnet ? 'testnet' : 'www'}.bitmex.com`;
   const rsp = await https.send(`${host}${path}`, null, {method: opts.method});
 
-  // TODO: Handle overload events x-ratelimit-remaining)
-  // log.warn('x-ratelimit-remaining', rsp.headers['x-ratelimit-remaining']);
-
   return JSON.parse(rsp.body);
 }
 
@@ -46,7 +43,7 @@ function toOhlc (o)
     l: o.low,
     c: o.close,
     v: o.volume,
-    t: ~~((new Date(o.timestamp)).getTime() / 1000)
+    t: (new Date(o.timestamp)).getTime()
   };
 }
 

@@ -9,6 +9,7 @@ const mongo = require('./lib/mongo');
 const adapter = require('./core/adapter');
 const accountant = require('./core/accountant');
 const archivist = require('./core/archivist');
+const analyst = require('./core/analyst');
 
 (async () => {
   const log = new logger(`[Peron/main]`);
@@ -20,6 +21,7 @@ const archivist = require('./core/archivist');
   adapter.plug(bb, db);
   accountant.plug(bb, db);
   archivist.plug(bb, db);
+  analyst.plug(bb, db);
 
   bb.chain('SocketConnected', 'DownloadHistory');
   bb.chain('SocketConnected', 'SyncAccount');

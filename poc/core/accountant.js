@@ -15,7 +15,6 @@ function plug (_bb, _db)
   log.log('plugging');
   bb = _bb;
   db = _db;
-
   bb.on('BalanceUpdated', onBalanceUpdate);
   // TODO: listen for OpenPosition / ClosePosition
 }
