@@ -46,7 +46,7 @@ function toOhlc (o)
     l: o.low,
     c: o.close,
     v: o.volume,
-    t: o.timestamp
+    t: ~~((new Date(o.timestamp)).getTime() / 1000)
   };
 }
 
