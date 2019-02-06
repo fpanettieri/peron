@@ -6,7 +6,7 @@ const ws = require('./ws');
 const logger = require('./logger');
 
 const log = new logger(`[Peron/main]`);
-log.info('initializing peron');
+log.info('peronizando');
 
 const ev = new events();
 ws.init('wss://testnet.bitmex.com/realtime', ev);

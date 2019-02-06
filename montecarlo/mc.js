@@ -6,8 +6,8 @@ const MPY = 60 * 24 * 365;
 const funds = 1000000;
 
 const position_size = 0.001;
-const stop_loss = -0.01;
-const target = 0.02;
+const stop_loss = -0.02;
+const target = 0.01;
 const maker_fee = -0.025;
 const taker_fee = 0.0750;
 const leverage = 10;
@@ -16,14 +16,12 @@ const min_hold_time = 5;
 const max_hold_time = 60;
 const min_interval = 5;
 const max_interval = 60;
-const success_ratio = 0.51;
+const success_ratio = 0.1;
 
-const iterations = 1;
-
-let balance = funds;
+const iterations = 3;
 
 for (let iteration = 0; iteration < iterations; iteration++) {
-  // console.log(`iteration ${iteration}`);
+  let balance = funds;
 
   let time = 0;
   do {
