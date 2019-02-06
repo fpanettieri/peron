@@ -41,7 +41,7 @@ function onError (err)
 function onOpen ()
 {
   log.info('connection established');
-  log.log(process.env.BITMEX_SECRET, process.env.BITMEX_KEY);
+  // log.log(process.env.BITMEX_SECRET, process.env.BITMEX_KEY);
   auth();
 }
 
@@ -55,17 +55,17 @@ function auth ()
     op: 'authKeyExpires',
     args: [ process.env.BITMEX_KEY, expires, signature ]
   }
-  ws.send(JSON.stringify(auth_params));
+  socket.send(JSON.stringify(auth_params));
 }
 
 function dms ()
 {
-  ws.send(JSON.stringify({op: 'cancelAllAfter', args: DMS_TIMEOUT}));
+  socket.send(JSON.stringify({op: 'cancelAllAfter', args: DMS_TIMEOUT}));
   setTimeout(dms, DMS_INTERVAL);
 }
 
-
-function onMessage (data) {
+function onMessage (data)
+{
   const json = JSON.parse(data);
 
   if ('error' in json) {
@@ -111,7 +111,7 @@ function subscribe ()
     args: [ 'wallet' ]
     // args: [ 'wallet', 'position', 'instrument:XBTUSD', 'orderBookL2_25:XBTUSD' ]
   }
-  ws.send(JSON.stringify(sub_params));
+  socket.send(JSON.stringify(sub_params));
   // log.log('subscribe request!');
 }
 module.exports = {

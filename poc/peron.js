@@ -10,7 +10,6 @@ log.info('initializing peron');
 
 const ev = new events();
 ws.init('wss://testnet.bitmex.com/realtime', ev);
-ws.subscribe();
 
 // TODO: Sync modules through the event emitter
 
