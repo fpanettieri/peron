@@ -12,7 +12,7 @@ let balance = 0;
 
 function plug (_bb, _db)
 {
-  log.info('plugging');
+  log.log('plugging');
   bb = _bb;
   db = _db;
 

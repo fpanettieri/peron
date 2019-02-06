@@ -19,7 +19,7 @@ function noop () {}
 
 function plug (_bb, _db)
 {
-  log.info('plugging');
+  log.log('plugging');
   bb = _bb;
   db = _db;
 
@@ -49,7 +49,7 @@ function onError (err)
 
 function onOpen ()
 {
-  log.info('connection established');
+  log.log('connection established');
   auth();
 }
 
@@ -88,7 +88,6 @@ function onMessage (data)
   } else if ('success' in json) {
     switch(json.request.op) {
       case 'authKeyExpires': {
-        subscribe();
         dms();
       } break;
 

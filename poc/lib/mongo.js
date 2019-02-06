@@ -9,14 +9,14 @@ const cfg = require('../cfg/mongo.json');
 
 async function connect (cb)
 {
-  log.info('initializing');
+  log.log('initializing');
 
   let url = `${cfg.prefix}${cfg.credentials}${cfg.host}:${cfg.port}/${cfg.database}${cfg.options}`;
-  log.info('connecting to', url);
+  log.log('connecting to', url);
 
   try {
     let client = await mongodb.MongoClient.connect(url, { useNewUrlParser: true });
-    log.info('connected successfully');
+    log.log('connected successfully');
     return client.db(cfg.database);
   } catch (err) {
     log.log(err);

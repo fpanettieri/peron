@@ -9,13 +9,13 @@ class Backbone extends EventEmitter
 {
   constructor ()
   {
-    log.info('initializing');
+    log.log('initializing');
     super();
   }
 
   chain (a, b)
   {
-    log.info(`chaining ${a} => ${b}`);
+    log.log(`chaining ${a} => ${b}`);
     this.on(a, () => this.emit(b));
   }
 }
