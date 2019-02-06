@@ -3,24 +3,24 @@
 const events = require('events');
 
 const logger = require('./lib/logger');
+const backbone = require('./lib/backbone');
 const mongo = require('./lib/mongo');
-const adapter = require('./lib/adapter');
-const accountant = require('./lib/accountant');
 
-const log = new logger(`[Peron/main]`);
-const em = new Emitter();
+const adapter = require('./core/adapter');
+const accountant = require('./core/accountant');
 
 (async () => {
+  const log = new logger(`[Peron/main]`);
   log.info('peronizando');
 
-  const em = new events();
-  database.plug(em);
-  adapter.plug(em);
-  accountant.plug(em);
+  const db = await mongo.connect();
+  const bb = new backbone();
 
-  em.chain('DatabaseConnected', 'ConnectSocket');
-  em.chain('SocketConnected', 'DownloadHistory');
-  em.chain('SocketConnected', 'DownloadHistory');
+  adapter.plug(bb, db);
+  accountant.plug(bb, db);
 
-  em.emit('ConnectDatabase');
+  bb.chain('SocketConnected', 'DownloadHistory');
+  bb.chain('SocketConnected', '');
+
+  bb.emit('ConnectSocket', 'wss://testnet.bitmex.com/realtime');
 })();

@@ -3,23 +3,32 @@
 const ws = require('ws');
 const crypto = require('crypto');
 
-const logger = require('./logger');
+const logger = require('../lib/logger');
+const log = new logger('[core/adapter]');
 
 const DMS_INTERVAL = 15 * 1000;
 const DMS_TIMEOUT = 60 * 1000;
 
+let bb = null;
+let db = null;
+
 let socket = null;
-let log = new logger('[Peron/ws  ]');
-let ev = null;
 let limit = 0;
 
 function noop () {}
 
-function plug (emitter, db)
+function plug (_bb, _db)
 {
-  log.info('plugging adapter');
-  ev = emitter;
-  ev.on('')
+  log.info('plugging');
+  bb = _bb;
+  db = _db;
+
+  bb.on('ConnectSocket', onConnect);
+  bb.on('UpdateBalance', onSubscribe);
+}
+
+function onConnect(url)
+{
   socket = new ws(url);
   socket.on('open', onOpen);
   socket.on('message', onMessage);
@@ -29,7 +38,7 @@ function plug (emitter, db)
 
 function onClose (code, reason)
 {
-  log.info('connection closed:', code, reason);
+  log.warn('connection closed:', code, reason);
 }
 
 function onError (err)
@@ -96,7 +105,7 @@ function broadcast (json)
   switch (json.table) {
     case 'wallet': {
       const xbt = json.data.find((d) => d.currency === 'XBt');
-      ev.emit('BalanceUpdated', xbt.amount);
+      bb.emit('BalanceUpdated', xbt.amount);
     } break;
 
     default: {
@@ -105,7 +114,7 @@ function broadcast (json)
   }
 }
 
-function subscribe ()
+function onSubscribe ()
 {
   const sub_params = {
     op: 'subscribe',
