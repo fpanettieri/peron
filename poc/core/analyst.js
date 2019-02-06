@@ -22,7 +22,6 @@ function plug (_bb, _db)
   db = _db;
   bb.on('HistoryDownloaded', onHistoryDownloaded);
   bb.on('CandleClosed', onCandleClosed);
-  bb.on('CandleUpdated', onCandleUpdated);
 }
 
 async function onHistoryDownloaded (ohlcs)

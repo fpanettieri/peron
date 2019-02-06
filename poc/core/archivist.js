@@ -24,6 +24,7 @@ async function onDownloadHistory ()
   const ticks = await bitmex.api(options, params);
   const ohlcs = ticks.map((k) => bitmex.toOhlc(k)).reverse();
 
+  log.info(`history downloaded`);
   bb.emit('HistoryDownloaded', ohlcs);
 }
 
