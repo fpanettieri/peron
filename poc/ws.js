@@ -94,8 +94,8 @@ function onMessage (data)
 
 function broadcast (json)
 {
-  // log.log(i++, Date.now(), json.data.length, '\n', json);
-  log.log(json.table, json.action, Object.keys(json.data[0]).length, Date.now());
+  log.log(Date.now(), json.data.length, '\n', json);
+  // log.log(json.table, json.action, Object.keys(json.data[0]).length, Date.now());
 }
 
 function subscribe ()
