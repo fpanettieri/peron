@@ -1,54 +1,30 @@
 'use strict';
 
-const crypto = require('crypto');
-const https = require('https');
-const logger = require('./logger');
+const bitmex = require('./lib/bitmex');
+const logger = require('./lib/logger');
 
-const log = new logger(`[BitMEX/Peron-ml]`);
+const log = new logger(`[Peron/ml]`);
 
-const method = 'GET'
-log.log('method', method);
-
-const expires = ~~(Date.now() / 1000 + 24 * 60 * 60);
-log.log('expires', expires);
-
-const path = '/api/v1/trade/bucketed?binSize=1m&symbol=XBTUSD&count=3&startTime=0&partial=false';
-log.log('path', path);
-
-const signature = crypto.createHmac('sha256', process.env.BITMEX_SECRET).update(`${method}${path}${expires}`).digest('hex');
-log.log('signature', signature);
-
-const headers = {
-  'content-type' : 'application/json',
-  'Accept': 'application/json',
-  'X-Requested-With': 'XMLHttpRequest',
-  'api-expires': expires,
-  'api-key': process.env.BITMEX_KEY,
-  'api-signature': signature
-};
-log.log(headers);
-
-const options = {
-  host: 'testnet.bitmex.com',
-  path: path,
-  method: method,
-  headers: headers
+const bitmex_opts = {
+  method: 'GET',
+  api: 'trade/bucketed',
+  testnet: false
 };
 
-const req = https.request(options);
-req.on('error', (err) => { log.error(`problem with request: ${e.message}`); });
+const bitmex_params = {
+  symbol: 'XBTUSD',
+  binSize: '1m',
+  count: 10,
+  startTime: 0,
+  partial: false,
+};
 
-req.once('response', (res) => {
-  log.log(res.statusCode, res.statusMessage, res.headers);
+async function go (){
+  try {
+    const rsp = await bitmex.api(bitmex_opts, bitmex_params);
+    log.log(rsp);
 
-  let data = '';
-  res.setEncoding('utf8');
-  res.on('data', (chunk) => { data += chunk; });
-  res.on('end', () => { log.log('end', data); });
-});
-
-// req.write(postData);
-req.end();
-
-//
-// const data = https.get('https://testnet.bitmex.com/api/v1/trade/bucketed?binSize=1m&symbol=XBTUSD&count=3&startTime=0&partial=false')
+  } catch(err) {
+    log.error(err);
+  }
+}

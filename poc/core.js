@@ -48,7 +48,7 @@ function subscribe () {
   //
   const sub_params = {
     op: 'subscribe',
-    args: [ 'quote:XBTUSD' ]
+    args: [ 'quoteBin1m:XBTUSD' ]
     // args: [ 'orderBookL2_25:XBTUSD' ]
     // args: [ 'liquidation' ]
     // args: [ 'funding:XBTUSD' ]

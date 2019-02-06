@@ -12,3 +12,6 @@ client.on('open', core.open);
 client.on('message', core.dispatch);
 client.on('close', core.close);
 client.on('error', core.error);
+
+// todo: listen to core events
+// plug the brain here
