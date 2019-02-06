@@ -24,7 +24,8 @@ function plug (_bb, _db)
   db = _db;
 
   bb.on('ConnectSocket', onConnect);
-  bb.on('UpdateBalance', onSubscribe);
+  bb.on('SyncAccount', onSyncAccount);
+  bb.on('WatchMarket', onWatchMarket);
 }
 
 function onConnect(url)
@@ -114,21 +115,25 @@ function broadcast (json)
   }
 }
 
-function onSubscribe ()
+function onSyncAccount ()
 {
+  log.log('syncing account');
   const sub_params = {
     op: 'subscribe',
-    // args: [ 'quoteBin1m:XBTUSD' ]
-    // args: [ 'orderBookL2_25:XBTUSD' ]
-    // args: [ 'liquidation' ]
-    // args: [ 'funding:XBTUSD' ]
-    // args: [ 'trade:XBTUSD' ]
-    // args: [ 'instrument:XBTUSD' ]
-    args: [ 'wallet' ]
-    // args: [ 'wallet', 'position', 'instrument:XBTUSD', 'orderBookL2_25:XBTUSD' ]
+    args: [ 'position' ]
+    // args: [ 'wallet', 'position', 'margin', 'order' ]
   }
   send(sub_params);
-  // log.log('subscribe request!');
+}
+
+function onWatchMarket ()
+{
+  log.log('watching market');
+  const sub_params = {
+    op: 'subscribe',
+    args: [ 'quote', 'quoteBin1m', 'funding' ]
+  }
+  send(sub_params);
 }
 
 function send (msg)

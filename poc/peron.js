@@ -20,7 +20,8 @@ const accountant = require('./core/accountant');
   accountant.plug(bb, db);
 
   bb.chain('SocketConnected', 'DownloadHistory');
-  bb.chain('SocketConnected', '');
+  bb.chain('SocketConnected', 'SyncAccount');
+  // bb.chain('SocketConnected', 'WatchMarket');
 
   bb.emit('ConnectSocket', 'wss://testnet.bitmex.com/realtime');
 })();

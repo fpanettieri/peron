@@ -1,0 +1,10 @@
+op: 'subscribe',
+// args: [ 'quoteBin1m:XBTUSD' ]
+// args: [ 'orderBookL2_25:XBTUSD' ]
+// args: [ 'liquidation' ]
+// args: [ 'funding:XBTUSD' ]
+// args: [ 'trade:XBTUSD' ]
+// args: [ 'instrument:XBTUSD' ]
+args: [ 'position' ]
+// args: [ 'wallet', 'position', 'margin', 'order' ]
+// args: [ 'wallet', 'position', 'instrument:XBTUSD', 'orderBookL2_25:XBTUSD' ]
