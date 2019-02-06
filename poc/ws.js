@@ -95,8 +95,8 @@ function broadcast (json)
 {
   switch (json.table) {
     case 'wallet': {
-      const balance = json.data.map((d) => { currency: d.currency, amount: d.amount });
-      ev.emit('BalanceUpdated', balance);
+      const xbt = json.data.find((d) => d.currency === 'XBt');
+      ev.emit('BalanceUpdated', xbt.amount);
     } break;
 
     default: {
