@@ -2,20 +2,25 @@
 
 const events = require('events');
 
-const ws = require('./ws');
-const logger = require('./logger');
+const logger = require('./lib/logger');
+const mongo = require('./lib/mongo');
+const adapter = require('./lib/adapter');
+const accountant = require('./lib/accountant');
 
 const log = new logger(`[Peron/main]`);
-log.info('peronizando');
+const em = new Emitter();
 
-const ev = new events();
-ws.init('wss://testnet.bitmex.com/realtime', ev);
+(async () => {
+  log.info('peronizando');
 
+  const em = new events();
+  database.plug(em);
+  adapter.plug(em);
+  accountant.plug(em);
 
-ev.on('BalanceUpdated', (d) => {
-  console.log(d);
-})
-// TODO: Sync modules through the event emitter
+  em.chain('DatabaseConnected', 'ConnectSocket');
+  em.chain('SocketConnected', 'DownloadHistory');
+  em.chain('SocketConnected', 'DownloadHistory');
 
-// todo: listen to core events
-// plug the brain here
+  em.emit('ConnectDatabase');
+})();

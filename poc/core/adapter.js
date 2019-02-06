@@ -1,7 +1,6 @@
 'use strict';
 
 const ws = require('ws');
-
 const crypto = require('crypto');
 
 const logger = require('./logger');
@@ -16,10 +15,11 @@ let limit = 0;
 
 function noop () {}
 
-function init (url, emitter)
+function plug (emitter, db)
 {
-  log.info('initializing ws');
+  log.info('plugging adapter');
   ev = emitter;
+  ev.on('')
   socket = new ws(url);
   socket.on('open', onOpen);
   socket.on('message', onMessage);
@@ -103,8 +103,6 @@ function broadcast (json)
       log.warn('Unexpected msg:', json);
     }
   }
-  // log.log(Date.now(), json.data.length, '\n', json);
-  // log.log(json.table, json.action, Object.keys(json.data[0]).length, Date.now());
 }
 
 function subscribe ()
@@ -134,6 +132,6 @@ function send (msg)
 }
 
 module.exports = {
-  init: init,
+  plug: plug,
   send: send
 }
