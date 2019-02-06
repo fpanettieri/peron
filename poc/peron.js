@@ -1,17 +1,18 @@
 'use strict';
 
-const ws = require('ws');
-const core = require('./core');
+const events = require('events');
+
+const ws = require('./ws');
 const logger = require('./logger');
 
-const log = new logger(`[BitMEX/Peron]`);
-const client = new ws('wss://testnet.bitmex.com/realtime');
-core.init(client, log);
+const log = new logger(`[Peron/main]`);
+log.info('initializing peron');
 
-client.on('open', core.open);
-client.on('message', core.dispatch);
-client.on('close', core.close);
-client.on('error', core.error);
+const ev = new events();
+ws.init('wss://testnet.bitmex.com/realtime', ev);
+ws.subscribe();
+
+// TODO: Sync modules through the event emitter
 
 // todo: listen to core events
 // plug the brain here
