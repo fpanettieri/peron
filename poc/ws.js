@@ -12,15 +12,14 @@ const DMS_TIMEOUT = 60 * 1000;
 let socket = null;
 let log = new logger('[Peron/ws  ]');
 let ev = null;
+let limit = 0;
 
 function noop () {}
 
 function init (url, emitter)
 {
-  log.log('initializing ws');
-
+  log.info('initializing ws');
   ev = emitter;
-
   socket = new ws(url);
   socket.on('open', onOpen);
   socket.on('message', onMessage);
@@ -41,7 +40,6 @@ function onError (err)
 function onOpen ()
 {
   log.info('connection established');
-  // log.log(process.env.BITMEX_SECRET, process.env.BITMEX_KEY);
   auth();
 }
 
@@ -73,7 +71,8 @@ function onMessage (data)
 
   } else if ('info' in json) {
     if ('limit' in json) {
-      ev.emit('LimitUpdated', json.limit.remaining);
+      limit = json.limit.remaining;
+      log.log(`limit updated: ${limit}`);
     }
 
   } else if ('success' in json) {
@@ -94,7 +93,16 @@ function onMessage (data)
 
 function broadcast (json)
 {
-  log.log(Date.now(), json.data.length, '\n', json);
+  switch (json.table) {
+    case 'wallet': {
+      ev.emit('BalanceUpdated', json.data[0].)
+    } break;
+
+    default: {
+      log.warn('Unexpected msg:', json);
+    }
+  }
+  // log.log(Date.now(), json.data.length, '\n', json);
   // log.log(json.table, json.action, Object.keys(json.data[0]).length, Date.now());
 }
 
@@ -111,10 +119,20 @@ function subscribe ()
     args: [ 'wallet' ]
     // args: [ 'wallet', 'position', 'instrument:XBTUSD', 'orderBookL2_25:XBTUSD' ]
   }
-  socket.send(JSON.stringify(sub_params));
+  send(sub_params);
   // log.log('subscribe request!');
 }
+
+function send (msg)
+{
+  if (limit < 1) {
+    log.error('limit reached, try again in a few seconds');
+    return;
+  }
+  socket.send(JSON.stringify(msg));
+}
+
 module.exports = {
   init: init,
-  subscribe: subscribe
+  send: send
 }
