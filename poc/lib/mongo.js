@@ -19,7 +19,8 @@ async function connect (cb)
     log.log('connected successfully');
     return client.db(cfg.database);
   } catch (err) {
-    log.log(err);
+    log.error(err);
+    process.exit(-1);
   }
 }
 
