@@ -1,9 +1,9 @@
 ============
   TODO
 ============
-. receive available balance
-. read currently open positions
-. 
+. fetch available balance
+. fetch positions
+. fetch orders
 
 ============
   DONE
