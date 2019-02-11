@@ -31,37 +31,13 @@ https://github.com/bcongdon/awesome-lightning-network
 8. check the installation
   make test
 
-9. Install bitcoin core full node, with a pruned chain
-https://medium.com/coinmonks/bitcoin-lightning-network-run-your-node-at-home-for-fun-and-no-profit-da5b61be2ba9
+9. Install btcd
+  make btcd
 
-9a. Add 2Gb of swap
+10. Add 2Gb of swap
   sudo dd if=/dev/zero of=/opt/swap bs=1M count=2048
   sudo mkswap /opt/swap
   sudo swapon /opt/swap
 
-9b. Add swap to /etc/fstab
+  Add swap to /etc/fstab
   /opt/swap swap swap defaults 0 0
-
-9c. Download Bitcoin Core
-  # Variables setup
-  BITCOIND_VERSION=0.17.1
-  ARCH=x86_64-linux-gnu
-  BITCOIND_ARCHIVE=bitcoin-${BITCOIND_VERSION}-${ARCH}.tar.gz
-
-  # Download bitcoin core
-  cd /tmp
-  wget https://bitcoincore.org/bin/bitcoin-core-${BITCOIND_VERSION}/${BITCOIND_ARCHIVE}
-  wget https://bitcoincore.org/bin/bitcoin-core-${BITCOIND_VERSION}/SHA256SUMS.asc
-  wget https://bitcoin.org/laanwj-releases.asc
-
-  # Validate download
-  SHA256=`grep "${BITCOIND_ARCHIVE}" SHA256SUMS.asc | awk '{print $1}'`
-  echo $SHA256
-  echo "$SHA256 ${BITCOIND_ARCHIVE}" | sha256sum -c -
-  gpg --import ./laanwj-releases.asc
-  gpg --verify SHA256SUMS.asc
-
-  tar -xzf ${BITCOIND_ARCHIVE}
-  sudo install -m 0755 -o root -g root -t /usr/local/bin bitcoin-${BITCOIND_VERSION}/bin/*
-  rm -rf /tmp/*
-  bitcoind --version
