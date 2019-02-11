@@ -105,10 +105,14 @@ function broadcast (json)
 {
   switch (json.table) {
     case 'wallet': {
-      log.log(json);
       const xbt = json.data.find((d) => d.currency === 'XBt');
       bb.emit('BalanceUpdated', xbt.amount);
     } break;
+
+    // case 'position': {
+    //   const xbt = json.data.map();
+    //   bb.emit('BalanceUpdated', xbt.amount);
+    // } break;
 
     default: {
       log.warn('Unexpected msg:', json);

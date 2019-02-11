@@ -387,4 +387,73 @@
        timestamp: '2019-02-11T09:52:32.503Z',
        lastValue: 46339838,
        markPrice: 3552,
+       liquidationPrice: 100000000 } ] }
+
+// Updating leverage
+{ table: 'position',
+  action: 'update',
+  data:
+   [ { account: 153475,
+       symbol: 'XBTUSD',
+       currency: 'XBt',
+       initMarginReq: 0.5,
+       leverage: 2,
+       currentTimestamp: '2019-02-11T10:05:01.531Z',
+       posInit: 23091073,
+       posComm: 52310,
+       posMargin: 23143383,
+       posMaint: 456404,
+       maintMargin: 23301075,
+       unrealisedRoePcnt: 0.0068,
+       marginCallPrice: 7005,
+       liquidationPrice: 7005,
+       bankruptPrice: 7128,
+       timestamp: '2019-02-11T10:05:01.531Z',
+       currentQty: -1646,
+       markPrice: 3552 } ] }
+
+// Cross leverage
+{ table: 'position',
+  action: 'update',
+  data:
+   [ { account: 153475,
+       symbol: 'XBTUSD',
+       currency: 'XBt',
+       initMarginReq: 0.01,
+       leverage: 100,
+       crossMargin: true,
+       currentTimestamp: '2019-02-11T10:05:29.608Z',
+       posInit: 461822,
+       posComm: 35338,
+       posMargin: 497160,
+       posMaint: 439432,
+       maintMargin: 654852,
+       unrealisedRoePcnt: 0.3415,
+       marginCallPrice: 100000000,
+       liquidationPrice: 100000000,
+       bankruptPrice: 100000000,
+       timestamp: '2019-02-11T10:05:29.608Z',
+       currentQty: -1646,
+       markPrice: 3552 } ] }
+
+// Back to 1x leverage
+{ table: 'position',
+  action: 'update',
+  data:
+   [ { account: 153475,
+       symbol: 'XBTUSD',
+       currency: 'XBt',
+       initMarginReq: 1,
+       leverage: 1,
+       crossMargin: false,
+       currentTimestamp: '2019-02-11T10:05:52.843Z',
+       posInit: 46182146,
+       posComm: 0,
+       posMargin: 46182146,
+       posMaint: 0,
+       maintMargin: 46339838,
+       unrealisedRoePcnt: 0.0034,
+       timestamp: '2019-02-11T10:05:52.843Z',
+       currentQty: -1646,
+       markPrice: 3552,
        liquidationPrice: 100000000 } ] } 
