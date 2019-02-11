@@ -3,7 +3,7 @@
 const logger = require('../lib/logger');
 const log = new logger('[core/accountant]');
 
-// const position_size = 0.001;
+const BTS = 0.00000001;
 
 let bb = null;
 let db = null;
