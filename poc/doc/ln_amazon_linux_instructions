@@ -1,0 +1,9 @@
+Installing LN node in Amazon linux
+1. Create basic instance with 32gb of disk
+2. sudo yum upgrade
+3. sudo amazon-linux-extras install golang1.11
+4. append to .bash_profile
+  # Golang
+  export GOPATH=~/go
+  export PATH=$PATH:$GOPATH/bin
+5. reload profile `source .bash_profile`
