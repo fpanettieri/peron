@@ -17,8 +17,9 @@ const max_hold_time = 60;
 const min_interval = 5;
 const max_interval = 60;
 const success_ratio = 0.1;
+const liquidation_ratio = 1 / 15;
 
-const iterations = 3;
+const iterations = 1;
 
 for (let iteration = 0; iteration < iterations; iteration++) {
   let balance = funds;
@@ -40,6 +41,9 @@ for (let iteration = 0; iteration < iterations; iteration++) {
       let fee = position * maker_fee * leverage;
       let gain = delta - fee;
       balance += gain;
+
+    } else if (Math.random() < liquidation_ratio) {
+      balance -= position;
 
     } else {
       let delta = position * stop_loss * leverage;
