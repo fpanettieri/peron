@@ -1,21 +1,14 @@
-============
+===============
   TODO
-============
+===============
 . fetch available balance
 . fetch positions
 . fetch orders
 
-============
+===============
   QUESTIONS
-============
-. can I have 2 positions open at the same time?
-  only one position per symbol is supported
-
-. can they point in different directions?
-  nope. this is easier to program.
-
-. what happens when I change the margin on an existing position
-  margin implies what you are 'betting'.
+===============
+. changing leverage affects the amount of
 
 . how do we calculate risk
 
@@ -25,6 +18,14 @@
 
 . might be calculated on the fee structure?
 
-============
-  DONE
-============
+===============
+  ANSWERS
+===============
+. can I have 2 positions open at the same time?
+  only one position per symbol is supported
+
+. can they point in different directions?
+  nope. this is easier to program.
+
+. what happens when I change the margin on an existing position
+  margin implies what you are 'betting'.

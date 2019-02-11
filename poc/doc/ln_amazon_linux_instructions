@@ -1,9 +1,67 @@
 Installing LN node in Amazon linux
-1. Create basic instance with 32gb of disk
-2. sudo yum upgrade
+
+# Source:
+https://dev.lightning.community/guides/installation/#installation
+
+# More info:
+https://github.com/bcongdon/awesome-lightning-network
+
+## Provisioning
+
+- Launch one T2 micro instance, using Ubuntu 14.04 LTS AMI.
+- Open SSH and Bitcoin Protocol TCP ports: 22, 8333.
+- Attach 40GB EBS (General-Purpose SSD) volume for blockchain storage to /dev/sdf.
+
+1. Create basic instance with 64gb of disk
+2. sudo yum update && sudo yum upgrade
 3. sudo amazon-linux-extras install golang1.11
 4. append to .bash_profile
   # Golang
   export GOPATH=~/go
   export PATH=$PATH:$GOPATH/bin
 5. reload profile `source .bash_profile`
+6. install lnd
+  go get -d github.com/lightningnetwork/lnd
+  cd $GOPATH/src/github.com/lightningnetwork/lnd
+  make && make install
+7. updating lnd
+  cd $GOPATH/src/github.com/lightningnetwork/lnd
+  git pull
+  make clean && make && make install
+8. check the installation
+  make test
+
+9. Install bitcoin core full node, with a pruned chain
+https://medium.com/coinmonks/bitcoin-lightning-network-run-your-node-at-home-for-fun-and-no-profit-da5b61be2ba9
+
+9a. Add 2Gb of swap
+  sudo dd if=/dev/zero of=/opt/swap bs=1M count=2048
+  sudo mkswap /opt/swap
+  sudo swapon /opt/swap
+
+9b. Add swap to /etc/fstab
+  /opt/swap swap swap defaults 0 0
+
+9c. Download Bitcoin Core
+  # Variables setup
+  BITCOIND_VERSION=0.17.1
+  ARCH=x86_64-linux-gnu
+  BITCOIND_ARCHIVE=bitcoin-${BITCOIND_VERSION}-${ARCH}.tar.gz
+
+  # Download bitcoin core
+  cd /tmp
+  wget https://bitcoincore.org/bin/bitcoin-core-${BITCOIND_VERSION}/${BITCOIND_ARCHIVE}
+  wget https://bitcoincore.org/bin/bitcoin-core-${BITCOIND_VERSION}/SHA256SUMS.asc
+  wget https://bitcoin.org/laanwj-releases.asc
+
+  # Validate download
+  SHA256=`grep "${BITCOIND_ARCHIVE}" SHA256SUMS.asc | awk '{print $1}'`
+  echo $SHA256
+  echo "$SHA256 ${BITCOIND_ARCHIVE}" | sha256sum -c -
+  gpg --import ./laanwj-releases.asc
+  gpg --verify SHA256SUMS.asc
+
+  tar -xzf ${BITCOIND_ARCHIVE}
+  sudo install -m 0755 -o root -g root -t /usr/local/bin bitcoin-${BITCOIND_VERSION}/bin/*
+  rm -rf /tmp/*
+  bitcoind --version
