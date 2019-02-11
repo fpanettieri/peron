@@ -309,8 +309,8 @@
 
 // Executed sell order
 { table: 'position',
- action: 'update',
- data:
+  action: 'update',
+  data:
   [ { account: 153475,
       symbol: 'XBTUSD',
       currency: 'XBt',
@@ -347,3 +347,44 @@
       lastValue: 46621368,
       markPrice: 3552,
       liquidationPrice: 100000000 } ] }
+
+  // Executed buy order
+{ table: 'position',
+  action: 'update',
+  data:
+   [ { account: 153475,
+       symbol: 'XBTUSD',
+       currency: 'XBt',
+       openOrderBuyQty: 0,
+       openOrderBuyCost: 0,
+       execBuyQty: 20,
+       execBuyCost: 558540,
+       execQty: 10,
+       execCost: -279290,
+       execComm: 71,
+       currentTimestamp: '2019-02-11T09:52:32.503Z',
+       currentQty: -1646,
+       currentCost: 46233262,
+       currentComm: 576095,
+       realisedCost: 51116,
+       unrealisedCost: 46182146,
+       markValue: 46339838,
+       riskValue: 46339838,
+       homeNotional: -0.46339838,
+       foreignNotional: 1646,
+       posCost: 46182146,
+       posCost2: 46655313,
+       posCross: 473167,
+       posInit: 46182146,
+       posLoss: 473167,
+       posMargin: 46182146,
+       maintMargin: 46339838,
+       realisedGrossPnl: -51116,
+       realisedPnl: -627211,
+       unrealisedGrossPnl: 157692,
+       unrealisedPnl: 157692,
+       breakEvenPrice: 3517,
+       timestamp: '2019-02-11T09:52:32.503Z',
+       lastValue: 46339838,
+       markPrice: 3552,
+       liquidationPrice: 100000000 } ] } 
