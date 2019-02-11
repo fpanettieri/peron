@@ -110,8 +110,13 @@ function broadcast (json)
     } break;
 
     // case 'position': {
-    //   const xbt = json.data.map();
-    //   bb.emit('BalanceUpdated', xbt.amount);
+    //   if (json.action == 'partial') {
+    //     bb.emit('PositionUpdated', xbt.amount);
+    //   } else if (json.action == 'update') {
+    //     bb.emit('PositionUpdated', json.data[0]);
+    //   } else {
+    //     log.warn('Unexpected Position msg', json);
+    //   }
     // } break;
 
     default: {

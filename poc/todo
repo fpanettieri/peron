@@ -1,6 +1,7 @@
 ===============
   TODO
 ===============
+. get realtime mark price
 . fetch available balance
 . fetch positions
 . fetch orders
@@ -26,8 +27,6 @@
 . margin is used to reduce the amount of collateral used
 . fees get multiplied by the leverage used
 . volatility also gets amplified by leverage
-.
-
 
 
 ===============
