@@ -1,10 +1,11 @@
 ===============
   TODO
 ===============
-. get realtime mark price
 . fetch available balance
 . fetch positions
+. test the 'partial' load with a fresh account
 . fetch orders
+. get realtime mark price
 
 ===============
   QUESTIONS

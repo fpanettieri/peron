@@ -86,6 +86,7 @@ function onMessage (data)
     }
 
   } else if ('success' in json) {
+    log.log(json);
     switch(json.request.op) {
       case 'authKeyExpires': {
         bb.emit('SocketConnected');
@@ -111,9 +112,11 @@ function broadcast (json)
 
     // case 'position': {
     //   if (json.action == 'partial') {
-    //     bb.emit('PositionUpdated', xbt.amount);
+    //     bb.emit('PositionLoaded', json.data);
+    //   } else if (json.action == 'insert') {
+    //     bb.emit('PositionCreated', json.data);
     //   } else if (json.action == 'update') {
-    //     bb.emit('PositionUpdated', json.data[0]);
+    //     bb.emit('PositionUpdated', json.data);
     //   } else {
     //     log.warn('Unexpected Position msg', json);
     //   }
