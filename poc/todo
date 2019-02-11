@@ -4,7 +4,6 @@
 . fetch available balance
 . fetch positions
 . fetch orders
-.
 
 ============
   QUESTIONS
@@ -12,6 +11,10 @@
 . can I have 2 positions open at the same time?
 . can they point in different directions?
 . what happens when I change the margin on an existing position
+. how do we calculate risk
+. how do we add time-to-funding to the risk calculation
+. how do we add liquidation chance to the risk calculation
+. might be calculated on the fee structure?
 
 ============
   DONE
