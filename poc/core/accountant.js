@@ -9,6 +9,7 @@ let bb = null;
 let db = null;
 
 let balance = 0;
+let positions = [];
 
 function plug (_bb, _db)
 {
@@ -24,25 +25,26 @@ function plug (_bb, _db)
 
 function onBalanceUpdate (b)
 {
-  balance = b;
   log.info(`balance updated: ${b}`);
+  balance = b;
 }
 
 function onPositionSynced (data)
 {
-  // TODO:
-  log.fatal('onPositionSynced not implemented', data);
+  log.info(`positions synced: ${data.length}`);
+  positions = data;
 }
 
 function onPositionOpened (data)
 {
-  // TODO:
-  log.fatal('onPositionOpened not implemented', data);
+  log.info(`position opened`);
+  positions = positions.concat(data);
 }
 
 function onPositionUpdate (data)
 {
   // TODO:
+  // for (let i = 0)
   log.fatal('onPositionUpdate not implemented', data);
 }
 
