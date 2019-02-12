@@ -106,7 +106,7 @@ function broadcast (json)
   switch (json.table) {
     case 'wallet': {
       const xbt = json.data.find((d) => d.currency === 'XBt');
-      bb.emit('BalanceUpdated', xbt.amount);
+      bb.emit('MarginUpdated', xbt.amount);
     } break;
 
     case 'position': {
