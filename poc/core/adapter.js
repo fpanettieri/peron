@@ -3,6 +3,7 @@
 const ws = require('ws');
 const crypto = require('crypto');
 
+const delta = require('../lib/delta');
 const logger = require('../lib/logger');
 const log = new logger('[core/adapter]');
 
@@ -11,6 +12,7 @@ const DMS_TIMEOUT = 60 * 1000;
 
 let bb = null;
 let db = null;
+let cache = {};
 
 let socket = null;
 let limit = 0;
@@ -86,7 +88,6 @@ function onMessage (data)
     }
 
   } else if ('success' in json) {
-    log.log(json);
     switch(json.request.op) {
       case 'authKeyExpires': {
         bb.emit('SocketConnected');
@@ -98,6 +99,7 @@ function onMessage (data)
       }
     }
   } else if ('table' in json) {
+    // delta.parse(json, cache);
     broadcast(json);
   }
 }
@@ -105,12 +107,17 @@ function onMessage (data)
 function broadcast (json)
 {
   switch (json.table) {
-    case 'wallet': {
-      const xbt = json.data.find((d) => d.currency === 'XBt');
-      bb.emit('BalanceUpdated', xbt.amount);
-    } break;
+    // case 'wallet': {
+    //   const xbt = json.data.find((d) => d.currency === 'XBt');
+    //   bb.emit('BalanceUpdated', xbt.amount);
+    // } break;
 
     // case 'position': {
+    // {
+    //    'partial': 'PositionLoaded',
+    //    'insert': 'PositionCreated',
+    //    'update': 'PositionUpdated'
+    //  }
     //   if (json.action == 'partial') {
     //     bb.emit('PositionLoaded', json.data);
     //   } else if (json.action == 'insert') {
@@ -133,7 +140,7 @@ function onSyncAccount ()
   log.log('syncing account');
   const sub_params = {
     op: 'subscribe',
-    args: [ 'position' ]
+    args: [ 'wallet' ]
     // args: [ 'wallet', 'position', 'margin', 'order' ]
   }
   send(sub_params);
