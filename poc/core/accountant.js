@@ -32,6 +32,7 @@ function onMarginUpdated (m)
 function onPositionSynced (data)
 {
   log.info(`positions synced: ${data.length}`);
+  log.log(data);
   positions = data;
 }
 
@@ -43,21 +44,12 @@ function onPositionOpened (data)
 
 function onPositionUpdated (data)
 {
-  console.log('=======================');
-
   log.info(`position updated`);
   for (let i = 0; i < data.length; i++) {
     let pos = data[i];
-    console.log('\n/// POS\n', pos, '\n');
-
     let idx = positions.findIndex(p => p.symbol == pos.symbol && p.account == pos.account && p.currency == pos.currency);
-    console.log('\n/// STORED\n', positions[idx], '\n');
-
     positions[idx] = {...positions[idx], ...pos};
-    console.log('\n/// MERGED\n', positions[idx], '\n');
   }
-
-  console.log('=======================');
 }
 
 function onPositionClosed (data)
