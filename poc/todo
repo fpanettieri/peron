@@ -1,9 +1,8 @@
 ===============
   TODO
 ===============
-. fetch available balance
-. fetch positions
 . calculate usable funds
+. request funds to lock
 
 . test the 'partial' load with a fresh account
 . fetch orders
@@ -14,3 +13,5 @@
 ===============
   DONE
 ===============
+. fetch available margin
+. fetch positions
