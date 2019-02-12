@@ -24,15 +24,32 @@ function plug (_bb, _db)
 
 function onBalanceUpdate (b)
 {
-  log.info(`balance updated: ${b}`);
   balance = b;
+  log.info(`balance updated: ${b}`);
 }
 
+function onPositionSynced (data)
+{
+  // TODO:
+  log.fatal('not implemented', data);
+}
 
+function onPositionOpened (data)
+{
+  // TODO:
+  log.fatal('not implemented', data);
+}
+
+function onPositionUpdate (data)
+{
+  // TODO:
+  log.fatal('not implemented', data);
+}
 
 function onPositionClosed (data)
 {
-  log.error()
+  // TODO:
+  log.error('not implemented', data);
 }
 module.exports = {
   plug: plug

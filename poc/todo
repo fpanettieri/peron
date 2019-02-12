@@ -3,6 +3,7 @@
 ===============
 . fetch available balance
 . fetch positions
+. calculate usable funds
 
 . test the 'partial' load with a fresh account
 . fetch orders

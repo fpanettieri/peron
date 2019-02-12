@@ -126,7 +126,7 @@ function onSyncAccount ()
   log.log('syncing account');
   const sub_params = {
     op: 'subscribe',
-    args: [ 'wallet' ]
+    args: [ 'wallet', 'position' ]
     // args: [ 'wallet', 'position', 'margin', 'order' ]
   }
   send(sub_params);
