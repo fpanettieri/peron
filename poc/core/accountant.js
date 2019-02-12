@@ -43,8 +43,17 @@ function onPositionOpened (data)
 
 function onPositionUpdate (data)
 {
-  // TODO:
-  // for (let i = 0)
+  for (let i = 0; i < data.length; i++) {
+    let pos = data[i];
+    let stored = positions.find(p => p.symbol == pos.symbol && p.account == pos.account && p.currency == pos.currency);
+    let merged = {...stored, ...pos};
+
+    console.log('\n\n',pos,'\n\n');
+    console.log('\n\n',stored,'\n\n');
+    console.log('\n\n',merged,'\n\n');
+    // find the proper position
+    //
+  }
   log.fatal('onPositionUpdate not implemented', data);
 }
 
