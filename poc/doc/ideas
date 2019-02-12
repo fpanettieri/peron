@@ -1,13 +1,6 @@
-============
-  TODO
-============
-. fetch available balance
-. fetch positions
-. fetch orders
-
-============
+================
   QUESTIONS
-============
+================
 . can I have 2 positions open at the same time?
   only one position per symbol is supported
 
@@ -25,6 +18,11 @@
 
 . might be calculated on the fee structure?
 
-============
-  DONE
-============
+===============
+  LEARNED
+===============
+. your balance is used as collateral, you never move those coins
+. PnL are directly related to position size, not collateral
+. margin is used to reduce the amount of collateral used
+. fees get multiplied by the leverage used
+. volatility also gets amplified by leverage
