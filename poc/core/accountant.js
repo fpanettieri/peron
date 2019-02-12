@@ -31,25 +31,25 @@ function onBalanceUpdate (b)
 function onPositionSynced (data)
 {
   // TODO:
-  log.fatal('not implemented', data);
+  log.fatal('onPositionSynced not implemented', data);
 }
 
 function onPositionOpened (data)
 {
   // TODO:
-  log.fatal('not implemented', data);
+  log.fatal('onPositionOpened not implemented', data);
 }
 
 function onPositionUpdate (data)
 {
   // TODO:
-  log.fatal('not implemented', data);
+  log.fatal('onPositionUpdate not implemented', data);
 }
 
 function onPositionClosed (data)
 {
   // TODO:
-  log.error('not implemented', data);
+  log.error('onPositionClosed not implemented', data);
 }
 module.exports = {
   plug: plug
