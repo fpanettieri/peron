@@ -16,7 +16,7 @@ function plug (_bb, _db)
   bb = _bb;
   db = _db;
   bb.on('BalanceUpdated', onBalanceUpdate);
-  bb.on('PositionLoaded', onPositionLoaded);
+  bb.on('PositionSynced', onPositionSynced);
   bb.on('PositionOpened', onPositionOpened);
   bb.on('PositionUpdated', onPositionUpdate);
   bb.on('PositionClosed', onPositionClosed);
@@ -28,6 +28,12 @@ function onBalanceUpdate (b)
   balance = b;
 }
 
+
+
+function onPositionClosed (data)
+{
+  log.error()
+}
 module.exports = {
   plug: plug
 }

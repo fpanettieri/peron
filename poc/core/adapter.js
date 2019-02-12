@@ -110,7 +110,7 @@ function broadcast (json)
     } break;
 
     case 'position': {
-      const map = { 'partial': 'Loaded', 'insert': 'Created', 'update': 'Updated', 'delete': 'Deleted' };
+      const map = { 'partial': 'Synced', 'insert': 'Opened', 'update': 'Updated', 'delete': 'Closed' };
       const action = `Position${map[json.action]}`;
       bb.emit(action, json.data);
     } break;
