@@ -41,6 +41,7 @@ class Logger
   log ()   { console.log(this.prefix, ...arguments); }
   warn ()  { console.warn(colors.fg.yellow + this.prefix, ...arguments, colors.base.reset); }
   error () { console.error(colors.fg.red + this.prefix, ...arguments, colors.base.reset); }
+  fatal () { console.error(colors.fg.red + this.prefix, ...arguments, colors.base.reset); process.exit(-1); }
 }
 
 module.exports = Logger;

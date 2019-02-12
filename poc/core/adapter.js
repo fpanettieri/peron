@@ -3,7 +3,6 @@
 const ws = require('ws');
 const crypto = require('crypto');
 
-const delta = require('../lib/delta');
 const logger = require('../lib/logger');
 const log = new logger('[core/adapter]');
 
@@ -12,7 +11,6 @@ const DMS_TIMEOUT = 60 * 1000;
 
 let bb = null;
 let db = null;
-let cache = {};
 
 let socket = null;
 let limit = 0;
@@ -41,7 +39,7 @@ function onConnect(url)
 
 function onClose (code, reason)
 {
-  log.warn('connection closed:', code, reason);
+  log.fatal('connection closed:', code, reason);
 }
 
 function onError (err)
@@ -99,7 +97,6 @@ function onMessage (data)
       }
     }
   } else if ('table' in json) {
-    // delta.parse(json, cache);
     broadcast(json);
   }
 }
@@ -107,27 +104,16 @@ function onMessage (data)
 function broadcast (json)
 {
   switch (json.table) {
-    // case 'wallet': {
-    //   const xbt = json.data.find((d) => d.currency === 'XBt');
-    //   bb.emit('BalanceUpdated', xbt.amount);
-    // } break;
+    case 'wallet': {
+      const xbt = json.data.find((d) => d.currency === 'XBt');
+      bb.emit('BalanceUpdated', xbt.amount);
+    } break;
 
-    // case 'position': {
-    // {
-    //    'partial': 'PositionLoaded',
-    //    'insert': 'PositionCreated',
-    //    'update': 'PositionUpdated'
-    //  }
-    //   if (json.action == 'partial') {
-    //     bb.emit('PositionLoaded', json.data);
-    //   } else if (json.action == 'insert') {
-    //     bb.emit('PositionCreated', json.data);
-    //   } else if (json.action == 'update') {
-    //     bb.emit('PositionUpdated', json.data);
-    //   } else {
-    //     log.warn('Unexpected Position msg', json);
-    //   }
-    // } break;
+    case 'position': {
+      const map = { 'partial': 'Loaded', 'insert': 'Created', 'update': 'Updated', 'delete': 'Deleted' };
+      const action = `Position${map[json.action]}`;
+      bb.emit(action, json.data);
+    } break;
 
     default: {
       log.warn('Unexpected msg:', json);
