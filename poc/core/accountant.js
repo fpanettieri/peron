@@ -32,7 +32,6 @@ function onMarginUpdated (m)
 function onPositionSynced (data)
 {
   log.info(`positions synced: ${data.length}`);
-  log.log(data);
   positions = data;
 }
 
