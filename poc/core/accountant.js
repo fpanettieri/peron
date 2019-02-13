@@ -33,6 +33,7 @@ function onPositionSynced (data)
 {
   log.info(`positions synced: ${data.length}`);
   positions = data;
+  log.log(positions);
 }
 
 function onPositionOpened (data)
