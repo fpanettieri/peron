@@ -8,7 +8,7 @@ const BTS = 0.00000001;
 let bb = null;
 let db = null;
 
-let balance = 0;
+let margin = {};
 let positions = [];
 
 function plug (_bb, _db)
@@ -16,24 +16,23 @@ function plug (_bb, _db)
   log.log('plugging');
   bb = _bb;
   db = _db;
-  bb.on('BalanceUpdated', onBalanceUpdated);
+  bb.on('MarginUpdated', onMarginUpdated);
   bb.on('PositionSynced', onPositionSynced);
   bb.on('PositionOpened', onPositionOpened);
   bb.on('PositionUpdated', onPositionUpdated);
   bb.on('PositionClosed', onPositionClosed);
 }
 
-function onBalanceUpdated (b)
+function onMarginUpdated (m)
 {
-  log.info(`balance updated: ${b}`);
-  balance = b;
+  log.info(`margin updated`);
+  margin = {...margin, ...m};
 }
 
 function onPositionSynced (data)
 {
   log.info(`positions synced: ${data.length}`);
   positions = data;
-  log.log(positions);
 }
 
 function onPositionOpened (data)

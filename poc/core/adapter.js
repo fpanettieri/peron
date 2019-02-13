@@ -108,10 +108,8 @@ function onMessage (data)
 function broadcast (json)
 {
   switch (json.table) {
-    case 'wallet': {
-      const xbt = json.data.find((d) => d.currency === 'XBt');
-      if (!xbt || !xbt.amount) { return; }
-      bb.emit('BalanceUpdated', xbt.amount);
+    case 'margin': {
+      bb.emit('MarginUpdated', json.data[0]);
     } break;
 
     case 'position': {
@@ -131,8 +129,8 @@ function onSyncAccount ()
   log.log('syncing account');
   const sub_params = {
     op: 'subscribe',
-    args: [ 'margin' ]
-    // args: [ 'wallet', 'position', 'margin', 'order' ]
+    args: [ 'margin', 'position' ]
+    // args: [ 'position', 'margin', 'order' ]
   }
   send(sub_params);
 }
