@@ -92,6 +92,10 @@ function onMessage (data)
         dms();
       } break;
 
+      case 'subscribe': {
+        log.log(`subscribed successfully to '${json.subscribe}'`);
+      } break;
+
       default: {
         log.warn('Unexpected success msg:', json);
       }
