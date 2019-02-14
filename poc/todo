@@ -1,12 +1,35 @@
 ===============
   TODO
 ===============
-. Trader
-  . fetch orders
-  . get realtime mark price
-  . state machine
+. Design strategy
+. Test strategy on TV
 
+. Analyst (detects alpha opportunities)
+  . Watch market
+  . Cache N candles on the analyst side
+  . Calculate needed indicators
+  . Emit buy/sell signal
+
+. Trader (determines the concrete strategy)
+  . Listens to signals from the analyst
+  . Mixes alpha sources with current position
+  . Determines the risk of entering a position
+  . Calculates possible fees
+
+. Broker (Execute the strategy)
+  . Watch market
+  . Watch order book
+  . Determine size and number of orders to create
+  . Send orders to the market
+  . Overviews the market and determines when to cancel orders
+  . Receives orders from the trader
+
+
+===============
+  Backlog
+===============
 . log every message that passes through the backbone to replicate the data flow platita
+
 
 ===============
   DONE

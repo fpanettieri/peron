@@ -18,9 +18,9 @@ const analyst = require('./core/analyst');
   const db = await mongo.connect();
   const bb = new backbone();
 
+  archivist.plug(bb, db);
   adapter.plug(bb, db);
   accountant.plug(bb, db);
-  archivist.plug(bb, db);
   analyst.plug(bb, db);
 
   bb.chain('SocketConnected', 'DownloadHistory');
