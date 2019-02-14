@@ -1,13 +1,10 @@
 ===============
   TODO
 ===============
-. track subscribe requests, and match with pendings?
-. calculate usable funds
-. get usable margin
-
-. test the 'partial' load with a fresh account
-. fetch orders
-. get realtime mark price
+. Trader
+  . fetch orders
+  . get realtime mark price
+  . state machine
 
 . log every message that passes through the backbone to replicate the data flow platita
 
@@ -17,3 +14,7 @@
 . fetch available margin
 . fetch positions
 . handle deposit (update to wallet)
+. track subscribe requests, and match with pendings?
+. calculate usable funds
+. get usable margin
+. test the 'partial' load with a fresh account
