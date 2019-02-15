@@ -17,12 +17,12 @@ short_lower = short_basis - short_dev
 long_upper = long_basis + long_dev
 long_lower = long_basis - long_dev
 
-plot(short_basis, color=red)
+//plot(short_basis, color=red)
 plot(long_basis, color=red)
 
-short_p1 = plot(short_upper, color=blue)
-short_p2 = plot(short_lower, color=blue)
-fill(short_p1, short_p2)
+//short_p1 = plot(short_upper, color=blue)
+//short_p2 = plot(short_lower, color=blue)
+//fill(short_p1, short_p2)
 
 long_p1 = plot(long_upper, color=green)
 long_p2 = plot(long_lower, color=green)

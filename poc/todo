@@ -1,9 +1,6 @@
 ===============
   TODO
 ===============
-. Design strategy
-. Test strategy on TV
-
 . Analyst (detects alpha opportunities)
   . Watch market
   . Cache N candles on the analyst side
@@ -41,3 +38,5 @@
 . calculate usable funds
 . get usable margin
 . test the 'partial' load with a fresh account
+. Design strategy
+. Test strategy on TV
