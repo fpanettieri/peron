@@ -20,6 +20,10 @@ long_lower = long_basis - long_dev
 plot(short_basis, color=red)
 plot(long_basis, color=red)
 
-// p1 = plot(upper, color=blue)
-// p2 = plot(lower, color=blue)
-// fill(p1, p2)
+short_p1 = plot(short_upper, color=blue)
+short_p2 = plot(short_lower, color=blue)
+fill(short_p1, short_p2)
+
+long_p1 = plot(long_upper, color=green)
+long_p2 = plot(long_lower, color=green)
+fill(long_p1, long_p2)
