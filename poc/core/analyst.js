@@ -24,18 +24,18 @@ function plug (_bb, _db)
   bb.on('CandleClosed', onCandleClosed);
 }
 
-async function onHistoryDownloaded (o)
+async function onHistoryDownloaded (history)
 {
   log.info(`caching history`);
-  ohlcs = o;
+  ohlcs = history;
   offset = 0;
   analyzeCandles();
 }
 
-async function onCandleClosed (ohlc)
+async function onCandleClosed (candle)
 {
   log.info(`on candle closed`);
-  if (ohlcs.push(ohlc) > CANDLE_LIMIT) { ohlcs.shift(); };
+  if (ohlcs.push(candle) > CANDLE_LIMIT) { ohlcs.shift(); };
   analyzeCandles();
 }
 
@@ -45,7 +45,9 @@ function analyzeCandles ()
   if (analyzing) { return; }
   analyzing = true;
 
-  console.log(ohlcs);
+
+  log.log(`stored candles ${ohlcs.length}`);
+
 
   for (let i = 0; i < ohlcs.length; i++) {
 

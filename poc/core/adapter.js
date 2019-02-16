@@ -3,6 +3,7 @@
 const ws = require('ws');
 const crypto = require('crypto');
 
+const bitmex = require('../lib/bitmex');
 const logger = require('../lib/logger');
 const log = new logger('[core/adapter]');
 
@@ -116,6 +117,10 @@ function broadcast (json)
       const map = { 'partial': 'Synced', 'insert': 'Opened', 'update': 'Updated', 'delete': 'Closed' };
       const action = `Position${map[json.action]}`;
       bb.emit(action, json.data);
+    } break;
+
+    case 'tradeBin5m': {
+      bb.emit('CandleClosed', bitmex.toOhlc(json.data));
     } break;
 
     default: {
