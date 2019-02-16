@@ -20,7 +20,7 @@ async function onDownloadHistory ()
   log.info(`downloading history`);
 
   const options = { method: 'GET', api: 'trade/bucketed', testnet: true };
-  const params = { symbol: 'XBTUSD', binSize: '1m', count: 200, partial: false, reverse: true };
+  const params = { symbol: 'XBTUSD', binSize: '5m', count: 200, partial: false, reverse: true };
   const ticks = await bitmex.api(options, params);
   const ohlcs = ticks.map((k) => bitmex.toOhlc(k)).reverse();
 

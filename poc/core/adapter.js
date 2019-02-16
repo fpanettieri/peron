@@ -141,7 +141,7 @@ function onWatchMarket ()
   const sub_params = {
     op: 'subscribe',
     //args: [ 'quote', 'quoteBin1m', 'funding' ]
-    args: [ 'quoteBin5m:XBTUSD' ]
+    args: [ 'tradeBin5m:XBTUSD' ]
   }
   send(sub_params);
 }

@@ -24,10 +24,10 @@ function plug (_bb, _db)
   bb.on('CandleClosed', onCandleClosed);
 }
 
-async function onHistoryDownloaded (ohlcs)
+async function onHistoryDownloaded (o)
 {
   log.info(`caching history`);
-  ohlcs = ohlcs;
+  ohlcs = o;
   offset = 0;
   analyzeCandles();
 }
@@ -44,6 +44,8 @@ function analyzeCandles ()
   log.log('Anayzing candles!')
   if (analyzing) { return; }
   analyzing = true;
+
+  console.log(ohlcs);
 
   for (let i = 0; i < ohlcs.length; i++) {
 
