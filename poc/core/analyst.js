@@ -41,6 +41,7 @@ async function onCandleClosed (ohlc)
 
 function analyzeCandles ()
 {
+  log.log('Anayzing candles!')
   if (analyzing) { return; }
   analyzing = true;
 

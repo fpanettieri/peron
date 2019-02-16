@@ -140,7 +140,8 @@ function onWatchMarket ()
   log.log('watching market');
   const sub_params = {
     op: 'subscribe',
-    args: [ 'quote', 'quoteBin1m', 'funding' ]
+    //args: [ 'quote', 'quoteBin1m', 'funding' ]
+    args: [ 'quoteBin5m:XBTUSD' ]
   }
   send(sub_params);
 }
