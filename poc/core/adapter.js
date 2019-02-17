@@ -120,7 +120,7 @@ function broadcast (json)
     } break;
 
     case 'tradeBin5m': {
-      bb.emit('CandleClosed', bitmex.toOhlc(json.data));
+      bb.emit('CandleClosed', bitmex.toOhlc(json.data[0]));
     } break;
 
     default: {

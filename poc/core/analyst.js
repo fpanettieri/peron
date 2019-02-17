@@ -35,6 +35,7 @@ async function onHistoryDownloaded (history)
 async function onCandleClosed (candle)
 {
   log.info(`on candle closed`);
+  if (ohlcs.length > 0 && candle.t === ohlcs[ohlcs.length - 1].t) { return; }
   if (ohlcs.push(candle) > CANDLE_LIMIT) { ohlcs.shift(); };
   analyzeCandles();
 }
@@ -45,12 +46,9 @@ function analyzeCandles ()
   if (analyzing) { return; }
   analyzing = true;
 
-
-  log.log(`stored candles ${ohlcs.length}`);
-
-
-  for (let i = 0; i < ohlcs.length; i++) {
-
+  for (let i = 1; i < ohlcs.length; i++) {
+    console.log(ohlcs[i].t - ohlcs[i - 1].t);
+    // calculate BB 50
   }
 
   analyzing = false;

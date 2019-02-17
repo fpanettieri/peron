@@ -2,8 +2,8 @@
   TODO
 ===============
 . Analyst (detects alpha opportunities)
-  . Watch market
-  . Cache N candles on the analyst side
+  - Watch market
+  - Cache N candles on the analyst side
   . Calculate needed indicators
   . Emit buy/sell signal
 
@@ -21,6 +21,8 @@
   . Overviews the market and determines when to cancel orders
   . Receives orders from the trader
 
+. Improvements
+  . Manually accumulate candles with an offset. Instead of [0, 5, 10, 15], [1, 6, 11, 16] etc..
 
 ===============
   Backlog
