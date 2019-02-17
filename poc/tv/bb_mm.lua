@@ -5,18 +5,20 @@ strategy("BB MM", overlay=true)
 // Revision:        1
 // Author:          @getplatita
 
-// === INPUT SMA ===
-length = input(50, minval=1)
-mult = input(2.1, minval=0.001, maxval=50)
+// === INPUT ===
+period = input(20, minval=1)
+mult = input(2, minval=0.001, maxval=50)
 
-basis = ema(close, length)
-dev = mult * stdev(close, length)
-
+// === PARAMS ===
+basis = sma(close, period)
+dev = mult * stdev(close, period)
 upper = basis + dev
 lower = basis - dev
 
-buyEntry = crossover(close, lower)
-sellEntry = crossunder(close, upper)
+// === EXECUTION ===
+long = crossover(close, lower)
+short = crossunder(close, upper)
+exit = cross(close, basis)
 
 if (crossover(close, lower))
     strategy.entry("BBandLE", strategy.long, stop=lower, oca_name="BollingerBands", oca_type=strategy.oca.cancel, comment="BBandLE")
