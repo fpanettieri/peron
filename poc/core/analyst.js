@@ -24,6 +24,7 @@ function plug (_bb, _db)
   bb = _bb;
   db = _db;
   bb.on('HistoryDownloaded', onHistoryDownloaded);
+  // TODO: bb.on('CandleUpdated', onCandleUpdated);
   bb.on('CandleClosed', onCandleClosed);
 }
 
@@ -33,6 +34,7 @@ async function onHistoryDownloaded (history)
   ohlcs = history;
   offset = 0;
   analyzeCandles();
+  bb.emit('HistoryAnalyzed', ohlcs);
 }
 
 async function onCandleClosed (candle)
@@ -40,7 +42,8 @@ async function onCandleClosed (candle)
   log.info(`on candle closed`);
   if (ohlcs.length > 0 && candle.t === ohlcs[ohlcs.length - 1].t) { return; }
   if (ohlcs.push(candle) > CANDLE_LIMIT) { ohlcs.shift(); };
-  analyzeCandles();
+  analyzeCandle(ohlcs.length - 1);
+  bb.emit('CandleAnalyzed', ohlcs[ohlcs.length - 1]);
 }
 
 function analyzeCandles ()
@@ -49,9 +52,7 @@ function analyzeCandles ()
   if (analyzing) { return; }
   analyzing = true;
 
-  for (let i = 1; i < ohlcs.length; i++) {
-    analyzeCandle(i);
-  }
+  for (let i = 1; i < ohlcs.length; i++) { analyzeCandle(i); }
 
   log.log(ohlcs[ohlcs.length - 1]);
 
