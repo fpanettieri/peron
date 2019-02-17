@@ -16,11 +16,11 @@ upper = basis + dev
 lower = basis - dev
 
 // === EXECUTION ===
-strategy.entry("L", strategy.long, when = crossover(close, lower))
-strategy.close("L", when = crossunder(low, basis))
+strategy.entry("L", strategy.long, when = crossover(close, lower) and close < basis)
+strategy.close("L", when = crossover(high, basis) or crossover(high, upper))
 
-strategy.entry("S", strategy.short, when = crossunder(close, upper))
-strategy.close("S", when = crossover(high, basis))
+strategy.entry("S", strategy.short, when = crossunder(close, upper) and close > basis)
+strategy.close("S", when = crossunder(low, basis) or crossunder(low, lower))
 
 // === PLOT ===
 plot(basis, color=red)
