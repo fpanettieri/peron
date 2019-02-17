@@ -16,20 +16,13 @@ upper = basis + dev
 lower = basis - dev
 
 // === EXECUTION ===
-long = crossover(close, lower)
-short = crossunder(close, upper)
-exit = cross(close, basis)
+strategy.entry("L", strategy.long, when = crossover(close, lower))
+strategy.close("L", when = crossunder(low, basis))
 
-if (crossover(close, lower))
-    strategy.entry("BBandLE", strategy.long, stop=lower, oca_name="BollingerBands", oca_type=strategy.oca.cancel, comment="BBandLE")
-else
-    strategy.cancel(id="BBandLE")
+strategy.entry("S", strategy.short, when = crossunder(close, upper))
+strategy.close("S", when = crossover(high, basis))
 
-if (crossunder(close, upper))
-    strategy.entry("BBandSE", strategy.short, stop=upper, oca_name="BollingerBands", oca_type=strategy.oca.cancel, comment="BBandSE")
-else
-    strategy.cancel(id="BBandSE")
-
+// === PLOT ===
 plot(basis, color=red)
 p1 = plot(upper, color=blue)
 p2 = plot(lower, color=blue)
