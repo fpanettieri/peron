@@ -8,6 +8,9 @@ const log = new logger('[core/analyst]');
 const CANDLE_STEP = utils.intervalToMs('1m');
 const CANDLE_LIMIT = 200;
 
+const BB_PERIODS = 24;
+const BB_MULT = 2;
+
 let bb = null;
 let db = null;
 
@@ -42,16 +45,25 @@ async function onCandleClosed (candle)
 
 function analyzeCandles ()
 {
-  log.log('Anayzing candles!')
+  log.log('Anayzing candles!');
   if (analyzing) { return; }
   analyzing = true;
 
   for (let i = 1; i < ohlcs.length; i++) {
-    console.log(ohlcs[i].t - ohlcs[i - 1].t);
-    // calculate BB 50
+    analyzeCandle(i);
   }
 
+  log.log(ohlcs[ohlcs.length - 1]);
+
   analyzing = false;
+}
+
+function analyzeCandle (idx)
+{
+  let o = ohlcs[idx];
+  o.bb_ma = 3;
+  o.bb_lower = 0.2;
+  o.bb_upper = 24;
 }
 
 module.exports = {
