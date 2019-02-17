@@ -51,11 +51,7 @@ function analyzeCandles ()
   log.log('Anayzing candles!');
   if (analyzing) { return; }
   analyzing = true;
-
   for (let i = 1; i < ohlcs.length; i++) { analyzeCandle(i); }
-
-  log.log(ohlcs[ohlcs.length - 1]);
-
   analyzing = false;
 }
 
