@@ -51,7 +51,11 @@ function analyzeCandles ()
 
 function analyzeCandle (idx)
 {
+  if (idx > ohlcs.length) { return log.warn('analyzeCandle out of bounds'); }
+  if (idx < cfg.bb.periods) { return log.warn(`${idx} < ${cfg.bb.periods}`); }
+
   let o = ohlcs[idx];
+
   o.bb_ma = 3;
   o.bb_lower = 0.2;
   o.bb_upper = 24;
