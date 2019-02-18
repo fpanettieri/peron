@@ -84,7 +84,7 @@ function onMessage (data)
   } else if ('info' in json) {
     if ('limit' in json) {
       limit = json.limit.remaining;
-      log.log(`limit updated: ${limit}`);
+      log.warn(`limit updated: ${limit}`);
     }
 
   } else if ('success' in json) {

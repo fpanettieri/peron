@@ -33,17 +33,17 @@ function onHistoryDownloaded (history)
   bb.emit('HistoryAnalyzed');
 }
 
-function onCandleUpdated (c)
-{
-  analyze(c);
-  bb.emit('LiveCandleAnalyzed', c);
-}
-
 function onCandleClosed (c)
 {
+  if (c.t == ohlcs[ohlcs.length - 1].t) { return; }
+
   analyze(c);
   if (ohlcs.push(c) > cfg.history) { ohlcs.shift(); };
   bb.emit('CandleAnalyzed', c);
+
+  for (let i = 1; i < ohlcs.length; i++) {
+    log.error(ohlcs[i].t - ohlcs[i - 1].t);
+  }
 }
 
 function analyze (o)
