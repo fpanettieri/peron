@@ -24,9 +24,8 @@ function plug (_bb, _db)
 
 function onHistoryDownloaded (history)
 {
-  log.info(`caching history`);
   ohlcs = [];
-  for (let i = 0; i <  history.length; i++) {
+  for (let i = 0; i < history.length; i++) {
     let o = history[i];
     analyze(o);
     ohlcs.push(o);
@@ -42,10 +41,9 @@ function onCandleUpdated (c)
 
 function onCandleClosed (c)
 {
-  log.info(`new candle: ${c.c}`);
   analyze(c);
   if (ohlcs.push(c) > cfg.history) { ohlcs.shift(); };
-  bb.emit('CandleAnalyzed', ohlcs[ohlcs.length - 1]);
+  bb.emit('CandleAnalyzed', c);
 }
 
 function analyze (o)
