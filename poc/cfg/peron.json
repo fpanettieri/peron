@@ -1,4 +1,5 @@
 {
+  "testnet": false,
   "timeframe": "1m",
   "symbol": "XBTUSD",
   "history": "200",
