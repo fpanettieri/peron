@@ -134,8 +134,7 @@ function onSyncAccount ()
   log.log('syncing account');
   const sub_params = {
     op: 'subscribe',
-    args: [ 'margin', 'position' ]
-    // args: [ 'position', 'margin', 'order' ]
+    args: [ 'margin', 'position', 'order' ]
   }
   send(sub_params);
 }
