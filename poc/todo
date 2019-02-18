@@ -22,11 +22,7 @@
 ===============
   Backlog
 ===============
-. log every message that passes through the backbone to replicate the data flow platita
-. Manually accumulate candles with an offset. Instead of [0, 5, 10, 15], [1, 6, 11, 16] etc..
 . Try to enter market 10~15s before the candle closes
-. Shared memory, instead of sending the full list of candles?
-
 
 ===============
   DONE
@@ -45,3 +41,11 @@
   - Watch market
   - Cache N candles on the analyst side
   - Calculate needed indicators
+
+. log every message that passes through the backbone to replicate the data flow platita
+
+===============
+  IGNORE
+===============
+. Manually accumulate candles with an offset. Instead of [0, 5, 10, 15], [1, 6, 11, 16] etc..
+. Shared memory, instead of sending the full list of candles?
