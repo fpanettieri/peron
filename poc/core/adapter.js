@@ -149,8 +149,8 @@ function onWatchMarket ()
   log.log('watching market');
   const sub_params = {
     op: 'subscribe',
-    // args: [ `quote:${cfg.symbol}, `tradeBin5m:${cfg.symbol}`, `quote:${cfg.symbol}`, `funding:XBTUSD` ]
-    args: [ `quote:${cfg.symbol}` ]
+    // args: [ `quote:${cfg.symbol}, `tradeBin${cfg.timeframe}:${cfg.symbol}`, `quote:${cfg.symbol}`, `funding:XBTUSD` ]
+    args: [ `tradeBin${cfg.timeframe}:${cfg.symbol}`, `quote:${cfg.symbol}` ]
   }
   send(sub_params);
 }
