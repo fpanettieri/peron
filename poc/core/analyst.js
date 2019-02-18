@@ -45,7 +45,11 @@ function analyzeCandles ()
   log.log('Anayzing candles!');
   if (analyzing) { return; }
   analyzing = true;
-  for (let i = 1; i < ohlcs.length; i++) { analyzeCandle(i); }
+  for (let i = 0; i < ohlcs.length; i++) { analyzeCandle(i); }
+
+  // FIXME: remove this debug line
+  debugCandle(ohlcs[ohlcs.length - 1]);
+
   analyzing = false;
 }
 
@@ -61,9 +65,18 @@ function analyzeCandle (idx)
     o.bb_ma += ohlcs[idx - i].c;
   }
 
+  o.bb_ma /= cfg.bb.periods;
+
   o.bb_lower = 0.24;
   o.bb_upper = 240;
 }
+
+function debugCandle (c)
+{
+  log.log(`c: ${c.c}`);
+  log.log(`t: ${new Date(c.t)}`);
+}
+
 
 module.exports = {
   plug: plug
