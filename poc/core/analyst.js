@@ -68,16 +68,6 @@ function analyzeCandle (idx)
   o.bb_upper = o.bb_ma + o.bb_dev * cfg.bb.mult;
 }
 
-function debugCandle (c)
-{
-  log.log(`t: ${new Date(c.t)}`);
-  log.log(`c: ${c.c}`);
-  log.log(`avg: ${c.bb_ma}`);
-  log.log(`dev: ${c.bb_dev}`);
-  log.log(`low: ${c.bb_lower}`);
-  log.log(`up: ${c.bb_upper}`);
-}
-
 module.exports = {
   plug: plug
 }
