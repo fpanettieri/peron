@@ -47,8 +47,10 @@ function analyzeCandles ()
   analyzing = true;
   for (let i = 0; i < ohlcs.length; i++) { analyzeCandle(i); }
 
-  // FIXME: remove this debug line
-  debugCandle(ohlcs[ohlcs.length - 1]);
+  // FIXME: remove this debug lines
+  log.log('\n\n');
+  for (let i = ohlcs.length - 5; i < ohlcs.length; i++) { log.log(ohlcs[i].bb_ma); }
+  log.log('\n\n');
 
   analyzing = false;
 }
@@ -73,11 +75,10 @@ function analyzeCandle (idx)
 
 function debugCandle (c)
 {
-  log.info(`t: ${new Date(c.t)}`);
-  log.info(`c: ${c.c}`);
-  log.info(`ma: ${c.bb_ma}`);
+  log.log(`t: ${new Date(c.t)}`);
+  log.log(`c: ${c.c}`);
+  log.log(`ma: ${c.bb_ma}`);
 }
-
 
 module.exports = {
   plug: plug
