@@ -48,11 +48,13 @@ function analyzeCandles ()
   for (let i = 0; i < ohlcs.length; i++) { analyzeCandle(i); }
 
   // FIXME: remove this debug lines
-  log.log('\n\n');
-  for (let i = ohlcs.length - 10; i < ohlcs.length; i++) {
-    log.log(ohlcs[i].bb_ma, '-', o.bb_lower);
-  }
-  log.log('\n\n');
+  debugCandle(ohlcs[ohlcs.length - 1]);
+
+  // log.log('\n\n');
+  // for (let i = ohlcs.length - 10; i < ohlcs.length; i++) {
+  //   log.log(ohlcs[i].bb_ma, '-', ohlcs[i].bb_lower, '-', ohlcs[i].bb_upper);
+  // }
+  // log.log('\n\n');
 
   analyzing = false;
 }
