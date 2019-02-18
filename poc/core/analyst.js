@@ -28,7 +28,6 @@ function onHistoryDownloaded (history)
   log.info(`caching history`);
   ohlcs = history;
   analyzeCandles();
-  log.log(ohlcs[ohlcs.length - 1]);
   bb.emit('HistoryAnalyzed', ohlcs);
 }
 
@@ -38,7 +37,6 @@ function onCandleClosed (candle)
   if (ohlcs.length > 0 && candle.t === ohlcs[ohlcs.length - 1].t) { return; }
   if (ohlcs.push(candle) > cfg.history) { ohlcs.shift(); };
   analyzeCandle(ohlcs.length - 1);
-  log.log(candle);
   bb.emit('CandleAnalyzed', ohlcs[ohlcs.length - 1]);
 }
 
