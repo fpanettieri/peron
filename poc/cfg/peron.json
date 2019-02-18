@@ -1,5 +1,9 @@
 {
   "timeframe": "1m",
   "symbol": "XBTUSD",
-  "history": "200"
+  "history": "200",
+  "bb": {
+    "periods": 24,
+    "mult": 2
+  }
 }

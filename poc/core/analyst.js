@@ -1,15 +1,12 @@
 'use strict';
 
+const cfg = require('../cfg/peron.json');
 const bitmex = require('../lib/bitmex');
 const utils = require('../lib/utils');
 const logger = require('../lib/logger');
 const log = new logger('[core/analyst]');
 
-const CANDLE_STEP = utils.intervalToMs('1m');
-const CANDLE_LIMIT = 200;
-
-const BB_PERIODS = 24;
-const BB_MULT = 2;
+const CANDLE_STEP = utils.intervalToMs(cfg.timeframe);
 
 let bb = null;
 let db = null;
@@ -39,7 +36,7 @@ function onCandleClosed (candle)
 {
   log.info(`on candle closed`);
   if (ohlcs.length > 0 && candle.t === ohlcs[ohlcs.length - 1].t) { return; }
-  if (ohlcs.push(candle) > CANDLE_LIMIT) { ohlcs.shift(); };
+  if (ohlcs.push(candle) > cfg.history) { ohlcs.shift(); };
   analyzeCandle(ohlcs.length - 1);
   log.log(candle);
   bb.emit('CandleAnalyzed', ohlcs[ohlcs.length - 1]);
