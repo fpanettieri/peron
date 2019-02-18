@@ -36,17 +36,15 @@ function onHistoryDownloaded (history)
 
 function onCandleUpdated (c)
 {
-  log.info(`caching history`);
   analyze(c);
   bb.emit('LiveCandleAnalyzed', c);
 }
 
-function onCandleClosed (candle)
+function onCandleClosed (c)
 {
-  log.info(`new candle: ${candle.c}`);
-  if (ohlcs.length > 0 && candle.t === ohlcs[ohlcs.length - 1].t) { return; }
-  if (ohlcs.push(candle) > cfg.history) { ohlcs.shift(); };
-  analyze(ohlcs.length - 1);
+  log.info(`new candle: ${c.c}`);
+  analyze(c);
+  if (ohlcs.push(c) > cfg.history) { ohlcs.shift(); };
   bb.emit('CandleAnalyzed', ohlcs[ohlcs.length - 1]);
 }
 
@@ -54,12 +52,12 @@ function analyze (o)
 {
   if (ohlcs.length < cfg.history) { return; }
 
-  o.bb_ma = 0;
-  for (let i = 0; i < cfg.bb.periods; i++) { o.bb_ma += ohlcs[idx - i].c; }
+  o.bb_ma = o.c;
+  for (let i = 0; i < cfg.bb.periods - 1; i++) { o.bb_ma += ohlcs[idx - i].c; }
   o.bb_ma /= cfg.bb.periods;
 
-  o.bb_dev = 0;
-  for (let i = 0; i < cfg.bb.periods; i++) { o.bb_dev += Math.pow(ohlcs[idx - i].c - o.bb_ma, 2); }
+  o.bb_dev = o.c - o.bb_ma;
+  for (let i = 0; i < cfg.bb.periods - 1; i++) { o.bb_dev += Math.pow(ohlcs[idx - i].c - o.bb_ma, 2); }
   o.bb_dev = Math.sqrt(o.bb_dev / cfg.bb.periods);
 
   o.bb_lower = o.bb_ma - o.bb_dev * cfg.bb.mult;
