@@ -2,6 +2,8 @@
 
 const events = require('events');
 
+const cfg = require('./cfg/peron');
+
 const logger = require('./lib/logger');
 const backbone = require('./lib/backbone');
 const mongo = require('./lib/mongo');

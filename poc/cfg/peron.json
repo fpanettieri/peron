@@ -2,7 +2,7 @@
   "testnet": false,
   "timeframe": "1m",
   "symbol": "XBTUSD",
-  "history": "200",
+  "history": "50",
   "bb": {
     "periods": 24,
     "mult": 2

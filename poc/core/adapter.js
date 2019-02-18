@@ -3,7 +3,7 @@
 const ws = require('ws');
 const crypto = require('crypto');
 
-const cfg = require('../cfg/peron.json');
+const cfg = require('../cfg/peron');
 const bitmex = require('../lib/bitmex');
 const logger = require('../lib/logger');
 const log = new logger('[core/adapter]');
