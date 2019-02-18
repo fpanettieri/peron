@@ -28,7 +28,6 @@ const analyst = require('./core/analyst');
   bb.chain('SocketConnected', 'DownloadHistory');
   // bb.chain('SocketConnected', 'SyncAccount');
   bb.chain('HistoryDownloaded', 'WatchMarket');
-  bb.on('CandleAnalyzed', (c) => log.log('new candle!', c));
 
   bb.emit('ConnectSocket', `wss://${cfg.testnet ? 'testnet' : 'www'}.bitmex.com/realtime`);
 })();

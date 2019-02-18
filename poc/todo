@@ -1,14 +1,12 @@
 ===============
   TODO
 ===============
-. Analyst (detects alpha opportunities)
-  - Watch market
-  - Cache N candles on the analyst side
-  - Calculate needed indicators
+. Brain (finds alpha opportunities)
+  . Listens to updates from the analyst
+  . Implements a concrete strategy to find alpha
 
 . Trader (determines the concrete strategy)
   . Emit buy/sell signal
-  . Listens to updates from the analyst
   . Mixes alpha sources with current position
   . Determines the risk of entering a position
   . Calculates possible fees
@@ -21,15 +19,13 @@
   . Overviews the market and determines when to cancel orders
   . Receives orders from the trader
 
-. Improvements
-  . Manually accumulate candles with an offset. Instead of [0, 5, 10, 15], [1, 6, 11, 16] etc..
-  . Try to enter market 10~15s before the candle closes
-  . Shared memory, instead of sending the full list of candles?
-
 ===============
   Backlog
 ===============
 . log every message that passes through the backbone to replicate the data flow platita
+. Manually accumulate candles with an offset. Instead of [0, 5, 10, 15], [1, 6, 11, 16] etc..
+. Try to enter market 10~15s before the candle closes
+. Shared memory, instead of sending the full list of candles?
 
 
 ===============
@@ -44,3 +40,8 @@
 . test the 'partial' load with a fresh account
 . Design strategy
 . Test strategy on TV
+
+. Analyst (technical analysis)
+  - Watch market
+  - Cache N candles on the analyst side
+  - Calculate needed indicators

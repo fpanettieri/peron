@@ -33,7 +33,7 @@ function onHistoryDownloaded (history)
 
 function onCandleClosed (candle)
 {
-  log.info(`on candle closed`);
+  log.info(`new candle closed: ${candle.c}`);
   if (ohlcs.length > 0 && candle.t === ohlcs[ohlcs.length - 1].t) { return; }
   if (ohlcs.push(candle) > cfg.history) { ohlcs.shift(); };
   analyzeCandle(ohlcs.length - 1);
