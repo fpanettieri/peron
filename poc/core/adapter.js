@@ -3,6 +3,7 @@
 const ws = require('ws');
 const crypto = require('crypto');
 
+const cfg = require('../cfg/peron.json');
 const bitmex = require('../lib/bitmex');
 const logger = require('../lib/logger');
 const log = new logger('[core/adapter]');
@@ -119,8 +120,12 @@ function broadcast (json)
       bb.emit(action, json.data);
     } break;
 
-    case 'tradeBin5m': {
+    case `tradeBin${cfg.timeframe}`: {
       bb.emit('CandleClosed', bitmex.toOhlc(json.data[0]));
+    } break;
+
+    case 'quote': {
+      // TODO: implement quote
     } break;
 
     default: {
@@ -144,8 +149,8 @@ function onWatchMarket ()
   log.log('watching market');
   const sub_params = {
     op: 'subscribe',
-    // args: [ 'quote:XBTUSD, 'tradeBin5m:XBTUSD', 'quote:XBTUSD', 'funding:XBTUSD' ]
-    args: [ 'quote:XBTUSD' ]
+    // args: [ `quote:${cfg.symbol}, `tradeBin5m:${cfg.symbol}`, `quote:${cfg.symbol}`, `funding:XBTUSD` ]
+    args: [ `quote:${cfg.symbol}` ]
   }
   send(sub_params);
 }

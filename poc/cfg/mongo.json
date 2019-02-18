@@ -3,6 +3,6 @@
   "credentials": "",
   "host": "localhost" ,
   "port": 27017,
-  "database": "platita",
+  "database": "peron",
   "options": ""
 }

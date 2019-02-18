@@ -16,7 +16,6 @@ let db = null;
 
 let ohlcs = [];
 let analyzing = false;
-let offset = 0;
 
 function plug (_bb, _db)
 {
@@ -28,16 +27,15 @@ function plug (_bb, _db)
   bb.on('CandleClosed', onCandleClosed);
 }
 
-async function onHistoryDownloaded (history)
+function onHistoryDownloaded (history)
 {
   log.info(`caching history`);
   ohlcs = history;
-  offset = 0;
   analyzeCandles();
   bb.emit('HistoryAnalyzed', ohlcs);
 }
 
-async function onCandleClosed (candle)
+function onCandleClosed (candle)
 {
   log.info(`on candle closed`);
   if (ohlcs.length > 0 && candle.t === ohlcs[ohlcs.length - 1].t) { return; }

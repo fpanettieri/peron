@@ -1,5 +1,6 @@
 'use strict';
 
+const cfg = require('../cfg/peron.json');
 const bitmex = require('../lib/bitmex');
 const logger = require('../lib/logger');
 const log = new logger('[core/archivist]');
@@ -20,7 +21,7 @@ async function onDownloadHistory ()
   log.info(`downloading history`);
 
   const options = { method: 'GET', api: 'trade/bucketed', testnet: true };
-  const params = { symbol: 'XBTUSD', binSize: '5m', count: 200, partial: false, reverse: true };
+  const params = { symbol: cfg.symbol, binSize: cfg.timeframe, count: cfg.history, partial: false, reverse: true };
   const ticks = await bitmex.api(options, params);
   const ohlcs = ticks.map((k) => bitmex.toOhlc(k)).reverse();
 
