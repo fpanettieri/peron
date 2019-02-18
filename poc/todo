@@ -4,11 +4,11 @@
 . Analyst (detects alpha opportunities)
   - Watch market
   - Cache N candles on the analyst side
-  . Calculate needed indicators
-  . Emit buy/sell signal
+  - Calculate needed indicators
 
 . Trader (determines the concrete strategy)
-  . Listens to signals from the analyst
+  . Emit buy/sell signal
+  . Listens to updates from the analyst
   . Mixes alpha sources with current position
   . Determines the risk of entering a position
   . Calculates possible fees
