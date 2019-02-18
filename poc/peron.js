@@ -27,5 +27,5 @@ const analyst = require('./core/analyst');
   // bb.chain('SocketConnected', 'SyncAccount');
   bb.chain('HistoryDownloaded', 'WatchMarket');
 
-  bb.emit('ConnectSocket', 'wss://testnet.bitmex.com/realtime');
+  bb.emit('ConnectSocket', `wss://${cfg.testnet ? 'testnet' : 'www'}.bitmex.com/realtime`);
 })();
