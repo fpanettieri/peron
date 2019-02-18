@@ -49,7 +49,9 @@ function analyzeCandles ()
 
   // FIXME: remove this debug lines
   log.log('\n\n');
-  for (let i = ohlcs.length - 5; i < ohlcs.length; i++) { log.log(ohlcs[i].bb_ma); }
+  for (let i = ohlcs.length - 10; i < ohlcs.length; i++) {
+    log.log(ohlcs[i].bb_ma, '-', o.bb_lower);
+  }
   log.log('\n\n');
 
   analyzing = false;
@@ -62,22 +64,25 @@ function analyzeCandle (idx)
 
   let o = ohlcs[idx];
   o.bb_ma = 0;
+  o.bb_dev = 0;
 
-  for (let i = 0; i < cfg.bb.periods; i++) {
-    o.bb_ma += ohlcs[idx - i].c;
-  }
+  for (let i = 0; i < cfg.bb.periods; i++) { o.bb_ma += ohlcs[idx - i].c; }
+  for (let i = 0; i < cfg.bb.periods; i++) { o.bb_dev += Math.pow(ohlcs[idx - i].c - o.bb_ma, 2); }
 
   o.bb_ma /= cfg.bb.periods;
-
-  o.bb_lower = 0.24;
-  o.bb_upper = 240;
+  o.bb_dev = Math.sqrt(o.bb_dev / cfg.bb.periods);
+  o.bb_lower = o.bb_ma - o.bb_dev * cfg.bb.mult;
+  o.bb_upper = o.bb_ma + o.bb_dev * cfg.bb.mult;
 }
 
 function debugCandle (c)
 {
   log.log(`t: ${new Date(c.t)}`);
   log.log(`c: ${c.c}`);
-  log.log(`ma: ${c.bb_ma}`);
+  log.log(`avg: ${c.bb_ma}`);
+  log.log(`dev: ${c.bb_dev}`);
+  log.log(`low: ${c.bb_lower}`);
+  log.log(`up: ${c.bb_upper}`);
 }
 
 module.exports = {
