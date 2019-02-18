@@ -46,16 +46,6 @@ function analyzeCandles ()
   if (analyzing) { return; }
   analyzing = true;
   for (let i = 0; i < ohlcs.length; i++) { analyzeCandle(i); }
-
-  // FIXME: remove this debug lines
-  debugCandle(ohlcs[ohlcs.length - 1]);
-
-  // log.log('\n\n');
-  // for (let i = ohlcs.length - 10; i < ohlcs.length; i++) {
-  //   log.log(ohlcs[i].bb_ma, '-', ohlcs[i].bb_lower, '-', ohlcs[i].bb_upper);
-  // }
-  // log.log('\n\n');
-
   analyzing = false;
 }
 
@@ -65,14 +55,15 @@ function analyzeCandle (idx)
   if (idx > ohlcs.length) { return log.warn('analyzeCandle out of bounds'); }
 
   let o = ohlcs[idx];
+
   o.bb_ma = 0;
-  o.bb_dev = 0;
-
   for (let i = 0; i < cfg.bb.periods; i++) { o.bb_ma += ohlcs[idx - i].c; }
-  for (let i = 0; i < cfg.bb.periods; i++) { o.bb_dev += Math.pow(ohlcs[idx - i].c - o.bb_ma, 2); }
-
   o.bb_ma /= cfg.bb.periods;
+
+  o.bb_dev = 0;
+  for (let i = 0; i < cfg.bb.periods; i++) { o.bb_dev += Math.pow(ohlcs[idx - i].c - o.bb_ma, 2); }
   o.bb_dev = Math.sqrt(o.bb_dev / cfg.bb.periods);
+
   o.bb_lower = o.bb_ma - o.bb_dev * cfg.bb.mult;
   o.bb_upper = o.bb_ma + o.bb_dev * cfg.bb.mult;
 }
