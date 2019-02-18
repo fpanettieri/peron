@@ -12,7 +12,6 @@ const adapter = require('./core/adapter');
 const accountant = require('./core/accountant');
 const archivist = require('./core/archivist');
 const analyst = require('./core/analyst');
-const analyst = require('./core/analyst');
 const brain = require('./core/brain');
 
 (async () => {
