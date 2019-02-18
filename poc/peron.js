@@ -12,6 +12,8 @@ const adapter = require('./core/adapter');
 const accountant = require('./core/accountant');
 const archivist = require('./core/archivist');
 const analyst = require('./core/analyst');
+const analyst = require('./core/analyst');
+const brain = require('./core/brain');
 
 (async () => {
   const log = new logger(`[Peron/main]`);
@@ -24,6 +26,7 @@ const analyst = require('./core/analyst');
   adapter.plug(bb, db);
   accountant.plug(bb, db);
   analyst.plug(bb, db);
+  brain.plug(bb, db);
 
   bb.chain('SocketConnected', 'DownloadHistory');
   // bb.chain('SocketConnected', 'SyncAccount');
