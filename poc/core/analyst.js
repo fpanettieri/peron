@@ -55,10 +55,14 @@ function analyzeCandle (idx)
   if (idx < cfg.bb.periods) { return log.warn(`${idx} < ${cfg.bb.periods}`); }
 
   let o = ohlcs[idx];
+  o.bb_ma = 0;
 
-  o.bb_ma = 3;
-  o.bb_lower = 0.2;
-  o.bb_upper = 24;
+  for (let i = 0; i < cfg.bb.periods; i++) {
+    o.bb_ma += ohlcs[idx - i].c;
+  }
+
+  o.bb_lower = 0.24;
+  o.bb_upper = 240;
 }
 
 module.exports = {
