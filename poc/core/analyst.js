@@ -23,7 +23,6 @@ function plug (_bb, _db)
   bb = _bb;
   db = _db;
   bb.on('HistoryDownloaded', onHistoryDownloaded);
-  // TODO: bb.on('CandleUpdated', onCandleUpdated);
   bb.on('CandleClosed', onCandleClosed);
 }
 
@@ -32,6 +31,7 @@ function onHistoryDownloaded (history)
   log.info(`caching history`);
   ohlcs = history;
   analyzeCandles();
+  log.log(ohlcs[ohlcs.length - 1]);
   bb.emit('HistoryAnalyzed', ohlcs);
 }
 
@@ -41,6 +41,7 @@ function onCandleClosed (candle)
   if (ohlcs.length > 0 && candle.t === ohlcs[ohlcs.length - 1].t) { return; }
   if (ohlcs.push(candle) > CANDLE_LIMIT) { ohlcs.shift(); };
   analyzeCandle(ohlcs.length - 1);
+  log.log(candle);
   bb.emit('CandleAnalyzed', ohlcs[ohlcs.length - 1]);
 }
 
