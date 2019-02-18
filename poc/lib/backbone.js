@@ -18,6 +18,12 @@ class Backbone extends EventEmitter
     log.log(`chaining ${a} => ${b}`);
     this.on(a, () => this.emit(b));
   }
+
+  emit ()
+  {
+    log.info(arguments[0]);
+    return super.emit.apply(this, arguments);
+  }
 }
 
 module.exports = Backbone;
