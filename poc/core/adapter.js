@@ -96,6 +96,10 @@ function onMessage (data)
         log.log(`subscribed successfully to '${json.subscribe}'`);
       } break;
 
+      case 'unsubscribe': {
+        log.log(`unsubscribe successfully from '${json.unsubscribe}'`);
+      } break;
+
       default: {
         log.warn('Unexpected success msg:', json);
       }
