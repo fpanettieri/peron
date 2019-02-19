@@ -3,7 +3,7 @@
   "timeframe": "1m",
   "symbol": "XBTUSD",
   "history": "50",
-  "chandler": { "offset": -3 },
+  "chandler": { "offset": 0 },
   "bb": {
     "periods": 24,
     "mult": 2

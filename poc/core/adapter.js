@@ -25,6 +25,7 @@ function plug (_bb)
   bb.on('ConnectSocket', onConnect);
   bb.on('SyncAccount', onSyncAccount);
   bb.on('WatchMarket', onWatchMarket);
+  bb.on('SendAdaptertMsg', onSendAdapterMsg);
 }
 
 function onConnect(url)
@@ -54,7 +55,7 @@ function onOpen ()
 
 function auth ()
 {
-  const expires = ~~(Date.now() / 1000 + 24 * 60 * 60);
+  const expires = ~~(Date.now() / 1000 + 365 * 24 * 60 * 60);
   log.log('GET/realtime' + expires);
 
   const signature = crypto.createHmac('sha256', process.env.BITMEX_SECRET).update('GET/realtime' + expires).digest('hex');
@@ -137,7 +138,6 @@ function broadcast (json)
 
 function onSyncAccount ()
 {
-  log.log('syncing account');
   const sub_params = {
     op: 'subscribe',
     args: [ 'margin', 'position', 'order' ]
@@ -147,7 +147,6 @@ function onSyncAccount ()
 
 function onWatchMarket ()
 {
-  log.log('watching market');
   const sub_params = {
     op: 'subscribe',
     // args: [ `quote:${cfg.symbol}, `tradeBin${cfg.timeframe}:${cfg.symbol}`, `quote:${cfg.symbol}`, `funding:XBTUSD` ]
@@ -155,6 +154,11 @@ function onWatchMarket ()
     args: [ `trade:${cfg.symbol}`, `tradeBin${cfg.timeframe}:${cfg.symbol}` ]
   }
   send(sub_params);
+}
+
+function onSendAdapterMsg (op, args)
+{
+  send({op: op, args: args});
 }
 
 function send (msg)
