@@ -16,7 +16,7 @@ function plug (_bb, _db)
   bb.on('DownloadHistory', onDownloadHistory);
 }
 
-async function onDownloadHistory ()
+function onDownloadHistory ()
 {
   log.log(`downloading history`);
 

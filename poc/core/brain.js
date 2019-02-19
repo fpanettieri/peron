@@ -19,7 +19,7 @@ function plug (_bb, _db)
   bb.on('CandleAnalyzed', onCandleAnalyzed);
 }
 
-async function onCandleAnalyzed (c)
+function onCandleAnalyzed (c)
 {
   previous = current;
   current = c;
