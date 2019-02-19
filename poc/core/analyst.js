@@ -40,10 +40,6 @@ function onCandleClosed (c)
   analyze(c);
   if (ohlcs.push(c) > cfg.history) { ohlcs.shift(); };
   bb.emit('CandleAnalyzed', c);
-
-  for (let i = 1; i < ohlcs.length; i++) {
-    log.error(ohlcs[i].t - ohlcs[i - 1].t);
-  }
 }
 
 function analyze (o)
