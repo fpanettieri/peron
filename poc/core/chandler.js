@@ -24,6 +24,7 @@ function plug (_bb)
 
 function onCandleReceived (c)
 {
+  log.log(c);
   if (candle) { return; }
   candle = c;
 }
