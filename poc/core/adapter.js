@@ -121,7 +121,7 @@ function broadcast (json)
     } break;
 
     case 'tradex': {
-      bb.emit('TradePosted', json.data[0]);
+      bb.emit('TradeReceived', json.data[0]);
     } break;
 
     case `tradeBin${cfg.timeframe}`: {
