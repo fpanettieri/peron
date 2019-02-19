@@ -16,16 +16,10 @@ function plug (_bb)
 
 async function onDownloadHistory ()
 {
-  log.log(`downloading history`);
-
   const options = { method: 'GET', api: 'trade/bucketed', testnet: cfg.testnet };
   const params = { symbol: cfg.symbol, binSize: cfg.timeframe, count: cfg.history, partial: false, reverse: true };
   const ticks = await bitmex.api(options, params);
   const ohlcs = ticks.map((k) => bitmex.toOhlc(k)).reverse();
-
-  log.log(`history downloaded`);
-
-  log.log(ohlcs[ohlcs.length - 1]);
   bb.emit('HistoryDownloaded', ohlcs);
 }
 
