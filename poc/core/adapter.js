@@ -150,7 +150,8 @@ function onWatchMarket ()
   const sub_params = {
     op: 'subscribe',
     // args: [ `quote:${cfg.symbol}, `tradeBin${cfg.timeframe}:${cfg.symbol}`, `quote:${cfg.symbol}`, `funding:XBTUSD` ]
-    args: [ `tradeBin${cfg.timeframe}:${cfg.symbol}`, `quote:${cfg.symbol}` ]
+    // args: [ `tradeBin${cfg.timeframe}:${cfg.symbol}`, `quote:${cfg.symbol}` ]
+    args: [ `trade:${cfg.symbol}` ]
   }
   send(sub_params);
 }
