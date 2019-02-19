@@ -28,6 +28,7 @@ function onHistoryDownloaded (history)
   for (let i = 0; i < history.length; i++) {
     let o = history[i];
     analyze(o);
+    log.log(o);
     ohlcs.push(o);
   }
   bb.emit('HistoryAnalyzed');
@@ -44,14 +45,14 @@ function onCandleClosed (c)
 
 function analyze (o)
 {
-  if (ohlcs.length < cfg.history) { return; }
+  if (ohlcs.length < cfg.bb.periods) { return; }
 
   o.bb_ma = o.c;
-  for (let i = 0; i < cfg.bb.periods - 1; i++) { o.bb_ma += ohlcs[ohlcs.length - i - 1].c; }
+  for (let i = 0; i < cfg.bb.periods; i++) { o.bb_ma += ohlcs[ohlcs.length - i - 1].c; }
   o.bb_ma /= cfg.bb.periods;
 
   o.bb_dev = o.c - o.bb_ma;
-  for (let i = 0; i < cfg.bb.periods - 1; i++) { o.bb_dev += Math.pow(ohlcs[ohlcs.length - i - 1].c - o.bb_ma, 2); }
+  for (let i = 0; i < cfg.bb.periods; i++) { o.bb_dev += Math.pow(ohlcs[ohlcs.length - i - 1].c - o.bb_ma, 2); }
   o.bb_dev = Math.sqrt(o.bb_dev / cfg.bb.periods);
 
   o.bb_lower = o.bb_ma - o.bb_dev * cfg.bb.mult;

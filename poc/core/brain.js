@@ -55,19 +55,19 @@ async function onCandleAnalyzed (c)
   log.log('  CloseShort:', previous.h > previous.bb_ma && current.l < current.bb_ma);
   log.log('================================');
   log.log('previous.h > previous.bb_ma', previous.h > previous.bb_ma);
-  log.log('current.c < current.bb_ma', current.c < current.bb_ma);
+  log.log('current.l < current.bb_ma', current.l < current.bb_ma);
   log.log('');
-  if (previous.c > previous.bb_ma && current.c < current.bb_ma) {
+  if (previous.h > previous.bb_ma && current.l < current.bb_ma) {
     bb.emit('CloseShort', current);
   }
 
   log.log('================================');
-  log.log('  CloseLong:', previous.c < previous.bb_ma && current.c > current.bb_ma);
+  log.log('  CloseLong:', previous.l < previous.bb_ma && current.h > current.bb_ma);
   log.log('================================');
-  log.log('previous.c < previous.bb_ma', previous.c < previous.bb_ma);
-  log.log('current.c > current.bb_ma', current.c > current.bb_ma);
+  log.log('previous.l < previous.bb_ma', previous.l < previous.bb_ma);
+  log.log('current.h > current.bb_ma', current.h > current.bb_ma);
   log.log('');
-  if (previous.c < previous.bb_ma && current.c > current.bb_ma) {
+  if (previous.l < previous.bb_ma && current.h > current.bb_ma) {
     bb.emit('CloseLong', current);
   }
 }
