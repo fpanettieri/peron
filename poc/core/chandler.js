@@ -60,7 +60,9 @@ function onTradeReceived (t)
 
 function closeCandle ()
 {
+  setTimeout(closeCandle, getTimeout());
   log.log('CLOSING CANDLE!');
+
 
   if (historic) {
     log.log('haven\'t broadcasted the first candle yet');
@@ -77,8 +79,6 @@ function closeCandle ()
   candle.t = (Math.round(Date.now() / CANDLE_STEP) + 1) * CANDLE_STEP;
 
   console.log(candle);
-
-  setTimeout(closeCandle, getTimeout());
 }
 
 function getTimeout ()

@@ -31,7 +31,7 @@ function onHistoryDownloaded (history)
 
 function onCandleClosed (c)
 {
-  log.log('onCandleClosed', typeof c, ohlcs.length);
+  log.log('onCandleClosed', c);
 
   if (c.t == ohlcs[ohlcs.length - 1].t) { return; }
 
