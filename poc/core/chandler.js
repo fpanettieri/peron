@@ -41,7 +41,7 @@ function onCandleReceived (c)
   }
 
   // propagate the first partial candle
-  bb.emit('SendAdapterMsg', 'unsubscribe', `tradeBin${cfg.timeframe}:${cfg.symbol}`);
+  bb.emit('SendAdapterMsg', 'unsubscribe', [`tradeBin${cfg.timeframe}:${cfg.symbol}`]);
   bb.emit('CandleClosed', c);
   historic = null;
 }
