@@ -31,6 +31,8 @@ function onHistoryDownloaded (h)
 
 function onCandleReceived (c)
 {
+  // if (!historic) { return; }
+
   // ignore last historic candle
   if (c.t == historic.t) {
     log.log('partial candle is the same as the last in the history');
