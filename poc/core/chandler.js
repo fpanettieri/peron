@@ -7,10 +7,12 @@ const log = new logger('[core/chandler]');
 
 const CLOSE_OFFSET = cfg.chandler.offset * 1000;
 const CANDLE_STEP = utils.intervalToMs(cfg.timeframe);
+const STATES = { INITIAL: 0, HISTORIC: 1, BRIDGE: 2, CANDLE: 3 };
 
 let bb = null;
 
-let historic = {};
+let state = STATES.INITIAL;
+let historic = null;
 let candle = null;
 
 function plug (_bb)
@@ -20,42 +22,35 @@ function plug (_bb)
   bb.on('CandleReceived', onCandleReceived);
   bb.on('TradeReceived', onTradeReceived);
 
+  resetCandle();
   setTimeout(closeCandle, getTimeout());
 }
 
 function onHistoryDownloaded (h)
 {
-  if (!historic) { log.fatal('unexpected history received'); }
+  if (state > STATES.INITIAL) { log.fatal('unexpected history received'); }
+  state = STATES.HISTORIC;
   historic = h[h.length - 1];
 }
 
 function onCandleReceived (c)
 {
-  // if (!historic) { return; }
+  if (c.t == historic.t) { return; }
+  if (state > STATES.HISTORIC) { return; }
+  state = STATES.BRIDGE;
 
-  // ignore last historic candle
-  if (c.t == historic.t) {
-    log.log('partial candle is the same as the last in the history');
-    return;
-  } else {
-    log.log('new candle! woohooo, only 15s late!');
-  }
-
-  // propagate the first partial candle
+  log.log('new candle! woohooo, only 15s late!');
   bb.emit('SendAdapterMsg', 'unsubscribe', [`tradeBin${cfg.timeframe}:${cfg.symbol}`]);
   bb.emit('CandleClosed', c);
-  historic = null;
 }
 
 function onTradeReceived (t)
 {
-  if (!candle) { return; }
-
   if (candle.o == null) { candle.o = t.price; }
   if (t.price > candle.h) { candle.h = t.price; }
   if (t.price < candle.l) { candle.l = t.price; }
   candle.c = t.price;
-  cande.v += t.foreignNotional;
+  candle.v += t.foreignNotional;
 }
 
 function closeCandle ()
@@ -63,20 +58,16 @@ function closeCandle ()
   setTimeout(closeCandle, getTimeout());
   log.log('CLOSING CANDLE!');
 
+  return;
 
   if (historic) {
-    log.log('haven\'t broadcasted the first candle yet');
+    candle = {};
     return;
   } else {
     bb.emit('CandleClosed', candle);
   }
 
-  candle.o = null;
-  candle.h = null;
-  candle.l = null;
-  candle.c = null;
-  candle.v = 0;
-  candle.t = (Math.round(Date.now() / CANDLE_STEP) + 1) * CANDLE_STEP;
+
 
   console.log(candle);
 }
@@ -84,6 +75,11 @@ function closeCandle ()
 function getTimeout ()
 {
   return CANDLE_STEP - (Date.now() % CANDLE_STEP) + CLOSE_OFFSET;
+}
+
+function resetCandle ()
+{
+  candle = {o: null, h: null, l: null, c: null, v: 0, t: (Math.round(Date.now() / CANDLE_STEP) + 1) * CANDLE_STEP};
 }
 
 module.exports = { plug: plug }
