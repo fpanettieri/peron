@@ -54,6 +54,4 @@ function onPositionClosed (data)
   log.error('onPositionClosed not implemented', data);
 }
 
-module.exports = {
-  plug: plug
-}
+module.exports = { plug: plug }

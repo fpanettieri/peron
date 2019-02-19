@@ -6,19 +6,24 @@ const logger = require('../lib/logger');
 const log = new logger('[core/chandler]');
 
 let bb = null;
+let partial = null;
 
 function plug (_bb)
 {
   log.log('plugging');
   bb = _bb;
+  bb.on('CandleReceived', onCandleReceived);
   bb.on('TradeReceived', onTradeReceived);
+}
+
+function onCandleReceived (c)
+{
+  log.log(c);
 }
 
 function onTradeReceived (t)
 {
-  console.log(t);
+  log.log('trade');
 }
 
-module.exports = {
-  plug: plug
-}
+module.exports = { plug: plug }

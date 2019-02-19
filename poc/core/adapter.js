@@ -118,11 +118,11 @@ function broadcast (json)
     } break;
 
     case 'trade': {
-      bb.emit('TradeReceived', json.data[0]);
+      bb.silent('TradeReceived', json.data[0]);
     } break;
 
     case `tradeBin${cfg.timeframe}`: {
-      bb.emit('CandleClosed', bitmex.toOhlc(json.data[0]));
+      bb.emit('CandleReceived', bitmex.toOhlc(json.data[0]));
     } break;
 
     case 'quote': {
@@ -152,7 +152,7 @@ function onWatchMarket ()
     op: 'subscribe',
     // args: [ `quote:${cfg.symbol}, `tradeBin${cfg.timeframe}:${cfg.symbol}`, `quote:${cfg.symbol}`, `funding:XBTUSD` ]
     // args: [ `tradeBin${cfg.timeframe}:${cfg.symbol}`, `quote:${cfg.symbol}` ]
-    args: [ `trade:${cfg.symbol}` ]
+    args: [ `trade:${cfg.symbol}`, `tradeBin${cfg.timeframe}:${cfg.symbol}` ]
   }
   send(sub_params);
 }

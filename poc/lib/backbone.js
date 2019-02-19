@@ -24,6 +24,11 @@ class Backbone extends EventEmitter
     log.info(arguments[0]);
     return super.emit.apply(this, arguments);
   }
+
+  silent ()
+  {
+    return super.emit.apply(this, arguments);
+  }
 }
 
 module.exports = Backbone;

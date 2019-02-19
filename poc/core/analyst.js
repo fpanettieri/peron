@@ -55,6 +55,4 @@ function analyze (o)
   o.bb_upper = o.bb_ma + o.bb_dev * cfg.bb.mult;
 }
 
-module.exports = {
-  plug: plug
-}
+module.exports = { plug: plug }

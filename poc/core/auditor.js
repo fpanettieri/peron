@@ -25,6 +25,4 @@ function onTradeExecuted (t)
   log.log(`time to market: ${Date.now() - start}`);
 }
 
-module.exports = {
-  plug: plug
-}
+module.exports = { plug: plug }
