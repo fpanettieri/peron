@@ -12,19 +12,16 @@ const DMS_INTERVAL = 15 * 1000;
 const DMS_TIMEOUT = 60 * 1000;
 
 let bb = null;
-let db = null;
-
 let socket = null;
 let limit = 0;
 
 function noop () {}
 
-function plug (_bb, _db)
+function plug (_bb)
 {
   log.log('plugging');
-  bb = _bb;
-  db = _db;
 
+  bb = _bb;
   bb.on('ConnectSocket', onConnect);
   bb.on('SyncAccount', onSyncAccount);
   bb.on('WatchMarket', onWatchMarket);

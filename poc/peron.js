@@ -11,21 +11,25 @@ const mongo = require('./lib/mongo');
 const adapter = require('./core/adapter');
 const accountant = require('./core/accountant');
 const archivist = require('./core/archivist');
+const chandler = require('./core/chandler');
 const analyst = require('./core/analyst');
 const brain = require('./core/brain');
+const auditor = require('./core/auditor');
 
 (async () => {
   const log = new logger(`[Peron/main]`);
   log.info('peronizando');
 
-  const db = await mongo.connect();
+  // const db = await mongo.connect();
   const bb = new backbone();
 
-  archivist.plug(bb, db);
-  adapter.plug(bb, db);
-  accountant.plug(bb, db);
-  analyst.plug(bb, db);
-  brain.plug(bb, db);
+  adapter.plug(bb);
+  accountant.plug(bb);
+  archivist.plug(bb);
+  chandler.plug(bb);
+
+  analyst.plug(bb);
+  brain.plug(bb);
 
   bb.chain('SocketConnected', 'DownloadHistory');
   // bb.chain('SocketConnected', 'SyncAccount');
