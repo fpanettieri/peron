@@ -18,8 +18,10 @@ function plug (_bb, _db)
 
 async function onCandleAnalyzed (c)
 {
+  log.log('alpha!');
   // Needs 2 candle at least
-  
+  // check that the time between them is
+
   //bb.emit('Long');
   //bb.emit('Short');
 }

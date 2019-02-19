@@ -7,7 +7,7 @@ period = input(20, minval=1)
 mult = input(2, minval=0.001, maxval=50)
 
 // === PARAMS ===
-basis = vwma(close, period)
+basis = ma(close, period)
 dev = mult * stdev(close, period)
 upper = basis + dev
 lower = basis - dev
