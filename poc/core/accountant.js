@@ -22,25 +22,21 @@ function plug (_bb)
 
 function onMarginUpdated (m)
 {
-  log.info(`margin updated`);
   margin = {...margin, ...m};
 }
 
 function onPositionSynced (data)
 {
-  log.info(`positions synced: ${data.length}`);
   positions = data;
 }
 
 function onPositionOpened (data)
 {
-  log.info(`position opened`);
   positions = positions.concat(data);
 }
 
 function onPositionUpdated (data)
 {
-  log.info(`position updated`);
   for (let i = 0; i < data.length; i++) {
     let pos = data[i];
     let idx = positions.findIndex(p => p.symbol == pos.symbol && p.account == pos.account && p.currency == pos.currency);
