@@ -23,20 +23,50 @@ async function onCandleAnalyzed (c)
 {
   previous = current;
   current = c;
-  if (!previous) { return; }
+  log.log(c);
+  if (!previous) {
+    log.log('no previous');
+    return;
+  }
 
+  log.log('================================');
+  log.log('  OpenShort:', previous.c > previous.bb_upper && current.c < current.bb_upper && current.c > current.bb_ma);
+  log.log('================================');
+  log.log('previous.c > previous.bb_upper', previous.c > previous.bb_upper);
+  log.log('current.c < current.bb_upper', current.c < current.bb_upper);
+  log.log('current.c > current.bb_ma', current.c > current.bb_ma);
+  log.log('');
   if (previous.c > previous.bb_upper && current.c < current.bb_upper && current.c > current.bb_ma) {
     bb.emit('OpenShort', current);
   }
 
+  log.log('================================');
+  log.log('  OpenLong:', previous.c < previous.bb_lower && current.c > current.bb_lower && current.c < current.bb_ma);
+  log.log('================================');
+  log.log('previous.c < previous.bb_lower', previous.c < previous.bb_lower);
+  log.log('current.c > current.bb_lower', current.c > current.bb_lower);
+  log.log('current.c < current.bb_ma', current.c < current.bb_ma);
+  log.log('');
   if (previous.c < previous.bb_lower && current.c > current.bb_lower && current.c < current.bb_ma) {
     bb.emit('OpenLong', current);
   }
 
+  log.log('================================');
+  log.log('  CloseShort:', previous.c > previous.bb_ma && current.c < current.bb_ma);
+  log.log('================================');
+  log.log('previous.c > previous.bb_ma', previous.c > previous.bb_ma);
+  log.log('current.c < current.bb_ma', current.c < current.bb_ma);
+  log.log('');
   if (previous.c > previous.bb_ma && current.c < current.bb_ma) {
     bb.emit('CloseShort', current);
   }
 
+  log.log('================================');
+  log.log('  CloseLong:', previous.c < previous.bb_ma && current.c > current.bb_ma);
+  log.log('================================');
+  log.log('previous.c < previous.bb_ma', previous.c < previous.bb_ma);
+  log.log('current.c > current.bb_ma', current.c > current.bb_ma);
+  log.log('');
   if (previous.c < previous.bb_ma && current.c > current.bb_ma) {
     bb.emit('CloseLong', current);
   }
