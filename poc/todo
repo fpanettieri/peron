@@ -1,6 +1,8 @@
 ===============
   TODO
 ===============
+. Predict next BB frame
+
 . Brain (finds alpha opportunities)
   . Listens to updates from the analyst
   . Implements a concrete strategy to find alpha
