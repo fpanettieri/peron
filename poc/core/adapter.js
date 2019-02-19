@@ -25,7 +25,7 @@ function plug (_bb)
   bb.on('ConnectSocket', onConnect);
   bb.on('SyncAccount', onSyncAccount);
   bb.on('WatchMarket', onWatchMarket);
-  bb.on('SendAdaptertMsg', onSendAdapterMsg);
+  bb.on('SendAdapterMsg', onSendAdapterMsg);
 }
 
 function onConnect(url)
@@ -158,6 +158,7 @@ function onWatchMarket ()
 
 function onSendAdapterMsg (op, args)
 {
+  log.warn('sending raw msg');
   send({op: op, args: args});
 }
 
