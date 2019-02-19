@@ -19,8 +19,6 @@ function noop () {}
 
 function plug (_bb)
 {
-  log.log('plugging');
-
   bb = _bb;
   bb.on('ConnectSocket', onConnect);
   bb.on('SyncAccount', onSyncAccount);

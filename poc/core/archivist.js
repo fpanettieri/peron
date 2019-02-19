@@ -9,7 +9,6 @@ let bb = null;
 
 function plug (_bb)
 {
-  log.log('plugging');
   bb = _bb;
   bb.on('DownloadHistory', onDownloadHistory);
 }

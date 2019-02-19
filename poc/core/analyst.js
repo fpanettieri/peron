@@ -13,7 +13,6 @@ let ohlcs = [];
 
 function plug (_bb)
 {
-  log.log('plugging');
   bb = _bb;
   bb.on('HistoryDownloaded', onHistoryDownloaded);
   bb.on('CandleClosed', onCandleClosed);
@@ -32,6 +31,8 @@ function onHistoryDownloaded (history)
 
 function onCandleClosed (c)
 {
+  log.log('onCandleClosed', typeof c, ohlcs.length);
+
   if (c.t == ohlcs[ohlcs.length - 1].t) { return; }
 
   for (let i = 1; i < ohlcs.length; i++) {

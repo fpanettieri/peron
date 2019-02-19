@@ -15,7 +15,6 @@ let candle = null;
 
 function plug (_bb)
 {
-  log.log('plugging');
   bb = _bb;
   bb.on('HistoryDownloaded', onHistoryDownloaded);
   bb.on('CandleReceived', onCandleReceived);

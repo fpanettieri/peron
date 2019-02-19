@@ -11,7 +11,6 @@ let positions = [];
 
 function plug (_bb)
 {
-  log.log('plugging');
   bb = _bb;
   bb.on('MarginUpdated', onMarginUpdated);
   bb.on('PositionSynced', onPositionSynced);

@@ -11,7 +11,6 @@ let current = null;
 
 function plug (_bb)
 {
-  log.log('plugging');
   bb = _bb;
   bb.on('CandleAnalyzed', onCandleAnalyzed);
 }

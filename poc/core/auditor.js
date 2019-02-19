@@ -8,7 +8,6 @@ let start = 0;
 
 function plug (_bb)
 {
-  log.log('plugging');
   bb = _bb;
   bb.on('CandleClosed', onCandleClosed);
   bb.on('TradeExecuted', onTradeExecuted);
