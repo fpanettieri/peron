@@ -6,16 +6,13 @@ const log = new logger('[core/accountant]');
 const BTS = 0.00000001;
 
 let bb = null;
-let db = null;
-
 let margin = {};
 let positions = [];
 
-function plug (_bb, _db)
+function plug (_bb)
 {
   log.log('plugging');
   bb = _bb;
-  db = _db;
   bb.on('MarginUpdated', onMarginUpdated);
   bb.on('PositionSynced', onPositionSynced);
   bb.on('PositionOpened', onPositionOpened);

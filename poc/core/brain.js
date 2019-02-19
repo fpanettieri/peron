@@ -6,16 +6,13 @@ const logger = require('../lib/logger');
 const log = new logger('[core/brain]');
 
 let bb = null;
-let db = null;
-
 let previous = null;
 let current = null;
 
-function plug (_bb, _db)
+function plug (_bb)
 {
   log.log('plugging');
   bb = _bb;
-  db = _db;
   bb.on('CandleAnalyzed', onCandleAnalyzed);
 }
 

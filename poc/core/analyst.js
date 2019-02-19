@@ -9,15 +9,12 @@ const log = new logger('[core/analyst]');
 const CANDLE_STEP = utils.intervalToMs(cfg.timeframe);
 
 let bb = null;
-let db = null;
-
 let ohlcs = [];
 
-function plug (_bb, _db)
+function plug (_bb)
 {
   log.log('plugging');
   bb = _bb;
-  db = _db;
   bb.on('HistoryDownloaded', onHistoryDownloaded);
   bb.on('CandleClosed', onCandleClosed);
 }

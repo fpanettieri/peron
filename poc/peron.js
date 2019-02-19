@@ -27,9 +27,9 @@ const auditor = require('./core/auditor');
   accountant.plug(bb);
   archivist.plug(bb);
   chandler.plug(bb);
-
   analyst.plug(bb);
   brain.plug(bb);
+  auditor.plug(bb);
 
   bb.chain('SocketConnected', 'DownloadHistory');
   // bb.chain('SocketConnected', 'SyncAccount');

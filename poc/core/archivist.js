@@ -6,13 +6,11 @@ const logger = require('../lib/logger');
 const log = new logger('[core/archivist]');
 
 let bb = null;
-let db = null;
 
-function plug (_bb, _db)
+function plug (_bb)
 {
   log.log('plugging');
   bb = _bb;
-  db = _db;
   bb.on('DownloadHistory', onDownloadHistory);
 }
 
