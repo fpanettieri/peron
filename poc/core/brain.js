@@ -18,7 +18,8 @@ function plug (_bb, _db)
 
 async function onCandleAnalyzed (c)
 {
-
+  // Needs 2 candle at least
+  
   //bb.emit('Long');
   //bb.emit('Short');
 }
