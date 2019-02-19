@@ -117,7 +117,7 @@ function broadcast (json)
       bb.emit(action, json.data);
     } break;
 
-    case 'tradex': {
+    case 'trade': {
       bb.emit('TradeReceived', json.data[0]);
     } break;
 
