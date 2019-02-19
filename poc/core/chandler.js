@@ -21,8 +21,7 @@ function plug (_bb)
   bb.on('CandleReceived', onCandleReceived);
   bb.on('TradeReceived', onTradeReceived);
 
-  const timeout = CANDLE_STEP - (Date.now() % CANDLE_STEP) + CLOSE_OFFSET;
-  setTimeout(closeCandle, timeout);
+  setTimeout(closeCandle, getTimeout());
 }
 
 function onHistoryDownloaded (h)
@@ -42,26 +41,46 @@ function onCandleReceived (c)
   }
 
   // propagate the first partial candle
-  historic = null;
   bb.emit('SendAdapterMsg', 'unsubscribe', `tradeBin${cfg.timeframe}:${cfg.symbol}`);
   bb.emit('CandleClosed', c);
+  historic = null;
 }
 
 function onTradeReceived (t)
 {
   if (!candle) { return; }
+
+  if (candle.o == null) { candle.o = t.price; }
+  if (t.price > candle.h) { candle.h = t.price; }
+  if (t.price < candle.l) { candle.l = t.price; }
   candle.c = t.price;
+  cande.v += t.foreignNotional;
 }
 
 function closeCandle ()
 {
+  log.log('CLOSING CANDLE!');
+
   if (historic) {
     log.log('haven\'t broadcasted the first candle yet');
     return;
+  } else {
+    bb.emit('CandleClosed', candle);
   }
-  log.log('CLOSING CANDLE!');
 
-  setTimeout(closeCandle, CANDLE_STEP);
+  candle.o = null;
+  candle.h = null;
+  candle.l = null;
+  candle.c = null;
+  candle.v = 0;
+  candle.t = (Math.round(Date.now() / CANDLE_STEP) + 1) * CANDLE_STEP;
+
+  setTimeout(closeCandle, getTimeout());
+}
+
+function getTimeout ()
+{
+  return CANDLE_STEP - (Date.now() % CANDLE_STEP) + CLOSE_OFFSET;
 }
 
 module.exports = { plug: plug }
