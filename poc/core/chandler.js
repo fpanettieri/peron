@@ -36,7 +36,7 @@ function onHistoryDownloaded (h)
 function onCandleReceived (c)
 {
   if (c.t == historic.t) { return; }
-  if (state > STATES.HISTORIC) { return; }
+  if (state > STATES.HISTORIC) { log.fatal('unexpected candle received'); return; }
   state = STATES.BRIDGE;
 
   log.log('new candle! woohooo, only 15s late!');
@@ -57,7 +57,8 @@ function closeCandle ()
 {
   setTimeout(closeCandle, getTimeout());
   log.log('CLOSING CANDLE!');
-
+  log.log(candle);
+  
   return;
 
   if (historic) {
