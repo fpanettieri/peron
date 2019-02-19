@@ -28,7 +28,6 @@ function onHistoryDownloaded (history)
   for (let i = 0; i < history.length; i++) {
     let o = history[i];
     analyze(o);
-    log.log(o);
     ohlcs.push(o);
   }
   bb.emit('HistoryAnalyzed');
