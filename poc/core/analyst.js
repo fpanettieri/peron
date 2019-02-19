@@ -34,6 +34,11 @@ function onCandleClosed (c)
 {
   if (c.t == ohlcs[ohlcs.length - 1].t) { return; }
 
+  for (let i = 1; i < ohlcs.length; i++) {
+    const delta = ohlcs[i].t - ohlcs[i - 1].t;
+    if (delta > 60 * 1000) { log.fatal(`invalid delta between candles: ${delta}`); }
+  }
+
   analyze(c);
   if (ohlcs.push(c) > cfg.history) { ohlcs.shift(); };
   bb.emit('CandleAnalyzed', c);

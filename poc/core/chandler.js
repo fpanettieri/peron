@@ -75,6 +75,8 @@ function closeCandle ()
   candle.v = 0;
   candle.t = (Math.round(Date.now() / CANDLE_STEP) + 1) * CANDLE_STEP;
 
+  console.log(candle);
+
   setTimeout(closeCandle, getTimeout());
 }
 
