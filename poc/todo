@@ -7,6 +7,7 @@
   . Determines the amount of margin and leverage to use
   . Calculates possible fees
   . Sends the Buy / Sell message
+  . 'Magic' SL. After an open position, if the price breaks out again, try to close at a good price
 
 . Broker (Execute the strategy)
   . Watch order book

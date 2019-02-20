@@ -33,6 +33,7 @@ function onCandleAnalyzed (c)
   if (previous.c < previous.bb_ma && current.h > current.bb_ma) {
     bb.emit('CloseLong', current);
   }
+  console.log('');
 }
 
 module.exports = { plug: plug }

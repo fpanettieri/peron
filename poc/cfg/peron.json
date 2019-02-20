@@ -3,9 +3,9 @@
   "timeframe": "1m",
   "symbol": "XBTUSD",
   "history": "50",
-  "chandler": { "offset": -5000 },
+  "chandler": { "offset": -15000 },
   "bb": {
-    "periods": 24,
+    "periods": 20,
     "mult": 2
   }
 }
