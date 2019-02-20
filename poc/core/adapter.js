@@ -109,6 +109,7 @@ function onMessage (data)
 
 function broadcast (json)
 {
+  log.log(json);
   switch (json.table) {
     case 'margin': {
       bb.emit('MarginUpdated', json.data[0]);
@@ -142,7 +143,7 @@ function onSyncAccount ()
 {
   const sub_params = {
     op: 'subscribe',
-    args: [ 'margin', 'position', 'order' ]
+    args: [ 'margin', 'position', 'order', 'execution' ]
   }
   send(sub_params);
 }
