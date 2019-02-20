@@ -1,24 +1,14 @@
 ===============
   TODO
 ===============
-. Chandler (Bundle trades into ohlcvt candles)
-  . Listen to live trades
-  . Bundle trades into OHLCVT candles
-  . Emit the CandleClosed
-  . Try to enter market 10~15s before the candle closes
-
-. Brain (finds alpha opportunities)
-  . Listens to updates from the analyst
-  . Implements a concrete strategy to find alpha
-
 . Trader (determines the concrete strategy)
-  . Emit buy/sell signal
-  . Mixes alpha sources with current position
-  . Determines the risk of entering a position
+  . Listen to Signals from the brain
+  . Check how many open positions we have / based on how much margin is allocated
+  . Determines the amount of margin and leverage to use
   . Calculates possible fees
+  . Sends the Buy / Sell message
 
 . Broker (Execute the strategy)
-  . Watch market
   . Watch order book
   . Determine size and number of orders to create
   . Send orders to the market
@@ -55,6 +45,17 @@
   - Calculate needed indicators
 
 . log every message that passes through the backbone to replicate the data flow platita
+
+. Chandler (Bundle trades into ohlcvt candles)
+  . Listen to live trades
+  . Bundle trades into OHLCVT candles
+  . Emit the CandleClosed
+  . Try to enter market 10~15s before the candle closes
+
+. Brain (finds alpha opportunities)
+  . Listens to updates from the analyst
+  . Implements a concrete strategy to find alpha
+  . Emit buy/sell signal
 
 ===============
   IGNORE
