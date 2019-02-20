@@ -35,12 +35,14 @@ function onHistoryDownloaded (h)
 
 function onCandleReceived (c)
 {
+  log.log(c);
+
   if (c.t == historic.t) { return; }
-  if (state > STATES.HISTORIC) { log.fatal('unexpected candle received'); return; }
+  if (state > STATES.BRIDGE) { log.fatal('unexpected candle received'); return; } //STATES.HISTORIC
   state = STATES.BRIDGE;
 
   log.log('new candle! woohooo, only 15s late!');
-  bb.emit('SendAdapterMsg', 'unsubscribe', [`tradeBin${cfg.timeframe}:${cfg.symbol}`]);
+  // bb.emit('SendAdapterMsg', 'unsubscribe', [`tradeBin${cfg.timeframe}:${cfg.symbol}`]);
   bb.emit('CandleClosed', c);
 }
 
