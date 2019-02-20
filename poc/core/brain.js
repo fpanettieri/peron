@@ -24,15 +24,13 @@ function onCandleAnalyzed (c)
   if (previous.c > previous.bb_upper && current.c < current.bb_upper && current.c > current.bb_ma) {
     bb.emit('OpenShort', current);
   }
-
   if (previous.c < previous.bb_lower && current.c > current.bb_lower && current.c < current.bb_ma) {
     bb.emit('OpenLong', current);
   }
-
-  if (previous.c > previous.bb_ma && current.c < current.bb_ma) {
+  if (previous.c > previous.bb_ma && current.l < current.bb_ma) {
     bb.emit('CloseShort', current);
   }
-  if (previous.c < previous.bb_ma && current.c > current.bb_ma) {
+  if (previous.c < previous.bb_ma && current.h > current.bb_ma) {
     bb.emit('CloseLong', current);
   }
 }
