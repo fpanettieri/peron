@@ -52,17 +52,17 @@ symbol: 'XBTUSD',
 currency: 'XBt',
 underlying: 'XBT',
 quoteCurrency: 'USD',
-commission: 0.00075,
-initMarginReq: 1,
-maintMarginReq: 0.005,
-riskLimit: 20000000000,
-leverage: 1,
-crossMargin: false,
+commission: 0.00075, // paid?
+initMarginReq: 1, // no idea
+maintMarginReq: 0.005, // no idea
+riskLimit: 20000000000, // interesting?
+leverage: 1, // interesting
+crossMargin: false, // interesting
 deleveragePercentile: null,
 rebalancedPnl: 0,
-prevRealisedPnl: -61602,
-prevUnrealisedPnl: 0,
-prevClosePrice: 3855,
+prevRealisedPnl: -61602,  // don't care
+prevUnrealisedPnl: 0, // don't care
+prevClosePrice: 3855, // don't care
 openingTimestamp: '2019-02-20T13:00:00.000Z',
 openingQty: 0,
 openingCost: 0,
@@ -89,7 +89,7 @@ unrealisedCost: 0,
 grossOpenCost: 0,
 grossOpenPremium: 0,
 grossExecCost: 0,
-isOpen: false,
+isOpen: false,  // CRITICAL!
 markPrice: null,
 markValue: 0,
 riskValue: 0,
