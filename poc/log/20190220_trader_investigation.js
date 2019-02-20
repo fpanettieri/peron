@@ -1,7 +1,7 @@
 { //! NO POSITIONS - NO ORDERS
 
-  // Margin
-  { account: 153475,
+  { // Margin
+  account: 153475,
   currency: 'XBt',
   riskLimit: 1000000000000,
   prevState: '',
@@ -46,8 +46,8 @@
   // Order
   []
 
-  // Position
-  { account: 153475,
+  { // Position
+  account: 153475,
   symbol: 'XBTUSD',
   currency: 'XBt',
   underlying: 'XBT',
