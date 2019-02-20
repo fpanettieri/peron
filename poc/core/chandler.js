@@ -23,9 +23,7 @@ function plug (_bb)
   bb.on('TradeReceived', onTradeReceived);
 
   resetCandle();
-  const timeout = getTimeout() + CLOSE_OFFSET;
-  if (timeout < 0) { timeout += CANDLE_STEP; }
-  setTimeout(closeCandle, timeout);
+  setTimeout(closeCandle, getTimeout());
 }
 
 function onHistoryDownloaded (h)
@@ -75,7 +73,9 @@ function closeCandle ()
 
 function getTimeout ()
 {
-  return CANDLE_STEP - (Date.now() % CANDLE_STEP);
+  let timeout = CANDLE_STEP - (Date.now() % CANDLE_STEP) + CLOSE_OFFSET;
+  if (timeout < 0) { timeout += CANDLE_STEP; }
+  return timeout;
 }
 
 function resetCandle ()
