@@ -143,7 +143,7 @@ function onSyncAccount ()
 {
   const sub_params = {
     op: 'subscribe',
-    args: [ 'margin', 'position', 'order', 'execution' ]
+    args: [ 'margin', 'position', 'order' ]
   }
   send(sub_params);
 }
