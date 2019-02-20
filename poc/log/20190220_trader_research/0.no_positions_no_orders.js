@@ -81,7 +81,7 @@ execQty: 0,
 execCost: 0,
 execComm: 0,
 currentTimestamp: '2019-02-20T13:00:00.341Z',
-currentQty: 0,
+currentQty: 0,  // seems important
 currentCost: 0,
 currentComm: 0,
 realisedCost: 0,
