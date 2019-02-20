@@ -15,7 +15,7 @@ function plug (_bb)
 {
   bb = _bb;
   bb.on('HistoryDownloaded', onHistoryDownloaded);
-  bb.on('CandleClosed', onCandleClosed);
+  // bb.on('CandleClosed', onCandleClosed);
 }
 
 function onHistoryDownloaded (history)
