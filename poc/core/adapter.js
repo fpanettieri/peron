@@ -160,7 +160,6 @@ function onWatchMarket ()
 
 function onSendAdapterMsg (op, args)
 {
-  log.warn('sending raw msg');
   send({op: op, args: args});
 }
 
