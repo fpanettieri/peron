@@ -19,7 +19,10 @@ function onCandleAnalyzed (c)
 {
   previous = current;
   current = c;
-  log.log(c);
+
+  log.log('previous', previous);
+  log.log('current', current);
+  
   if (!previous) {
     log.log('no previous');
     return;
