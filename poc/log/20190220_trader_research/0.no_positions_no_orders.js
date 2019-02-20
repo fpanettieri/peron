@@ -30,15 +30,15 @@ unrealisedPnl: 0,
 indicativeTax: 0,
 unrealisedProfit: 0,
 syntheticMargin: null,
-walletBalance: 136741605,       // do I care about this one?
-marginBalance: 136741605,       // do I care about this one?
-marginBalancePcnt: 1,           // how about this?
-marginLeverage: 0,              // this sounds important
-marginUsedPcnt: 0,              // this sounds important
-excessMargin: 136741605,        // how about this?
-excessMarginPcnt: 1,            // how about this?
-availableMargin: 136741605,     // this sounds important
-withdrawableMargin: 136741605,  // how about this?
+walletBalance: 136741605, // do I care about this one?
+marginBalance: 136741605, // do I care about this one?
+marginBalancePcnt: 1, // how about this?
+marginLeverage: 0, // this sounds important
+marginUsedPcnt: 0, // this sounds important
+excessMargin: 136741605, // how about this?
+excessMarginPcnt: 1, // how about this?
+availableMargin: 136741605, // this sounds important
+withdrawableMargin: 136741605, // how about this?
 timestamp: '2019-02-19T09:42:06.121Z',
 grossLastValue: 0,
 commission: null }
