@@ -3,11 +3,11 @@
 { // Margin
 account: 153475,
 currency: 'XBt',
-riskLimit: 1000000000000,
+riskLimit: 1000000000000, // no idea
 prevState: '',
 state: '',
 action: '',
-amount: 136741605,
+amount: 136741605, // total margin?
 pendingCredit: 0,
 pendingDebit: 0,
 confirmedDebit: 0,
@@ -30,15 +30,15 @@ unrealisedPnl: 0,
 indicativeTax: 0,
 unrealisedProfit: 0,
 syntheticMargin: null,
-walletBalance: 136741605,
-marginBalance: 136741605,
-marginBalancePcnt: 1,
-marginLeverage: 0,
-marginUsedPcnt: 0,
-excessMargin: 136741605,
-excessMarginPcnt: 1,
-availableMargin: 136741605,
-withdrawableMargin: 136741605,
+walletBalance: 136741605,       // do I care about this one?
+marginBalance: 136741605,       // do I care about this one?
+marginBalancePcnt: 1,           // how about this?
+marginLeverage: 0,              // this sounds important
+marginUsedPcnt: 0,              // this sounds important
+excessMargin: 136741605,        // how about this?
+excessMarginPcnt: 1,            // how about this?
+availableMargin: 136741605,     // this sounds important
+withdrawableMargin: 136741605,  // how about this?
 timestamp: '2019-02-19T09:42:06.121Z',
 grossLastValue: 0,
 commission: null }
