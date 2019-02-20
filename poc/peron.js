@@ -6,7 +6,7 @@ const cfg = require('./cfg/peron');
 
 const logger = require('./lib/logger');
 const backbone = require('./lib/backbone');
-const mongo = require('./lib/mongo');
+// const mongo = require('./lib/mongo');
 
 const adapter = require('./core/adapter');
 const accountant = require('./core/accountant');
@@ -32,8 +32,8 @@ const auditor = require('./core/auditor');
   auditor.plug(bb);
 
   bb.chain('SocketConnected', 'DownloadHistory');
-  // bb.chain('SocketConnected', 'SyncAccount');
-  bb.chain('HistoryDownloaded', 'WatchMarket');
+  bb.chain('SocketConnected', 'SyncAccount');
+  // bb.chain('HistoryDownloaded', 'WatchMarket');
 
   bb.emit('ConnectSocket', `wss://${cfg.testnet ? 'testnet' : 'www'}.bitmex.com/realtime`);
 })();
