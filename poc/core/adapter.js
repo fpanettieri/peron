@@ -121,7 +121,7 @@ function broadcast (json)
     } break;
 
     case 'trade': {
-      bb.silent('TradeReceived', json.data[0]);
+      bb.silent('TradeReceived', json.data);
     } break;
 
     case `tradeBin${cfg.timeframe}`: {

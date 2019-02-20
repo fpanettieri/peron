@@ -46,19 +46,23 @@ function onCandleReceived (c)
   state = STATES.CANDLE;
 }
 
-function onTradeReceived (t)
+function onTradeReceived (arr)
 {
-  if (candle.o == null) { candle.o = t.price; }
-  if (t.price > candle.h) { candle.h = t.price; }
-  if (t.price < candle.l) { candle.l = t.price; }
-  candle.c = t.price;
-  candle.v += t.foreignNotional;
+  for (let i = 0; i < arr.length; i++) {
+    const t = arr[i];
+
+    if (candle.o == null) { candle.o = t.price; }
+    if (t.price > candle.h) { candle.h = t.price; }
+    if (t.price < candle.l) { candle.l = t.price; }
+    candle.c = t.price;
+    candle.v += t.foreignNotional;
+  }
 }
 
 function closeCandle ()
 {
   setTimeout(closeCandle, getTimeout());
-  
+
   let close = candle.c;
   resetCandle();
   candle.o = close;
