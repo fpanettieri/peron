@@ -31,7 +31,7 @@ const auditor = require('./core/auditor');
   brain.plug(bb);
   auditor.plug(bb);
 
-  bb.chain('SocketConnected', 'DownloadHistory');
+  // bb.chain('SocketConnected', 'DownloadHistory');
   bb.chain('SocketConnected', 'SyncAccount');
   // bb.chain('HistoryDownloaded', 'WatchMarket');
 

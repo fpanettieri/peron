@@ -136,7 +136,7 @@ function broadcast (json)
   //   default: {
   //     log.warn('Unexpected msg:', json);
   //   }
-  }
+  // }
 }
 
 function onSyncAccount ()
