@@ -15,7 +15,7 @@ function plug (_bb)
 {
   bb = _bb;
   bb.on('HistoryDownloaded', onHistoryDownloaded);
-  // bb.on('CandleClosed', onCandleClosed);
+  bb.on('CandleClosed', onCandleClosed);
 }
 
 function onHistoryDownloaded (history)
@@ -31,9 +31,10 @@ function onHistoryDownloaded (history)
 
 function onCandleClosed (c)
 {
-  log.log('onCandleClosed', c);
-
-  if (c.t == ohlcs[ohlcs.length - 1].t) { return; }
+  if (c.t == ohlcs[ohlcs.length - 1].t) {
+    log.warn('this should never happen, it should be filtered by the chandler');
+    return;
+  }
 
   for (let i = 1; i < ohlcs.length; i++) {
     const delta = ohlcs[i].t - ohlcs[i - 1].t;
