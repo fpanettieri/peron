@@ -19,14 +19,7 @@ function onCandleAnalyzed (c)
 {
   previous = current;
   current = c;
-
-  log.log('previous', previous);
-  log.log('current', current);
-
-  if (!previous) {
-    log.log('no previous');
-    return;
-  }
+  if (!previous) { return; }
 
   log.log('================================');
   log.log('  OpenShort:', previous.c > previous.bb_upper && current.c < current.bb_upper && current.c > current.bb_ma);
