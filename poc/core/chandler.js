@@ -5,7 +5,7 @@ const utils = require('../lib/utils');
 const logger = require('../lib/logger');
 const log = new logger('[core/chandler]');
 
-const CLOSE_OFFSET = cfg.chandler.offset;
+const CLOSE_OFFSET = cfg.chandler.offset * 1000;
 const CANDLE_STEP = utils.intervalToMs(cfg.timeframe);
 const STATES = { INITIAL: 0, HISTORIC: 1, BRIDGE: 2, CANDLE: 3 };
 
@@ -73,6 +73,7 @@ function closeCandle ()
 
 function getTimeout ()
 {
+  log.error(CANDLE_STEP - (Date.now() % CANDLE_STEP) + CLOSE_OFFSET);
   return CANDLE_STEP - (Date.now() % CANDLE_STEP) + CLOSE_OFFSET;
 }
 
