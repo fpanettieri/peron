@@ -58,7 +58,7 @@ function closeCandle ()
   setTimeout(closeCandle, getTimeout());
   log.log('CLOSING CANDLE!');
   log.log(candle);
-  
+
   return;
 
   if (historic) {
@@ -80,7 +80,7 @@ function getTimeout ()
 
 function resetCandle ()
 {
-  candle = {o: null, h: null, l: null, c: null, v: 0, t: (Math.round(Date.now() / CANDLE_STEP) + 1) * CANDLE_STEP};
+  candle = {o: null, h: Number.MIN_SAFE_INTEGER, l: Number.MAX_SAFE_INTEGER, c: null, v: 0, t: (Math.round(Date.now() / CANDLE_STEP) + 1) * CANDLE_STEP};
 }
 
 module.exports = { plug: plug }
