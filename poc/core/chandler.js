@@ -35,15 +35,15 @@ function onHistoryDownloaded (h)
 
 function onCandleReceived (c)
 {
-  log.log(c);
-
   if (c.t == historic.t) { return; }
   if (state > STATES.BRIDGE) { log.fatal('unexpected candle received'); return; } //STATES.HISTORIC
   state = STATES.BRIDGE;
 
   log.log('new candle! woohooo, only 15s late!');
-  // bb.emit('SendAdapterMsg', 'unsubscribe', [`tradeBin${cfg.timeframe}:${cfg.symbol}`]);
+  bb.emit('SendAdapterMsg', 'unsubscribe', [`tradeBin${cfg.timeframe}:${cfg.symbol}`]);
   bb.emit('CandleClosed', c);
+
+  state = STATES.CANDLE;
 }
 
 function onTradeReceived (t)
@@ -58,21 +58,12 @@ function onTradeReceived (t)
 function closeCandle ()
 {
   setTimeout(closeCandle, getTimeout());
-  log.log('CLOSING CANDLE!');
-  log.log(candle);
+  
+  let close = candle.c;
+  resetCandle();
+  candle.o = close;
 
-  return;
-
-  if (historic) {
-    candle = {};
-    return;
-  } else {
-    bb.emit('CandleClosed', candle);
-  }
-
-
-
-  console.log(candle);
+  if (state == STATES.CANDLE) { bb.emit('CandleClosed', candle); };
 }
 
 function getTimeout ()
