@@ -67,7 +67,7 @@ function closeCandle ()
   setTimeout(closeCandle, getTimeout());
 
   log.warn('closeCandle');
-  log.warn(c);
+  log.warn(candle);
 
   if (state == STATES.CANDLE) {
     bb.emit('CandleClosed', candle);
