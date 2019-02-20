@@ -39,7 +39,7 @@ function onCandleReceived (c)
   log.warn(c);
 
   if (c.t == historic.t) { return; }
-  if (state > STATES.BRIDGE) { log.fatal('unexpected candle received'); return; } //STATES.HISTORIC
+  if (state > STATES.CANDLE) { log.fatal('unexpected candle received'); return; } //STATES.HISTORIC
   state = STATES.BRIDGE;
 
   log.log('new candle! woohooo, only 15s late!');
