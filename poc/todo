@@ -3,8 +3,8 @@
 ===============
 . Trader (determines the concrete strategy)
   - Listen to Signals from the brain
+  - Determine if we are using the funding info
   . Listen to market updates
-  . If there is an existing position when the trader starts, close it first
 
   . Check how many open positions we have / based on how much margin is allocated
   . Determines the amount of margin and leverage to use
@@ -15,8 +15,8 @@
     . if close & there is a position, emit Sell(X amount)
 
   . 'Magic' SL. After an open position, if the price breaks out again, try to close at a good price
-  . Determine if we are using the funding info
 
+  . If there is an existing position when the trader starts, close it first
 
 . Broker (Execute the strategy)
   . Watch order book
@@ -38,6 +38,8 @@
 . Maker Icebergs. Similar to icebergs
   . Only a small order is put on the market
   . When it's filled, other maker orders are created
+
+. Consider funding before openning positions
 
 ===============
   DONE
