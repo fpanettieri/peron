@@ -26,3 +26,4 @@
 . margin is used to reduce the amount of collateral used
 . fees get multiplied by the leverage used
 . volatility also gets amplified by leverage
+. LEVERAGE IS BAD!!! you only get paid fees on the margin allocated. but pay fees in leveraged position

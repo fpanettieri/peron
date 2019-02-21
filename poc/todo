@@ -17,12 +17,14 @@
   . 'Magic' SL. After an open position, if the price breaks out again, try to close at a good price
   . Determine if we are using the funding info
 
+
 . Broker (Execute the strategy)
   . Watch order book
   . Determine size and number of orders to create
   . Send orders to the market
   . Overviews the market and determines when to cancel orders
   . Receives orders from the trader
+  . Amend orders!!!
 
 . Auditor (Tracks the bot performance)
   . Listens to 2 events
