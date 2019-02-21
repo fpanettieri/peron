@@ -10,6 +10,30 @@ let bb = null;
 function plug (_bb)
 {
   bb = _bb;
+  bb.on('OpenShort', onOpenShort);
+  bb.on('OpenLong', onOpenLong);
+  bb.on('CloseShort', onCloseShort);
+  bb.on('CloseLong', onCloseLong);
+}
+
+function onOpenShort (c)
+{
+
+}
+
+function onOpenLong (c)
+{
+
+}
+
+function onCloseShort (c)
+{
+
+}
+
+function onCloseLong (c)
+{
+
 }
 
 module.exports = { plug: plug }
