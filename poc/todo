@@ -4,7 +4,7 @@
 . Trader (determines the concrete strategy)
   - Listen to Signals from the brain
   - Determine if we are using the funding info
-  . Listen to market updates
+  - Listen to market updates
 
   . Check how many open positions we have / based on how much margin is allocated
   . Determines the amount of margin and leverage to use

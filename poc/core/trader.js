@@ -16,6 +16,7 @@ function plug (_bb)
   // TODO: if at the beggining, there is a pre-existing position, close it before starting
 
   // bb.on('PreExistingPosition', onPreExistingPosition);
+  bb.on('MarginUpdated', onMarginUpdated);
   bb.on('QuoteUpdated', onQuoteUpdated);
   bb.on('OpenShort', onOpenShort);
   bb.on('OpenLong', onOpenLong);
@@ -26,11 +27,17 @@ function plug (_bb)
 function onQuoteUpdated (q)
 {
   quote = q;
-  log.log(q);
+}
+
+function onMarginUpdated (m)
+{
+  margin = {...margin, ...m};
+  log.log(margin);
 }
 
 function onOpenShort (c)
 {
+  // margin.marginBalance
 
 }
 
