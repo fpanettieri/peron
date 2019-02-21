@@ -133,6 +133,10 @@ function broadcast (json)
       // TODO: implement quote
     } break;
 
+    case 'order': {
+      // TODO: implement order
+    } break;
+
     default: {
       log.warn('Unexpected msg:', json);
     }
