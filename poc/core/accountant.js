@@ -27,6 +27,8 @@ function onMarginUpdated (m)
 function onPositionSynced (data)
 {
   positions = data;
+  let p = positions.find(p => p.symbol == 'XBTUSD');
+  log.log(p);
 }
 
 function onPositionOpened (data)

@@ -6,14 +6,15 @@ const logger = require('../lib/logger');
 const log = new logger('[core/trader]');
 
 let bb = null;
+let margin = {};
 
 function plug (_bb)
 {
   bb = _bb;
 
-  // TODO: listen to margin update
-  // TODO: listen to position update
   // TODO: if at the beggining, there is a pre-existing position, close it before starting
+
+  bb.on
 
   bb.on('OpenShort', onOpenShort);
   bb.on('OpenLong', onOpenLong);
