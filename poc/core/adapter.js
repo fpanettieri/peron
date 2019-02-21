@@ -129,12 +129,11 @@ function broadcast (json)
     } break;
 
     case 'quote': {
-      log.log(json.data);
-      // TODO: implement quote
+      bb.silent('QuoteUpdated', json.data[0]);
     } break;
 
     case 'order': {
-      // TODO: implement order
+      // TODO: implement order passing
     } break;
 
     default: {

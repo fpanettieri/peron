@@ -14,12 +14,16 @@ function plug (_bb)
 
   // TODO: if at the beggining, there is a pre-existing position, close it before starting
 
-  bb.on
-
+  bb.on('QuoteUpdated', onQuoteUpdated);
   bb.on('OpenShort', onOpenShort);
   bb.on('OpenLong', onOpenLong);
   bb.on('CloseShort', onCloseShort);
   bb.on('CloseLong', onCloseLong);
+}
+
+function onQuoteUpdated (q)
+{
+  
 }
 
 function onOpenShort (c)
