@@ -2,7 +2,9 @@
   TODO
 ===============
 . Trader (determines the concrete strategy)
-  . Listen to Signals from the brain
+  - Listen to Signals from the brain
+  . Listen to market updates
+  . If there is an existing position when the trader starts, close it first
   . Check how many open positions we have / based on how much margin is allocated
   . Determines the amount of margin and leverage to use
   . Calculates possible fees

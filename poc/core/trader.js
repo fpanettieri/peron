@@ -10,6 +10,11 @@ let bb = null;
 function plug (_bb)
 {
   bb = _bb;
+
+  // TODO: listen to margin update
+  // TODO: listen to position update
+  // TODO: if at the beggining, there is a pre-existing position, close it before starting
+
   bb.on('OpenShort', onOpenShort);
   bb.on('OpenLong', onOpenLong);
   bb.on('CloseShort', onCloseShort);

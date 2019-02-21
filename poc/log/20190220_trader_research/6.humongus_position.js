@@ -41,7 +41,7 @@ unrealisedCost: -5347671054,
 grossOpenCost: 0,
 grossOpenPremium: 0,
 grossExecCost: 5338406205,
-isOpen: true,
+isOpen: true,             // KEY!
 markPrice: 3907,
 markValue: -5374950000,
 riskValue: 5374950000,
