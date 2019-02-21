@@ -6,8 +6,8 @@ const logger = require('../lib/logger');
 const log = new logger('[core/trader]');
 
 let bb = null;
-let margin = {};
 let quote = {};
+let margin = {};
 
 function plug (_bb)
 {

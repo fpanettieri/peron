@@ -29,8 +29,8 @@ function onPositionSynced (data)
   positions = data;
 
   // TODO: Add support for other symbols
-  let pos = positions.find(p => p.symbol == 'XBTUSD');
-  if (pos.isOpen){ bb.emit('PreExistingPosition', pos); }
+  // let pos = positions.find(p => p.symbol == 'XBTUSD');
+  // if (pos.isOpen){ bb.emit('PreExistingPosition', pos); }
 }
 
 function onPositionOpened (data)
