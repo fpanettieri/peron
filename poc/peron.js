@@ -8,7 +8,6 @@ const logger = require('./lib/logger');
 const backbone = require('./lib/backbone');
 
 const adapter = require('./core/adapter');
-// const accountant = require('./core/accountant');
 const archivist = require('./core/archivist');
 const chandler = require('./core/chandler');
 const analyst = require('./core/analyst');
@@ -22,7 +21,6 @@ const auditor = require('./core/auditor');
 
   const bb = new backbone();
   adapter.plug(bb);
-  // accountant.plug(bb);
   archivist.plug(bb);
   chandler.plug(bb);
   analyst.plug(bb);

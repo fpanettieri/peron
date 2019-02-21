@@ -14,7 +14,7 @@
     . if open & there is enough margin left, emit Buy(X amount)
     . if close & there is a position, emit Sell(X amount)
 
-  . 'Magic' SL. After an open position, if the price breaks out again, try to close at a good price
+
 
   . If there is an existing position when the trader starts, close it first
 
@@ -39,7 +39,9 @@
   . Only a small order is put on the market
   . When it's filled, other maker orders are created
 
-. Consider funding before openning positions
+. Trader
+  . Consider funding before opening positions
+  . 'Magic' SL. After an open position, if the price breaks out again, try to close at a good price?
 
 ===============
   DONE
