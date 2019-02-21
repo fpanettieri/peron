@@ -1,5 +1,3 @@
-//! NO POSITIONS - NO ORDERS
-
 { // Margin
 account: 153475,
 currency: 'XBt',
