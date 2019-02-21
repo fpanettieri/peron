@@ -63,8 +63,8 @@ openingTimestamp: '2019-02-20T17:00:00.000Z',
 openingQty: 0,
 openingCost: 0,
 openingComm: 0,
-openOrderBuyQty: 1,
-openOrderBuyCost: -33333,
+openOrderBuyQty: 1, // This changed when the order was open
+openOrderBuyCost: -33333, // Raw margin
 openOrderBuyPremium: 0,
 openOrderSellQty: 0,
 openOrderSellCost: 0,
@@ -82,13 +82,13 @@ currentCost: 0,
 currentComm: 0,
 realisedCost: 0,
 unrealisedCost: 0,
-grossOpenCost: 33333,
+grossOpenCost: 33333, // This also changed
 grossOpenPremium: 0,
 grossExecCost: 0,
 isOpen: false,
 markPrice: null,
 markValue: 0,
-riskValue: 33333,
+riskValue: 33333, // Mmmm, no idea
 homeNotional: 0,
 foreignNotional: 0,
 posState: '',
@@ -102,7 +102,7 @@ posMargin: 0,
 posMaint: 0,
 posAllowance: 0,
 taxableMargin: 0,
-initMargin: 33408,
+initMargin: 33408, // This also changed
 maintMargin: 0,
 sessionMargin: 0,
 targetExcessMargin: 0,
@@ -135,7 +135,7 @@ timestamp: '2019-02-20T17:21:52.495Z',
 lastPrice: null,
 lastValue: 0 }
 
-{ // Order
+{ // Order (all this is new, although the trader might safely ignore this table probably)
 orderID: '91643d74-6120-c61b-efbf-c805945db3ee',
 clOrdID: '',
 clOrdLinkID: '',
