@@ -13,6 +13,7 @@ const archivist = require('./core/archivist');
 const chandler = require('./core/chandler');
 const analyst = require('./core/analyst');
 const brain = require('./core/brain');
+const trader = require('./core/trader');
 const auditor = require('./core/auditor');
 
 (async () => {
@@ -26,6 +27,7 @@ const auditor = require('./core/auditor');
   chandler.plug(bb);
   analyst.plug(bb);
   brain.plug(bb);
+  trader.plug(bb);
   auditor.plug(bb);
 
   bb.chain('SocketConnected', 'DownloadHistory');
