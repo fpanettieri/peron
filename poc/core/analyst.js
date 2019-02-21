@@ -48,18 +48,18 @@ function onCandleClosed (c)
 
 function analyze (o)
 {
-  if (ohlcs.length < cfg.bb.periods) { return; }
+  if (ohlcs.length < cfg.analyst.bb.periods) { return; }
 
   o.bb_ma = o.c;
-  for (let i = 0; i < cfg.bb.periods - 1; i++) { o.bb_ma += ohlcs[ohlcs.length - i - 1].c; }
-  o.bb_ma /= cfg.bb.periods;
+  for (let i = 0; i < cfg.analyst.bb.periods - 1; i++) { o.bb_ma += ohlcs[ohlcs.length - i - 1].c; }
+  o.bb_ma /= cfg.analyst.bb.periods;
 
   o.bb_dev = Math.pow(o.c - o.bb_ma, 2);
-  for (let i = 0; i < cfg.bb.periods - 1; i++) { o.bb_dev += Math.pow(ohlcs[ohlcs.length - i - 1].c - o.bb_ma, 2); }
-  o.bb_dev = Math.sqrt(o.bb_dev / cfg.bb.periods);
+  for (let i = 0; i < cfg.analyst.bb.periods - 1; i++) { o.bb_dev += Math.pow(ohlcs[ohlcs.length - i - 1].c - o.bb_ma, 2); }
+  o.bb_dev = Math.sqrt(o.bb_dev / cfg.analyst.bb.periods);
 
-  o.bb_lower = o.bb_ma - o.bb_dev * cfg.bb.mult;
-  o.bb_upper = o.bb_ma + o.bb_dev * cfg.bb.mult;
+  o.bb_lower = o.bb_ma - o.bb_dev * cfg.analyst.bb.mult;
+  o.bb_upper = o.bb_ma + o.bb_dev * cfg.analyst.bb.mult;
 }
 
 module.exports = { plug: plug }

@@ -6,7 +6,7 @@ openOrderBuyQty: 100, // Interesting
 openOrderBuyCost: -3333300,
 grossOpenCost: 3333300,
 riskValue: 3333300,
-initMargin: 3340800, // This is the really important value
+initMargin: 3340800, // This is the really important value. Is the amount allocated in current positions
 timestamp: '2019-02-20T17:29:51.465Z',
 currentQty: 0,
 markPrice: 3921.5,
@@ -18,10 +18,10 @@ account: 153475,
 currency: 'XBt',
 grossOpenCost: 3333300,
 riskValue: 3333300,
-initMargin: 3340800,
+initMargin: 3340800,  // Used margin in both, active positions and
 marginUsedPcnt: 0.0244,
 excessMargin: 133400805,
-availableMargin: 133400805,
+availableMargin: 133400805, // Margin available to use
 withdrawableMargin: 133400805,
 timestamp: '2019-02-20T17:29:51.465Z'
 }

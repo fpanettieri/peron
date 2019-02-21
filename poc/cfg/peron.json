@@ -4,8 +4,13 @@
   "symbol": "XBTUSD",
   "history": "50",
   "chandler": { "offset": -15000 },
-  "bb": {
-    "periods": 20,
-    "mult": 2
+  "analyst": {
+    "bb": {
+      "periods": 20,
+      "mult": 2
+    }
+  },
+  "trader": {
+
   }
 }
