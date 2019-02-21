@@ -109,34 +109,34 @@ function onMessage (data)
 
 function broadcast (json)
 {
-  log.log(json);
-  // switch (json.table) {
-  //   case 'margin': {
-  //     bb.emit('MarginUpdated', json.data[0]);
-  //   } break;
-  //
-  //   case 'position': {
-  //     const map = { 'partial': 'Synced', 'insert': 'Opened', 'update': 'Updated', 'delete': 'Closed' };
-  //     const action = `Position${map[json.action]}`;
-  //     bb.emit(action, json.data);
-  //   } break;
-  //
-  //   case 'trade': {
-  //     bb.silent('TradeReceived', json.data);
-  //   } break;
-  //
-  //   case `tradeBin${cfg.timeframe}`: {
-  //     bb.emit('CandleReceived', bitmex.toOhlc(json.data[0]));
-  //   } break;
-  //
-  //   case 'quote': {
-  //     // TODO: implement quote
-  //   } break;
-  //
-  //   default: {
-  //     log.warn('Unexpected msg:', json);
-  //   }
-  // }
+  switch (json.table) {
+    case 'margin': {
+      bb.emit('MarginUpdated', json.data[0]);
+    } break;
+
+    case 'position': {
+      const map = { 'partial': 'Synced', 'insert': 'Opened', 'update': 'Updated', 'delete': 'Closed' };
+      const action = `Position${map[json.action]}`;
+      bb.emit(action, json.data);
+    } break;
+
+    case 'trade': {
+      bb.silent('TradeReceived', json.data);
+    } break;
+
+    case `tradeBin${cfg.timeframe}`: {
+      bb.emit('CandleReceived', bitmex.toOhlc(json.data[0]));
+    } break;
+
+    case 'quote': {
+      log.log(json.data);
+      // TODO: implement quote
+    } break;
+
+    default: {
+      log.warn('Unexpected msg:', json);
+    }
+  }
 }
 
 function onSyncAccount ()
@@ -154,7 +154,7 @@ function onWatchMarket ()
     op: 'subscribe',
     // args: [ `quote:${cfg.symbol}, `tradeBin${cfg.timeframe}:${cfg.symbol}`, `quote:${cfg.symbol}`, `funding:${cfg.symbol}` ]
     // args: [ `tradeBin${cfg.timeframe}:${cfg.symbol}`, `quote:${cfg.symbol}` ]
-    args: [ `trade:${cfg.symbol}`, `tradeBin${cfg.timeframe}:${cfg.symbol}` ]
+    args: [ `trade:${cfg.symbol}`, `tradeBin${cfg.timeframe}:${cfg.symbol}`, `quote:${cfg.symbol}` ]
   }
   send(sub_params);
 }
