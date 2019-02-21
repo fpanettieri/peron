@@ -4,10 +4,10 @@ clOrdID: '',
 clOrdLinkID: '',
 account: 153475,
 symbol: 'XBTUSD',
-side: 'Buy',
+side: 'Buy', // Interesting for the broker
 simpleOrderQty: null,
-orderQty: 1,
-price: 3000,
+orderQty: 1,  // Interesting for the broker
+price: 3000,  // Interesting for the broker
 displayQty: null,
 stopPx: null,
 pegOffsetValue: null,
@@ -22,7 +22,7 @@ exDestination: 'XBME',
 ordStatus: 'New',
 triggered: '',
 workingIndicator: false,
-ordRejReason: '',
+ordRejReason: '', // Interesting for the broker
 simpleLeavesQty: null,
 leavesQty: 1,
 simpleCumQty: null,
@@ -43,13 +43,12 @@ symbol: 'XBTUSD',
 timestamp: '2019-02-20T14:20:21.089Z'
 }
 
-
 { // Position
 account: 153475,
 symbol: 'XBTUSD',
 currency: 'XBt',
-openOrderBuyQty: 1,
-openOrderBuyCost: -33333,
+openOrderBuyQty: 1, // Interesting for the broker
+openOrderBuyCost: -33333, // Interesting for the broker
 grossOpenCost: 33333,
 riskValue: 33333,
 initMargin: 33408,
@@ -62,10 +61,10 @@ liquidationPrice: null
 { // Margin
 account: 153475,
 currency: 'XBt',
-grossOpenCost: 33333,
+grossOpenCost: 33333, // Useful
 riskValue: 33333,
-initMargin: 33408,
-marginUsedPcnt: 0.0002,
+initMargin: 33408,  // InitMargin (used?) + AvailableMargin = MarginBalance
+marginUsedPcnt: 0.0002, // Useful
 excessMargin: 136708197,
 availableMargin: 136708197,
 withdrawableMargin: 136708197,
