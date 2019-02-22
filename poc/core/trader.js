@@ -46,17 +46,21 @@ function onMarginUpdated (m)
 function onOpenLong (c)
 {
   let margin = usableMargin();
-  log.log('Usable Margin:', margin);
-  if (margin <= 0) { return; }
-  bb.emit('BuyContract', cfg.symbol, marginToContracts(margin), c.c);
+  if (margin <= 0) {
+    log.warn('OpenLong signal ignored. Not enough margin.');
+    return;
+  }
+  bb.emit('BuyContract', cfg.symbol, marginToContracts(margin), c);
 }
 
 function onOpenShort (c)
 {
   let margin = usableMargin();
-  log.log('Usable Margin:', margin);
-  if (margin <= 0) { return; }
-  bb.emit('SellContract', cfg.symbol, marginToContracts(margin), c.c);
+  if (margin <= 0) {
+    log.warn('OpenShort signal ignored. Not enough margin.');
+    return;
+  }
+  bb.emit('SellContract', cfg.symbol, marginToContracts(margin), c);
 }
 
 function usableMargin ()

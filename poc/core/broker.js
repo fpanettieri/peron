@@ -6,13 +6,17 @@ const log = new logger('[core/broker]');
 
 let bb = null;
 
-const pending = [];
-const quote = {};
+let pending = [];
+let live = [];
+
+let quote = {};
+let candle = null;
 
 function plug (_bb)
 {
   bb = _bb;
   bb.on('QuoteUpdated', onQuoteUpdated);
+  bb.on('CandleAnalyzed', onCandleAnalyzed);
   bb.on('BuyContract', onBuyContract);
   bb.on('SellContract', onSellContract);
 }
@@ -20,17 +24,26 @@ function plug (_bb)
 function onQuoteUpdated (q)
 {
   quote = q;
+  log.log(q);
 }
 
-function onBuyContract (sym, qty, px)
+function onCandleAnalyzed (c)
 {
-  pending.push({ i: genId(), o: 'buy', s: sym, q: qty, p: px, t: Date.now() });
-
+  candle = c;
+  // for op in active
+    // amend orders
 }
 
-function onSellContract (sym, qty, px)
+function onBuyContract (sym, qty, _candle)
 {
-  pending.push({ i: genId(), o: 'sell', s: sym, q: qty, p: px, t: Date.now() });
+  candle = _candle;
+  pending.push({ id: genId(), op: 'buy', sym: sym, qty: qty, px: px, t: Date.now() });
+}
+
+function onSellContract (sym, qty, _candle)
+{
+  candle = _candle;
+  pending.push({ id: genId(), op: 'sell', sym: sym, qty: qty, px: px, t: Date.now() });
 }
 
 function genId ()
