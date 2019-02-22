@@ -1,20 +1,6 @@
 ===============
   TODO
 ===============
-. Trader (determines the concrete strategy)
-  - Listen to Signals from the brain
-  - Determine if we are using the funding info
-  - Listen to market updates
-  - Check how many open positions we have / based on how much margin is allocated
-  - Calculates possible fees
-  . Determines the amount of margin and leverage to use
-
-  . Sends the Buy / Sell message
-    . if open & there is enough margin left, emit Buy(X amount)
-    . if close & there is a position, emit Sell(X amount)
-
-  . If there is an existing position when the trader starts, close it first
-
 . Broker (Execute the strategy)
   . Watch order book
   . Close other orders
@@ -23,13 +9,13 @@
   . Overviews the market and determines when to cancel orders
   . Receives orders from the trader
   . Amend orders!!!
+  . If there is an existing position when the trader starts, close it first
   . Handle 503 errors => https://testnet.bitmex.com/app/restAPI#Overload
-
 
 . Auditor (Tracks the bot performance)
   . Listens to 2 events
-  . On candle closed
-  . On trade accepted (short or long opened | closed) ((TradeExecuted?))
+    . On candle closed
+    . On trade accepted (short or long opened | closed) ((TradeExecuted?))
   . Logs the time elapsed
   . Audit: Pre-market ms & Time To Market
 
@@ -41,43 +27,55 @@
   . When it's filled, other maker orders are created
 
 . Trader
-  . Consider funding before opening positions
+  . Consider funding before opening positions?
   . 'Magic' SL. After an open position, if the price breaks out again, try to close at a good price?
-  . Check if we need to to anything on Close msgs
+  . Check if we need to do anything on 'CloseX' msgs
 
 ===============
   DONE
 ===============
-. fetch available margin
-. fetch positions
-. handle deposit (update to wallet)
-. track subscribe requests, and match with pendings?
-. calculate usable funds
-. get usable margin
-. test the 'partial' load with a fresh account
-. Design strategy
-. Test strategy on TV
+- fetch available margin
+- fetch positions
+- handle deposit (update to wallet)
+- track subscribe requests, and match with pendings?
+- calculate usable funds
+- get usable margin
+- test the 'partial' load with a fresh account
+- Design strategy
+- Test strategy on TV
 
-. Analyst (technical analysis)
+- Analyst (technical analysis)
   - Watch market
   - Cache N candles on the analyst side
   - Calculate needed indicators
 
-. log every message that passes through the backbone to replicate the data flow platita
+- log every message that passes through the backbone to replicate the data flow platita
 
-. Chandler (Bundle trades into ohlcvt candles)
-  . Listen to live trades
-  . Bundle trades into OHLCVT candles
-  . Emit the CandleClosed
-  . Try to enter market 10~15s before the candle closes
+- Chandler (Bundle trades into ohlcvt candles)
+  - Listen to live trades
+  - Bundle trades into OHLCVT candles
+  - Emit the CandleClosed
+  - Try to enter market 10~15s before the candle closes
+  - Manually accumulate candles with an offset. Instead of [0, 5, 10, 15], [1, 6, 11, 16] etc..
 
-. Brain (finds alpha opportunities)
-  . Listens to updates from the analyst
-  . Implements a concrete strategy to find alpha
-  . Emit buy/sell signal
+- Brain (finds alpha opportunities)
+  - Listens to updates from the analyst
+  - Implements a concrete strategy to find alpha
+  - Emit buy/sell signal
+
+- Trader (determines the concrete strategy)
+  - Listen to Signals from the brain
+  - Determine if we are using the funding info
+  - Listen to market updates
+  - Check how many open positions we have / based on how much margin is allocated
+  - Calculates possible fees
+  - Determines the amount of margin and leverage to use
+
+  - Sends the Buy / Sell message
+    - if open & there is enough margin left, emit Buy(X amount)
+    - if close & there is a position, emit Sell(X amount)
 
 ===============
   IGNORE
 ===============
-. Manually accumulate candles with an offset. Instead of [0, 5, 10, 15], [1, 6, 11, 16] etc..
 . Shared memory, instead of sending the full list of candles?
