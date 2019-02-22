@@ -17,6 +17,7 @@ function plug (_bb)
 
 function onCandleClosed (c)
 {
+  log.log('onCandleClosed');
   start = Date.now();
 }
 
