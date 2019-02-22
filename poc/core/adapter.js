@@ -120,12 +120,12 @@ function broadcast (json)
       bb.emit(action, json.data);
     } break;
 
-    case 'trade': {
-      bb.silent('TradeReceived', json.data);
-    } break;
-
     case `tradeBin${cfg.timeframe}`: {
       bb.emit('CandleReceived', bitmex.toOhlc(json.data[0]));
+    } break;
+
+    case 'trade': {
+      bb.silent('TradeReceived', json.data);
     } break;
 
     case 'quote': {

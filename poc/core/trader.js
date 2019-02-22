@@ -15,10 +15,12 @@ function plug (_bb)
 {
   bb = _bb;
 
-  // TODO: if at the beggining, there is a pre-existing position, close it before starting
+  margin.availableMargin = 1;
+  margin.walletBalance = 1;
 
   bb.on('MarginUpdated', onMarginUpdated);
   bb.on('QuoteUpdated', onQuoteUpdated);
+  bb.on('PositionSynced', onPositionSynced);
   bb.on('OpenShort', onOpenShort);
   bb.on('OpenLong', onOpenLong);
   bb.on('CloseShort', onCloseShort);
@@ -33,16 +35,27 @@ function onQuoteUpdated (q)
 function onMarginUpdated (m)
 {
   margin = {...margin, ...m};
+}
 
-  log.log('balance', margin.walletBalance);
-  log.log('available', margin.availableMargin);
-  log.log('in use', 1 - margin.availableMargin / margin.walletBalance);
+function onPositionSynced (arr)
+{
+  let pos = arr.find(i => i.symbol == 'XBTUSD');
+  if (!pos.isOpen) { return; }
+  log.error('close it??');
+  // We can easily close it, by placing a sell order at the MA.
+}
+
+function enoughMargin ()
+{
+  let max = (cfg.trader.orders * cfg.trader.size);
+  let used = 1 - margin.availableMargin / margin.walletBalance;
+  return used < max;
 }
 
 function onOpenShort (c)
 {
   if (!enoughMargin()) { return; }
-  
+
   // margin.marginBalance
 
 }
