@@ -38,7 +38,7 @@ function onMarginUpdated (m)
 function onPositionSynced (arr)
 {
   let pos = arr.find(i => i.symbol == 'XBTUSD');
-  if (!pos.isOpen) { return; }
+  if (!pos || !pos.isOpen) { return; }
   log.error('close it??');
   // We can easily close it, by placing a sell order at the MA.
 }
