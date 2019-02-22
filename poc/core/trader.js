@@ -20,7 +20,7 @@ function plug (_bb)
 
   bb.on('MarginUpdated', onMarginUpdated);
   bb.on('QuoteUpdated', onQuoteUpdated);
-  bb.on('PositionSynced', onPositionSynced);
+  // bb.on('PositionSynced', onPositionSynced);
   bb.on('OpenLong', onOpenLong);
   bb.on('OpenShort', onOpenShort);
 }
@@ -35,20 +35,20 @@ function onMarginUpdated (m)
   margin = {...margin, ...m};
 }
 
-function onPositionSynced (arr)
-{
-  let pos = arr.find(i => i.symbol == 'XBTUSD');
-  if (!pos || !pos.isOpen) { return; }
-  log.error('close it??');
-  // We can easily close it, by placing a sell order at the MA.
-}
+// function onPositionSynced (arr)
+// {
+//   let pos = arr.find(i => i.symbol == 'XBTUSD');
+//   if (!pos || !pos.isOpen) { return; }
+//   log.error('close it??');
+//   // We can easily close it, by placing a sell order at the MA.
+// }
 
 function usableMargin ()
 {
   let max = (cfg.trader.orders * cfg.trader.size);
   let used = 1 - margin.availableMargin / margin.walletBalance;
   let free = Math.max(max - used, 0);
-  return Math.min(free, cfg.trader.size) * margin.walletBalance;
+  return Math.floor(Math.min(free, cfg.trader.size) * margin.walletBalance);
 }
 
 function marginToContracts (m)
