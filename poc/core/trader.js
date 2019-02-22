@@ -23,8 +23,6 @@ function plug (_bb)
   bb.on('PositionSynced', onPositionSynced);
   bb.on('OpenShort', onOpenShort);
   bb.on('OpenLong', onOpenLong);
-  bb.on('CloseShort', onCloseShort);
-  bb.on('CloseLong', onCloseLong);
 }
 
 function onQuoteUpdated (q)
@@ -56,23 +54,18 @@ function onOpenShort (c)
 {
   if (!enoughMargin()) { return; }
 
+  let margin =
+
   // margin.marginBalance
 
 }
 
 function onOpenLong (c)
 {
+  if (!enoughMargin()) { return; }
 
-}
 
-function onCloseShort (c)
-{
-
-}
-
-function onCloseLong (c)
-{
-
+  bb.emit('BuyContract', );
 }
 
 module.exports = { plug: plug }

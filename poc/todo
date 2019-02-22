@@ -5,16 +5,13 @@
   - Listen to Signals from the brain
   - Determine if we are using the funding info
   - Listen to market updates
-
-  . Check how many open positions we have / based on how much margin is allocated
+  - Check how many open positions we have / based on how much margin is allocated
+  - Calculates possible fees
   . Determines the amount of margin and leverage to use
-  . Calculates possible fees
 
   . Sends the Buy / Sell message
     . if open & there is enough margin left, emit Buy(X amount)
     . if close & there is a position, emit Sell(X amount)
-
-
 
   . If there is an existing position when the trader starts, close it first
 
@@ -25,6 +22,8 @@
   . Overviews the market and determines when to cancel orders
   . Receives orders from the trader
   . Amend orders!!!
+  . Handle 503 errors => https://testnet.bitmex.com/app/restAPI#Overload
+
 
 . Auditor (Tracks the bot performance)
   . Listens to 2 events
@@ -42,6 +41,7 @@
 . Trader
   . Consider funding before opening positions
   . 'Magic' SL. After an open position, if the price breaks out again, try to close at a good price?
+  . Check if we need to to anything on Close msgs
 
 ===============
   DONE
