@@ -14,7 +14,7 @@ const analyst = require('./core/analyst');
 const brain = require('./core/brain');
 const trader = require('./core/trader');
 const broker = require('./core/broker');
-const auditor = require('./core/auditor');
+// const auditor = require('./core/auditor');
 
 (async () => {
   const log = new logger(`[Peron/main]`);
@@ -28,7 +28,7 @@ const auditor = require('./core/auditor');
   brain.plug(bb);
   trader.plug(bb);
   broker.plug(bb);
-  auditor.plug(bb);
+  // auditor.plug(bb);
 
   bb.chain('SocketConnected', 'DownloadHistory');
   bb.chain('SocketConnected', 'SyncAccount');
