@@ -22,14 +22,15 @@ function onQuoteUpdated (q)
   quote = q;
 }
 
-function onBuyContract (s, q)
+function onBuyContract (sym, qty, px)
 {
-  pending.push({ id: genId(), op: 'buy', s: s, q: q, t: Date.now() });
+  pending.push({ i: genId(), o: 'buy', s: sym, q: qty, p: px, t: Date.now() });
+
 }
 
-function onSellContract (s, q)
+function onSellContract (sym, qty, px)
 {
-  pending.push({ id: genId(), op: 'sell', s: s, q: q, t: Date.now() });
+  pending.push({ i: genId(), o: 'sell', s: sym, q: qty, p: px, t: Date.now() });
 }
 
 function genId ()

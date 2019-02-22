@@ -8,3 +8,6 @@
   ordType: 'Limit',
   execInst: 'ParticipateDoNotInitiate'
 }
+
+
+ParticipateDoNotInitiate: If this order would have executed on placement, it will cancel instead.

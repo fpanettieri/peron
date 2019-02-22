@@ -43,6 +43,22 @@ function onMarginUpdated (m)
 //   // We can easily close it, by placing a sell order at the MA.
 // }
 
+function onOpenLong (c)
+{
+  let margin = usableMargin();
+  log.log('Usable Margin:', margin);
+  if (margin <= 0) { return; }
+  bb.emit('BuyContract', cfg.symbol, marginToContracts(margin), c.c);
+}
+
+function onOpenShort (c)
+{
+  let margin = usableMargin();
+  log.log('Usable Margin:', margin);
+  if (margin <= 0) { return; }
+  bb.emit('SellContract', cfg.symbol, marginToContracts(margin), c.c);
+}
+
 function usableMargin ()
 {
   let max = (cfg.trader.orders * cfg.trader.size);
@@ -54,22 +70,6 @@ function usableMargin ()
 function marginToContracts (m)
 {
   return Math.round(Math.max(margin * STB * quote.askPrice, 1));
-}
-
-function onOpenLong (c)
-{
-  let margin = usableMargin();
-  log.log('Usable Margin:', margin);
-  if (margin <= 0) { return; }
-  bb.emit('BuyContract', cfg.symbol, marginToContracts(margin));
-}
-
-function onOpenShort (c)
-{
-  let margin = usableMargin();
-  log.log('Usable Margin:', margin);
-  if (margin <= 0) { return; }
-  bb.emit('SellContract', cfg.symbol, marginToContracts(margin));
 }
 
 module.exports = { plug: plug }
