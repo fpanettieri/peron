@@ -10,7 +10,8 @@ function plug (_bb)
 {
   bb = _bb;
   bb.on('CandleClosed', onCandleClosed);
-  bb.on('TradeExecuted', onTradeExecuted);
+  bb.on('BuyContract', onPreMarket);
+  bb.on('SellContract', onPreMarket);
   // TODO: On TradeExecuted log the time elapsed
 }
 
@@ -19,9 +20,9 @@ function onCandleClosed (c)
   start = Date.now();
 }
 
-function onTradeExecuted (t)
+function onPreMarket (t)
 {
-  log.log(`time to market: ${Date.now() - start}`);
+  log.log(`pre-market: ${Date.now() - start}ms`);
 }
 
 module.exports = { plug: plug }
