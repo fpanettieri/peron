@@ -5,7 +5,7 @@ const cfg = require('../cfg/peron');
 const logger = require('../lib/logger');
 const log = new logger('[core/trader]');
 
-const BTS = 0.00000001;
+const STB = 0.00000001;
 
 let bb = null;
 let quote = {};
@@ -21,8 +21,8 @@ function plug (_bb)
   bb.on('MarginUpdated', onMarginUpdated);
   bb.on('QuoteUpdated', onQuoteUpdated);
   bb.on('PositionSynced', onPositionSynced);
-  bb.on('OpenShort', onOpenShort);
   bb.on('OpenLong', onOpenLong);
+  bb.on('OpenShort', onOpenShort);
 }
 
 function onQuoteUpdated (q)
@@ -43,29 +43,36 @@ function onPositionSynced (arr)
   // We can easily close it, by placing a sell order at the MA.
 }
 
-function enoughMargin ()
+function usableMargin ()
 {
   let max = (cfg.trader.orders * cfg.trader.size);
   let used = 1 - margin.availableMargin / margin.walletBalance;
-  return used < max;
-}
-
-function onOpenShort (c)
-{
-  if (!enoughMargin()) { return; }
-
-  let margin =
-
-  // margin.marginBalance
-
+  let free = Math.max(max - used, 0);
+  return Math.min(free, cfg.trader.size) * margin.walletBalance;
 }
 
 function onOpenLong (c)
 {
-  if (!enoughMargin()) { return; }
+  let margin = usableMargin();
+  log.log('Usable Margin:', margin);
 
+  if (margin <= 0) { return; }
 
-  bb.emit('BuyContract', );
+  log.log('BUY!', margin * STB * quote.askPrice);
+  let amount = Math.max(margin * STB * quote.askPrice, 1);
+  bb.emit('BuyContract', cfg.symbol, amount);
+}
+
+function onOpenShort (c)
+{
+  let margin = usableMargin();
+  log.log('Usable Margin:', margin);
+
+  if (margin <= 0) { return; }
+
+  log.log('SELL!', margin * STB * quote.askPrice);
+  let amount = Math.max(margin * STB * quote.askPrice, 1);
+  bb.emit('SellContract', cfg.symbol, amount);
 }
 
 module.exports = { plug: plug }

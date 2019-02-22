@@ -17,6 +17,7 @@
 
 . Broker (Execute the strategy)
   . Watch order book
+  . Close other orders
   . Determine size and number of orders to create
   . Send orders to the market
   . Overviews the market and determines when to cancel orders

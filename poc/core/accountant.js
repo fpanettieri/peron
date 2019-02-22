@@ -3,8 +3,6 @@
 const logger = require('../lib/logger');
 const log = new logger('[core/accountant]');
 
-const BTS = 0.00000001;
-
 let bb = null;
 let margin = {};
 let positions = [];
