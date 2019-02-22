@@ -31,6 +31,9 @@
   . 'Magic' SL. After an open position, if the price breaks out again, try to close at a good price?
   . Check if we need to do anything on 'CloseX' msgs
 
+. Double check with BitMEX support about auth params use case in both ws and http
+  . const expires = ~~(Date.now() / 1000 + 30);
+
 ===============
   DONE
 ===============
