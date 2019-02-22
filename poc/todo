@@ -31,6 +31,7 @@
   . On candle closed
   . On trade accepted (short or long opened | closed) ((TradeExecuted?))
   . Logs the time elapsed
+  . Audit: Pre-market ms & Time To Market
 
 ===============
   Backlog
