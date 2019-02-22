@@ -63,7 +63,7 @@ function closeCandle ()
   setTimeout(closeCandle, getTimeout());
 
   if (state == STATES.CANDLE) {
-    bb.emit('CandleClosed', candle);
+    bb.silen('CandleClosed', candle);
   };
 
   let close = candle.c;
