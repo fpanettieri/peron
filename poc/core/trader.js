@@ -51,28 +51,25 @@ function usableMargin ()
   return Math.min(free, cfg.trader.size) * margin.walletBalance;
 }
 
+function marginToContracts (m)
+{
+  return Math.round(Math.max(margin * STB * quote.askPrice, 1));
+}
+
 function onOpenLong (c)
 {
   let margin = usableMargin();
   log.log('Usable Margin:', margin);
-
   if (margin <= 0) { return; }
-
-  log.log('BUY!', margin * STB * quote.askPrice);
-  let amount = Math.max(margin * STB * quote.askPrice, 1);
-  bb.emit('BuyContract', cfg.symbol, amount);
+  bb.emit('BuyContract', cfg.symbol, marginToContracts(margin));
 }
 
 function onOpenShort (c)
 {
   let margin = usableMargin();
   log.log('Usable Margin:', margin);
-
   if (margin <= 0) { return; }
-
-  log.log('SELL!', margin * STB * quote.askPrice);
-  let amount = Math.max(margin * STB * quote.askPrice, 1);
-  bb.emit('SellContract', cfg.symbol, amount);
+  bb.emit('SellContract', cfg.symbol, marginToContracts(margin));
 }
 
 module.exports = { plug: plug }
