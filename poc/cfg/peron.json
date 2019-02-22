@@ -14,5 +14,10 @@
     "orders": 5,
     "size": 0.03,
     "leverage": 1
+  },
+  "broker": {
+    "interval": 1000,
+    "lifetime": 5,
+    "min_profit": 0.5
   }
 }

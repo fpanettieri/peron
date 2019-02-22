@@ -8,6 +8,7 @@ let bb = null;
 
 let pending = [];
 let live = [];
+let interval = null;
 
 let quote = {};
 let candle = null;
@@ -24,7 +25,6 @@ function plug (_bb)
 function onQuoteUpdated (q)
 {
   quote = q;
-  log.log(q);
 }
 
 function onCandleAnalyzed (c)
@@ -34,21 +34,28 @@ function onCandleAnalyzed (c)
     // amend orders
 }
 
-function onBuyContract (sym, qty, _candle)
+function onBuyContract (sym, qty, px)
 {
-  candle = _candle;
   pending.push({ id: genId(), op: 'buy', sym: sym, qty: qty, px: px, t: Date.now() });
+  if (interval) { return; }
+  interval = setInterval(run, cfg.broker.interval);
 }
 
-function onSellContract (sym, qty, _candle)
+function onSellContract (sym, qty, px)
 {
-  candle = _candle;
   pending.push({ id: genId(), op: 'sell', sym: sym, qty: qty, px: px, t: Date.now() });
+  if (interval) { return; }
+  interval = setInterval(run, cfg.broker.interval);
 }
 
 function genId ()
 {
   return `ag-${Math.random().toString(36).substr(2, 8)}`;
+}
+
+function run ()
+{
+
 }
 
 module.exports = { plug: plug }
