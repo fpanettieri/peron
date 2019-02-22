@@ -37,11 +37,12 @@ const colors = {
 class Logger
 {
   constructor(prefix) { this.prefix = prefix; }
-  log ()   { console.log(this.prefix, ...arguments); }
-  info ()  { console.info(colors.fg.green + this.prefix, ...arguments, colors.base.reset); }
-  warn ()  { console.warn(colors.fg.yellow + this.prefix, ...arguments, colors.base.reset); }
-  error () { console.error(colors.fg.red + this.prefix, ...arguments, colors.base.reset); }
-  fatal () { console.error(colors.fg.red + this.prefix, ...arguments, colors.base.reset); process.exit(-1); }
+  date () { return `[${new Date().toISOString()}]`; }
+  log ()   { console.log(this.prefix, this.date(), ...arguments); }
+  info ()  { console.info(colors.fg.green + this.prefix, this.date(), ...arguments, colors.base.reset); }
+  warn ()  { console.warn(colors.fg.yellow + this.prefix, this.date(), ...arguments, colors.base.reset); }
+  error () { console.error(colors.fg.red + this.prefix, this.date(), ...arguments, colors.base.reset); }
+  fatal () { console.error(colors.fg.red + this.prefix, this.date(), ...arguments, colors.base.reset); process.exit(-1); }
 }
 
 module.exports = Logger;
