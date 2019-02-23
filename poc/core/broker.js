@@ -4,7 +4,7 @@ const cfg = require('../cfg/peron');
 const logger = require('../lib/logger');
 const log = new logger('[core/broker]');
 
-const STATES = { INTENT: 0, ORDER: 1, POSITON: 2 };
+const STATES = { INTENT: 0, ORDER: 1, POSITON: 2, DONE: 3 };
 
 let bb = null;
 
@@ -62,15 +62,39 @@ function createJob (id, sym, qty, px, state, t)
 function run ()
 {
   for (let i = 0; i < jobs.length; i++){
-    log.log(i, jobs[i]);
     process (jobs[i]);
   }
   if (jobs.length == 0) { clearInterval(interval); }
 }
 
-function process ()
+function process (job)
 {
-  //
+  switch (job.state){
+    case STATES.INTENT: proccessIntent(job); break;
+    case STATES.ORDER: proccessOrder(job); break;
+    case STATES.POSITON: proccessPosition(job); break;
+    case STATES.DONE: proccessDone(job); break;
+  }
+}
+
+function proccessIntent (job)
+{
+  
+}
+
+function proccessOrder (job)
+{
+
+}
+
+function proccessPosition (job)
+{
+
+}
+
+function proccessDone (job)
+{
+
 }
 
 module.exports = { plug: plug }
