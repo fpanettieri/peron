@@ -5,6 +5,7 @@ const bitmex = require('../lib/bitmex');
 const logger = require('../lib/logger');
 const log = new logger('[test/auth]');
 
+const options = { method: 'POST', api: 'order', testnet: true };
 const params = {
   symbol: 'XBTUSD',
   side: 'Buy',
@@ -16,7 +17,11 @@ const params = {
   execInst: 'ParticipateDoNotInitiate'
 }
 
-const options = { method: 'POST', api: 'order', testnet: true };
-const rsp = await bitmex.api(options, params);
-
-log.log(rsp);
+(async () => {
+  try {
+    const rsp = await bitmex.api(options, params);
+    log.log(rsp);
+  } catch(err) {
+    log.error(err);
+  }
+})();
