@@ -6,8 +6,9 @@
   - Receives orders from the trader
   . Design Jobs state machine
   . Handle job states
-    . New:
-    . ...
+    . Intent: Post order to the books
+    . Order: Check if it needs to be ammended
+    . Position: Update SL & Close orders
 
   . Send orders to the market
   . Watch orders progress
