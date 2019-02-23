@@ -8,7 +8,7 @@ const STATES = { PENDING: 0, OPENING: 1, OPEN: 2, CLOSING: 3, COMPLETE: 4 };
 
 let bb = null;
 
-let jobs = null;
+const jobs = [];
 let interval = null;
 
 let quote = {};
@@ -17,9 +17,6 @@ let candle = null;
 function plug (_bb)
 {
   bb = _bb;
-
-  jobs = { pending: [], live: [] };
-
   bb.on('QuoteUpdated', onQuoteUpdated);
   bb.on('CandleAnalyzed', onCandleAnalyzed);
   bb.on('PositionSynced', onPositionSynced);
@@ -41,19 +38,23 @@ function onPositionSynced (arr)
   let pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { return; }
   const t = (new Date(pos.openingTimestamp)).getTime();
-  jobs.push({ id: genId(), sym: pos.symbol, qty: pos.currentQty, px: pos.avgCostPrice, state: STATES.OPEN, t: t });
+  createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.OPEN, t);
 }
 
 function onTradeContract (sym, qty, px)
 {
-  jobs.push({ id: genId(), sym: sym, qty: qty, px: px, state: STATES.PENDING, t: Date.now() });
-  if (interval) { return; }
-  interval = setInterval(run, cfg.broker.interval);
+  createJob(genId(), sym, qty, px, STATES.PENDING, Date.now());
 }
 
 function genId ()
 {
   return `ag-${Math.random().toString(36).substr(2, 8)}`;
+}
+
+function createJob (id, sym, qty, px, state, t)
+{
+  jobs.push({ id: id, sym: sym, qty: qty, px: px, state: state, t: t });
+  if (!interval) { interval = setInterval(run, cfg.broker.interval); }
 }
 
 function run ()
