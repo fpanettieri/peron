@@ -1,6 +1,7 @@
 'use strict';
 
 const cfg = require('../cfg/peron');
+const bitmex = require('../lib/bitmex');
 const logger = require('../lib/logger');
 const log = new logger('[core/broker]');
 
@@ -75,7 +76,7 @@ function process (job)
   }
 }
 
-function proccessIntent (job)
+async function proccessIntent (job)
 {
   const params = {
     symbol: job.sym,
@@ -99,9 +100,10 @@ function proccessIntent (job)
 
   const options = { method: 'POST', api: 'order', testnet: cfg.testnet };
   const rsp = await bitmex.api(options, params);
+
   log.log(rsp);
 
-  // TODO: If success move it to Order
+  if (rsp.status.code == 200){ job.state = STATES.ORDER; }
 }
 
 function proccessOrder (job)
