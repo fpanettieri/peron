@@ -96,7 +96,7 @@ async function proccessIntent (job)
   }
 
   // FIXME: REMOVE THIS LINE
-  params.qty = job.qty > 0 ? 1 : -1;
+  params.orderQty = job.qty > 0 ? 1 : -1;
 
   const options = { method: 'POST', api: 'order', testnet: cfg.testnet };
   const rsp = await bitmex.api(options, params);
