@@ -16,7 +16,7 @@
     "leverage": 1
   },
   "broker": {
-    "interval": 1000,
+    "interval": 5000,
     "lifetime": 5,
     "min_profit": 0.5,
     "sl": 0.05

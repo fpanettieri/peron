@@ -60,6 +60,7 @@ function createJob (id, sym, qty, px, state, t)
 function run ()
 {
   for (let i = 0; i < jobs.length; i++){
+    log.log(i, jobs[i]);
     process (jobs[i]);
   }
   if (jobs.length == 0) { clearInterval(interval); }
