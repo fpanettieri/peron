@@ -133,7 +133,7 @@ function broadcast (json)
     } break;
 
     case 'order': {
-      log.log('order', json.data);
+      log.warn('order', json.data);
       // TODO: implement order passing
     } break;
 
