@@ -60,11 +60,14 @@ function createJob (id, sym, qty, px, state, t)
 function run ()
 {
   for (let i = 0; i < jobs.length; i++){
-    const j = jobs[i];
-    // do the job!
-    log.log(j);
+    process (jobs[i]);
   }
   if (jobs.length == 0) { clearInterval(interval); }
+}
+
+function process ()
+{
+  //
 }
 
 module.exports = { plug: plug }
