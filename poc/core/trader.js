@@ -56,7 +56,7 @@ function onOpenShort (c)
 
 function usableMargin ()
 {
-  let max = (cfg.trader.orders * cfg.trader.size);
+  let max = (cfg.trader.positions * cfg.trader.size);
   let used = 1 - margin.availableMargin / margin.walletBalance;
   let free = Math.max(max - used, 0);
   return Math.floor(Math.min(free, cfg.trader.size) * margin.walletBalance);

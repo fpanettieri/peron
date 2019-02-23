@@ -11,7 +11,7 @@
     }
   },
   "trader": {
-    "orders": 5,
+    "positions": 5,
     "size": 0.03,
     "leverage": 1
   },
