@@ -15,7 +15,7 @@ const params = {
   ordType: 'Limit',
   price: 3000,
   execInst: 'ParticipateDoNotInitiate'
-}
+};
 
 (async () => {
   try {
