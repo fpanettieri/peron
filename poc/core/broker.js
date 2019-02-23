@@ -79,22 +79,22 @@ function process (job)
 
 function proccessIntent (job)
 {
-  
+  // Post Order. If success move it to Order
 }
 
 function proccessOrder (job)
 {
-
+  // Check if the order needs to be amended
 }
 
 function proccessPosition (job)
 {
-
+  // Check if the sell order needs to be amended
 }
 
 function proccessDone (job)
 {
-
+  // Take the job from the list 
 }
 
 module.exports = { plug: plug }
