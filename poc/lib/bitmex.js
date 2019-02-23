@@ -2,14 +2,16 @@
 
 const crypto = require('crypto');
 const https = require('./https');
-
 const Logger = require('./logger');
+
+const AUTH_EXPIRES = 30;
+
 const log = new Logger('[lib/bitmex]');
 
 async function api (opts, params)
 {
-  // FIXME: magic numbers + fast toInt
-  const expires = ~~(Date.now() / 1000 + 30);
+  // ~~(n) == fast toInt
+  const expires = ~~(Date.now() / 1000 + AUTH_EXPIRES);
   const query = Object.entries(params).map(([k, v]) => `${k}=${v}`).join('&');
   const path = `/api/v1/${opts.api}?${query}`;
   const signature = crypto.createHmac('sha256', process.env.BITMEX_SECRET).update(`${opts.method}${path}${expires}`).digest('hex');

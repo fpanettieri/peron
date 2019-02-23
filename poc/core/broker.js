@@ -4,10 +4,11 @@ const cfg = require('../cfg/peron');
 const logger = require('../lib/logger');
 const log = new logger('[core/broker]');
 
+const STATES = { PENDING: 0, OPENING: 1, OPEN: 2, CLOSING: 3, COMPLETE: 4 };
+
 let bb = null;
 
-let pending = [];
-let live = [];
+let jobs = null;
 let interval = null;
 
 let quote = {};
@@ -16,8 +17,12 @@ let candle = null;
 function plug (_bb)
 {
   bb = _bb;
+
+  jobs = { pending: [], live: [] };
+
   bb.on('QuoteUpdated', onQuoteUpdated);
   bb.on('CandleAnalyzed', onCandleAnalyzed);
+  bb.on('PositionSynced', onPositionSynced);
   bb.on('BuyContract', onBuyContract);
   bb.on('SellContract', onSellContract);
 }
@@ -30,20 +35,30 @@ function onQuoteUpdated (q)
 function onCandleAnalyzed (c)
 {
   candle = c;
-  // for op in active
-    // amend orders
 }
+
+function onPositionSynced (arr)
+{
+  let pos = arr.find(i => i.symbol == cfg.symbol);
+  if (!pos || !pos.isOpen) { return; }
+
+  log.log(pos);
+
+  return
+  jobs.push({ id: genId(), op: '?', sym: cfg.symbol, qty: qty, px: px, state: STATES.OPEN, t: Date.now() });
+}
+
 
 function onBuyContract (sym, qty, px)
 {
-  pending.push({ id: genId(), op: 'buy', sym: sym, qty: qty, px: px, t: Date.now() });
+  jobs.push({ id: genId(), op: 'buy', sym: sym, qty: qty, px: px, t: Date.now(), status: });
   if (interval) { return; }
   interval = setInterval(run, cfg.broker.interval);
 }
 
 function onSellContract (sym, qty, px)
 {
-  pending.push({ id: genId(), op: 'sell', sym: sym, qty: qty, px: px, t: Date.now() });
+  jobs.push({ id: genId(), op: 'sell', sym: sym, qty: qty, px: px, t: Date.now(), status: STATUS.NEW });
   if (interval) { return; }
   interval = setInterval(run, cfg.broker.interval);
 }
@@ -55,7 +70,8 @@ function genId ()
 
 function run ()
 {
-
+  // Iterate pending jobs
+    //
 }
 
 module.exports = { plug: plug }

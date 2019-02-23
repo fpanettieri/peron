@@ -5,6 +5,7 @@
   - Watch order book
   - Receives orders from the trader
   . Send orders to the market
+  . Watch orders progress
   . Overviews the market and determines when to cancel orders
 
   . Handle 503 errors => https://testnet.bitmex.com/app/restAPI#Overload

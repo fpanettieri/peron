@@ -20,7 +20,6 @@ function plug (_bb)
 
   bb.on('MarginUpdated', onMarginUpdated);
   bb.on('QuoteUpdated', onQuoteUpdated);
-  // bb.on('PositionSynced', onPositionSynced);
   bb.on('OpenLong', onOpenLong);
   bb.on('OpenShort', onOpenShort);
 }
@@ -34,14 +33,6 @@ function onMarginUpdated (m)
 {
   margin = {...margin, ...m};
 }
-
-// function onPositionSynced (arr)
-// {
-//   let pos = arr.find(i => i.symbol == 'XBTUSD');
-//   if (!pos || !pos.isOpen) { return; }
-//   log.error('close it??');
-//   // We can easily close it, by placing a sell order at the MA.
-// }
 
 function onOpenLong (c)
 {
