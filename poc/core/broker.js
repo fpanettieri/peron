@@ -23,8 +23,7 @@ function plug (_bb)
   bb.on('QuoteUpdated', onQuoteUpdated);
   bb.on('CandleAnalyzed', onCandleAnalyzed);
   bb.on('PositionSynced', onPositionSynced);
-  bb.on('BuyContract', onBuyContract);
-  bb.on('SellContract', onSellContract);
+  bb.on('TradeContract', onTradeContract);
 }
 
 function onQuoteUpdated (q)
@@ -40,27 +39,14 @@ function onCandleAnalyzed (c)
 function onPositionSynced (arr)
 {
   let pos = arr.find(i => i.symbol == cfg.symbol);
-  log.log(cfg.symbol, pos);
   if (!pos || !pos.isOpen) { return; }
-
-  log.log(pos);
-
-  return
-  // if qty positive, op = buy, if negative op = sell
-  jobs.push({ id: genId(), op: '?', sym: cfg.symbol, qty: qty, px: px, state: STATES.OPEN, t: Date.now() });
+  const t = (new Date(pos.openingTimestamp)).getTime();
+  jobs.push({ id: genId(), sym: pos.symbol, qty: pos.currentQty, px: pos.avgCostPrice, state: STATES.OPEN, t: t });
 }
 
-
-function onBuyContract (sym, qty, px)
+function onTradeContract (sym, qty, px)
 {
-  jobs.push({ id: genId(), op: 'buy', sym: sym, qty: qty, px: px, state: STATES.PENDING, t: Date.now() });
-  if (interval) { return; }
-  interval = setInterval(run, cfg.broker.interval);
-}
-
-function onSellContract (sym, qty, px)
-{
-  jobs.push({ id: genId(), op: 'sell', sym: sym, qty: qty, px: px, state: STATES.PENDING, t: Date.now() });
+  jobs.push({ id: genId(), sym: sym, qty: qty, px: px, state: STATES.PENDING, t: Date.now() });
   if (interval) { return; }
   interval = setInterval(run, cfg.broker.interval);
 }
@@ -72,10 +58,12 @@ function genId ()
 
 function run ()
 {
-  // Iterate pending jobs
-    //
-
-  // clearInterval(intervalObj);
+  for (let i = 0; i < jobs.length; i++){
+    const j = jobs[i];
+    // do the job!
+    log.log(j);
+  }
+  if (jobs.length == 0) { clearInterval(interval); }
 }
 
 module.exports = { plug: plug }

@@ -41,7 +41,7 @@ function onOpenLong (c)
     log.warn('OpenLong signal ignored. Not enough margin.');
     return;
   }
-  bb.emit('BuyContract', cfg.symbol, marginToContracts(margin), c.c);
+  bb.emit('TradeContract', cfg.symbol, marginToContracts(margin), c.c);
 }
 
 function onOpenShort (c)
@@ -51,7 +51,7 @@ function onOpenShort (c)
     log.warn('OpenShort signal ignored. Not enough margin.');
     return;
   }
-  bb.emit('SellContract', cfg.symbol, marginToContracts(margin), c.c);
+  bb.emit('TradeContract', cfg.symbol, -1 * marginToContracts(margin), c.c);
 }
 
 function usableMargin ()
