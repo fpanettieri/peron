@@ -40,6 +40,7 @@ function onCandleAnalyzed (c)
 function onPositionSynced (arr)
 {
   let pos = arr.find(i => i.symbol == cfg.symbol);
+  log.log(cfg.symbol, pos);
   if (!pos || !pos.isOpen) { return; }
 
   log.log(pos);
@@ -73,6 +74,8 @@ function run ()
 {
   // Iterate pending jobs
     //
+
+  // clearInterval(intervalObj);
 }
 
 module.exports = { plug: plug }

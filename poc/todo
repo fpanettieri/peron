@@ -14,6 +14,7 @@
     . Close other orders
 
 . Auditor (Tracks the bot performance)
+  . Improve event queueing / nesting using setImmediate / nextTick? 
   . Listens to 2 events
     . On candle closed
     . On trade accepted (short or long opened | closed) ((TradeExecuted?))
