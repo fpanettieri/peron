@@ -39,6 +39,10 @@
 . Make paths dynamic based on the proj root
   . const logger = require('../../lib/logger');
 
+. Dynamic modules loading
+  . Load modules from an array in a config file
+  . Init modules and plug them to the backbone
+
 ===============
   DONE
 ===============
