@@ -61,9 +61,7 @@ function createJob (id, sym, qty, px, state, t)
 
 function run ()
 {
-  for (let i = 0; i < jobs.length; i++){
-    process (jobs[i]);
-  }
+  for (let i = jobs.length - 1; i > -1; i--){ process (jobs[i]); }
   if (jobs.length == 0) { clearInterval(interval); }
 }
 
@@ -79,7 +77,31 @@ function process (job)
 
 function proccessIntent (job)
 {
-  // Post Order. If success move it to Order
+  const params = {
+    symbol: job.sym,
+    orderQty: job.qty,
+    timeInForce: 'GoodTillCancel',
+    clOrdID: job.id,
+    ordType: 'Limit',
+    execInst: 'ParticipateDoNotInitiate'
+  }
+
+  if (job.qty > 0) {
+    params.side = 'Buy';
+    params.price = quote.bidPrice;
+  } else {
+    params.side = 'Sell';
+    params.price = quote.askPrice;
+  }
+
+  // FIXME: REMOVE THIS LINE
+  params.qty = job.qty > 0 ? 1 : -1;
+
+  const options = { method: 'POST', api: 'order', testnet: cfg.testnet };
+  const rsp = await bitmex.api(options, params);
+  log.log(rsp);
+
+  // TODO: If success move it to Order
 }
 
 function proccessOrder (job)
@@ -94,7 +116,7 @@ function proccessPosition (job)
 
 function proccessDone (job)
 {
-  // Take the job from the list 
+  // Take the job from the list
 }
 
 module.exports = { plug: plug }

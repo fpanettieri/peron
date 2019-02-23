@@ -27,10 +27,11 @@ async function api (opts, params)
 
   const host = `https://${opts.testnet ? 'testnet' : 'www'}.bitmex.com`;
   const rsp = await https.send(`${host}${path}`, null, {method: opts.method});
+  rsp.body = JSON.parse(rsp.body);
 
   log.warn('x-ratelimit-remaining', rsp.headers['x-ratelimit-remaining']);
 
-  return JSON.parse(rsp.body);
+  return rsp;
 }
 
 function toObj (o)
