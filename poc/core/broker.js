@@ -4,7 +4,7 @@ const cfg = require('../cfg/peron');
 const logger = require('../lib/logger');
 const log = new logger('[core/broker]');
 
-const STATES = { PENDING: 0, OPENING: 1, OPEN: 2, CLOSING: 3, COMPLETE: 4 };
+const STATES = { INTENT: 0, ORDER: 1, POSITON: 2 };
 
 let bb = null;
 
@@ -38,12 +38,12 @@ function onPositionSynced (arr)
   let pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { return; }
   const t = (new Date(pos.openingTimestamp)).getTime();
-  createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.OPEN, t);
+  createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.POSITION, t);
 }
 
 function onTradeContract (sym, qty, px)
 {
-  createJob(genId(), sym, qty, px, STATES.PENDING, Date.now());
+  createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
 }
 
 function genId ()

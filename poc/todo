@@ -7,18 +7,18 @@
   . Design Jobs state machine
   . Handle job states
     . Intent: Post order to the books
-    . Order: Check if it needs to be ammended
+      . Send orders to the market
+    . Order: Check if it needs to be amended
+      . Watch orders progress
+      . Amend orders!!!
     . Position: Update SL & Close orders
-
-  . Send orders to the market
-  . Watch orders progress
-  . Overviews the market and determines when to cancel orders
+      . Overviews the market and determines when to cancel orders
 
   . Handle 503 errors => https://testnet.bitmex.com/app/restAPI#Overload
-  . Amend orders!!!
+
   . If there is an existing position when the trader starts, close it first
     . Close other orders
-  . Find best interval config to update orders
+  . Find best interval config to update orders (1~3 secs?)
 
 . Auditor (Tracks the bot performance)
   . Improve event queueing / nesting using setImmediate / nextTick?
