@@ -1,8 +1,8 @@
 'use strict';
 
-const cfg = require('../cfg/peron');
+const cfg = require('../../cfg/peron');
 
-const logger = require('../lib/logger');
+const logger = require('../../lib/logger');
 const log = new logger('[core/brain/greedy]');
 
 let bb = null;
