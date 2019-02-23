@@ -51,14 +51,14 @@ function onPositionSynced (arr)
 
 function onBuyContract (sym, qty, px)
 {
-  jobs.push({ id: genId(), op: 'buy', sym: sym, qty: qty, px: px, t: Date.now(), status: });
+  jobs.push({ id: genId(), op: 'buy', sym: sym, qty: qty, px: px, state: STATES.PENDING, status: t: Date.now() });
   if (interval) { return; }
   interval = setInterval(run, cfg.broker.interval);
 }
 
 function onSellContract (sym, qty, px)
 {
-  jobs.push({ id: genId(), op: 'sell', sym: sym, qty: qty, px: px, t: Date.now(), status: STATUS.NEW });
+  jobs.push({ id: genId(), op: 'sell', sym: sym, qty: qty, px: px, state: STATES.PENDING, t: Date.now() });
   if (interval) { return; }
   interval = setInterval(run, cfg.broker.interval);
 }
