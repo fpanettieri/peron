@@ -53,7 +53,9 @@ function genId ()
 
 function createJob (id, sym, qty, px, state, t)
 {
-  jobs.push({ id: id, sym: sym, qty: qty, px: px, state: state, t: t });
+  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t }
+  jobs.push(job);
+  process(job);
   if (!interval) { interval = setInterval(run, cfg.broker.interval); }
 }
 
