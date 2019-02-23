@@ -45,13 +45,14 @@ function onPositionSynced (arr)
   log.log(pos);
 
   return
+  // if qty positive, op = buy, if negative op = sell
   jobs.push({ id: genId(), op: '?', sym: cfg.symbol, qty: qty, px: px, state: STATES.OPEN, t: Date.now() });
 }
 
 
 function onBuyContract (sym, qty, px)
 {
-  jobs.push({ id: genId(), op: 'buy', sym: sym, qty: qty, px: px, state: STATES.PENDING, status: t: Date.now() });
+  jobs.push({ id: genId(), op: 'buy', sym: sym, qty: qty, px: px, state: STATES.PENDING, t: Date.now() });
   if (interval) { return; }
   interval = setInterval(run, cfg.broker.interval);
 }
