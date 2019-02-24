@@ -15,14 +15,16 @@ async function api (opts, params)
   // ~~(n) == fast toInt
   const expires = ~~(Date.now() / 1000 + AUTH_EXPIRES);
   const path = `/api/v1/${opts.api}`;
-  const params_str = JSON.stringify(params);
-  const unsigned = `${opts.method}${path}${expires}${params_str}`;
+  const data = Object.entries(params).map(([k, v]) => `${k}=${v}`).join('&');
+  log.log(query);
+
+  const unsigned = `${opts.method}${path}${expires}${data}`;
   const signature = crypto.createHmac('sha256', process.env.BITMEX_SECRET).update(unsigned).digest('hex');
 
   const headers = {
-    'content-type' : 'application/json; charset=utf-8',
+    'content-type' : 'application/x-www-form-urlencoded',
     'Accept': 'application/json',
-    // 'X-Requested-With': 'XMLHttpRequest',
+    'X-Requested-With': 'XMLHttpRequest',
     'api-expires': expires,
     'api-key': process.env.BITMEX_KEY,
     'api-signature': signature
@@ -32,7 +34,7 @@ async function api (opts, params)
   log.log();
 
   const host = `https://${opts.testnet ? 'testnet' : 'www'}.bitmex.com`;
-  const rsp = await https.send(`${host}${path}`, params_str, {method: opts.method});
+  const rsp = await https.send(`${host}${path}`, data, {method: opts.method});
   log.log('RESPONSE', rsp);
 
   rsp.body = JSON.parse(rsp.body);
