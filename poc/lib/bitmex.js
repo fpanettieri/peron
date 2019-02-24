@@ -20,7 +20,7 @@ async function api (opts, params)
   const signature = crypto.createHmac('sha256', process.env.BITMEX_SECRET).update(unsigned).digest('hex');
 
   const headers = {
-    'content-type' : 'application/json',
+    'content-type' : 'application/json; charset=utf-8',
     'Accept': 'application/json',
     // 'X-Requested-With': 'XMLHttpRequest',
     'api-expires': expires,
@@ -33,6 +33,8 @@ async function api (opts, params)
 
   const host = `https://${opts.testnet ? 'testnet' : 'www'}.bitmex.com`;
   const rsp = await https.send(`${host}${path}`, params_str, {method: opts.method});
+  log.log('RESPONSE', rsp);
+
   rsp.body = JSON.parse(rsp.body);
 
   log.warn('x-ratelimit-remaining', rsp.headers['x-ratelimit-remaining']);
