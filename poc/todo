@@ -13,6 +13,7 @@
       . Amend orders!!!
     . Position: Update SL & Close orders
       . Overviews the market and determines when to cancel orders
+      . ReduceOnly SL
 
   . Handle 503 errors => https://testnet.bitmex.com/app/restAPI#Overload
   . Handle 429 error => https://testnet.bitmex.com/app/restAPI
