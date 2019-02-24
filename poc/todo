@@ -15,6 +15,7 @@
       . Overviews the market and determines when to cancel orders
 
   . Handle 503 errors => https://testnet.bitmex.com/app/restAPI#Overload
+  . Handle 429 error => https://testnet.bitmex.com/app/restAPI
 
   . If there is an existing position when the trader starts, close it first
     . Close other orders
