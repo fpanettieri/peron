@@ -14,13 +14,10 @@ async function api (opts, params)
 {
   // ~~(n) == fast toInt
   const expires = ~~(Date.now() / 1000 + AUTH_EXPIRES);
-
-  // const query = Object.entries(params).map(([k, v]) => `${k}=${v}`).join('&');
-  // const path = `/api/v1/${opts.api}?${query}`;
-
   const path = `/api/v1/${opts.api}`;
-  const data = JSON.stringify(params);
-  const signature = crypto.createHmac('sha256', process.env.BITMEX_SECRET).update(pre_sign).digest('hex');
+  const params_str = {JSON.stringify(params);
+  const unsigned = `${opts.method}${path}${expires}${params_str}`;
+  const signature = crypto.createHmac('sha256', process.env.BITMEX_SECRET).update(unsigned).digest('hex');
 
   const headers = {
     'content-type' : 'application/json',
@@ -35,7 +32,7 @@ async function api (opts, params)
   log.log();
 
   const host = `https://${opts.testnet ? 'testnet' : 'www'}.bitmex.com`;
-  const rsp = await https.send(`${host}${path}`, data, {method: opts.method});
+  const rsp = await https.send(`${host}${path}`, params_str, {method: opts.method});
   rsp.body = JSON.parse(rsp.body);
 
   log.warn('x-ratelimit-remaining', rsp.headers['x-ratelimit-remaining']);
