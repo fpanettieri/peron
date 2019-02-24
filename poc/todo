@@ -28,6 +28,12 @@
   . Logs the time elapsed
   . Audit: Pre-market ms & Time To Market
 
+. TRACK PERFORMANCE!!!
+  . How many orders per hour
+  . Success rate
+  . Avg. Position Size
+  . Avg. Time To Exit
+
 . Bugfixing
   . Chandler managed to emit 2 candles somehow, triggering a 'this should never happen'
   . CloseShort called at unexpected times

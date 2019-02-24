@@ -14,21 +14,13 @@ async function api (opts, params)
 {
   // ~~(n) == fast toInt
   const expires = ~~(Date.now() / 1000 + AUTH_EXPIRES);
-  log.log('expires', expires);
 
   // const query = Object.entries(params).map(([k, v]) => `${k}=${v}`).join('&');
-  // log.log('query', query);
-
   // const path = `/api/v1/${opts.api}?${query}`;
+
   const path = `/api/v1/${opts.api}`;
-  log.log('path', path);
-
   const data = JSON.stringify(params);
-  const pre_sign = (`${opts.method}${path}${expires}${data}`);
-  log.log('pre-sig', pre_sign);
-
   const signature = crypto.createHmac('sha256', process.env.BITMEX_SECRET).update(pre_sign).digest('hex');
-  log.log('signature', signature);
 
   const headers = {
     'content-type' : 'application/json',
@@ -38,7 +30,6 @@ async function api (opts, params)
     'api-key': process.env.BITMEX_KEY,
     'api-signature': signature
   };
-
 
   log.log('headers', headers);
   log.log();
