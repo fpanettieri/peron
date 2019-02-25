@@ -11,7 +11,7 @@
     - Order: Check if it needs to be amended
       - Watch orders progress
       - Amend orders!!!
-      . Detect when the order is filled
+      - Detect when the order is filled
     . Position: Update SL & Close orders
       . Overviews the market and determines when to cancel orders
       . ReduceOnly SL
@@ -44,6 +44,7 @@
   . Auditor  said execTime was 6002.
     . Update: This could be caused by event nesting. The CandleClose event cascades other events, making the auditor use the old timestamp
   . Cancel all orders on start (by symbol??)
+  . When a position is manually closed, check jobs for updates
 
 ===============
   Backlog
