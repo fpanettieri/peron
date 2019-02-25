@@ -59,4 +59,4 @@ module.exports = {
   api: api,
   toObj: toObj,
   toOhlc: toOhlc
-}
+};

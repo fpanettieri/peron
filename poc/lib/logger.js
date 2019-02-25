@@ -32,7 +32,7 @@ const colors = {
     cyan: "\x1b[46m",
     white: "\x1b[47m"
   }
-}
+};
 
 class Logger
 {

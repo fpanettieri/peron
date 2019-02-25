@@ -48,4 +48,4 @@ module.exports = {
   send: send,
   get: get,
   post: post
-}
+};

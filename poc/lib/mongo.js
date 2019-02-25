@@ -25,4 +25,4 @@ async function connect (cb)
 
 module.exports = {
   connect: connect
-}
+};

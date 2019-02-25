@@ -23,8 +23,8 @@ function intervalToMs (interval)
   }
 
   switch (dimension) {
-    case 'd': ms *= 24;
-    case 'h': ms *= 60;
+    case 'd': ms *= 24; /* falls through */
+    case 'h': ms *= 60; /* falls through */
     case 'm': ms *= 60;
   }
 
@@ -35,4 +35,4 @@ module.exports = {
   clone: clone,
   humanize: humanize,
   intervalToMs: intervalToMs
-}
+};
