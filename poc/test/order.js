@@ -46,7 +46,7 @@ function sleep (ms)
     await sleep(1000);
 
     // Update
-    log.log('################ UPDATE');
+    log.info('################ UPDATE');
     options.method = 'PUT';
     rsp = await bitmex.api(options, update_params);
     // log.log(rsp);
@@ -54,7 +54,7 @@ function sleep (ms)
     await sleep(1000);
 
     // Delete
-    log.log('################ DELETE');
+    log.info('################ DELETE');
     options.method = 'DELETE';
     rsp = await bitmex.api(options, delete_params);
     log.log(rsp);
