@@ -102,7 +102,7 @@ async function proccessIntent (job)
 
   if (rsp.status.code == 200){
     job.state = STATES.ORDER;
-    job.order = rsp;
+    job.order = rsp[0];
     bb.emit('OrderPlaced', job.sym, params.side, job.qty, params.price, job.id);
   } else {
     log.error(rsp.error);

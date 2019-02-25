@@ -133,8 +133,8 @@ function broadcast (json)
     } break;
 
     case 'order': {
-      log.warn('order', json.data);
-      // TODO: implement order passing
+      log.warn('######################## orders: ', json.data.length);
+      bb.silent('OrderUpdated', json.data[0]);
     } break;
 
     default: {
