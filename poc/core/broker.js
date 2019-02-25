@@ -97,18 +97,20 @@ async function proccessIntent (job)
 
   const options = { method: 'POST', api: 'order', testnet: cfg.testnet };
   const rsp = await bitmex.api(options, params);
+
   if (rsp.status.code != 200){
     job.state = STATES.ORDER;
-    job.price = params.price;
+    job.order = rsp;
+    bb.emit('OrderPlaced', job.sym, params.side, job.qty, params.price, job.id);
   } else {
     log.error(rsp.error);
   }
-
 }
 
 function proccessOrder (job)
 {
   // Check if the order needs to be amended
+
 }
 
 function proccessPosition (job)
