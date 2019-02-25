@@ -6,11 +6,12 @@
   - Receives orders from the trader
   - Design Jobs state machine
   . Handle job states
-    . Intent: Post order to the books
-      . Send orders to the market
-    . Order: Check if it needs to be amended
-      . Watch orders progress
-      . Amend orders!!!
+    - Intent: Post order to the books
+      - Send orders to the market
+    - Order: Check if it needs to be amended
+      - Watch orders progress
+      - Amend orders!!!
+      . Detect when the order is filled
     . Position: Update SL & Close orders
       . Overviews the market and determines when to cancel orders
       . ReduceOnly SL
