@@ -140,7 +140,7 @@ async function proccessIntent (job)
   }
 }
 
-function proccessOrder (job)
+async function proccessOrder (job)
 {
   // log.log('job.qty', job.qty);
   // log.log('job.order.price', job.order.price);
@@ -148,14 +148,27 @@ function proccessOrder (job)
   // log.log('quote.askPrice', quote.askPrice);
 
   // Check if the order needs to be amended
+  const params = {};
   if (job.qty > 0) {
     if (job.order.price == quote.bidPrice) { return; }
+    params.price = quote.bidPrice;
   } else {
     if (job.order.price == quote.askPrice) { return; }
+    params.price = quote.askPrice;
   }
 
-  log.warn('order needs to be ammended');
-  // TODO: handle qty == 0 ??
+  const options = { method: 'PUT', api: 'order', testnet: cfg.testnet };
+  const rsp = await bitmex.api(options, params);
+
+  log.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
+  log.log(rsp);
+  log.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
+
+  if (rsp.status.code == 200){
+
+  } else {
+    log.error(rsp.error);
+  }
 }
 
 function proccessPosition (job)
