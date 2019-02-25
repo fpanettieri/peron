@@ -41,7 +41,7 @@ function onCandleClosed (c)
   }
 
   analyze(c);
-  if (ohlcs.push(c) > cfg.history) { ohlcs.shift(); };
+  if (ohlcs.push(c) > cfg.history) { ohlcs.shift(); }
   bb.emit('CandleAnalyzed', c);
 }
 
@@ -61,4 +61,4 @@ function analyze (o)
   o.bb_upper = o.bb_ma + o.bb_dev * cfg.analyst.bb.mult;
 }
 
-module.exports = { plug: plug }
+module.exports = { plug: plug };

@@ -40,7 +40,7 @@ function onPositionUpdated (data)
 {
   for (let i = 0; i < data.length; i++) {
     let pos = data[i];
-    let idx = positions.findIndex(p => p.symbol == pos.symbol && p.account == pos.account && p.currency == pos.currency);
+    let idx = getIndex(pos);
     positions[idx] = {...positions[idx], ...pos};
   }
 }
@@ -51,4 +51,14 @@ function onPositionClosed (data)
   log.error('onPositionClosed not implemented', data);
 }
 
-module.exports = { plug: plug }
+function getIndex (pos)
+{
+  return positions.findIndex(p => samePosition(p, pos));
+}
+
+function samePosition (a, b)
+{
+  return a.symbol == b.symbol && a.account == b.account && a.currency == b.currency;
+}
+
+module.exports = { plug: plug };

@@ -74,4 +74,4 @@ function open (t, c)
   bb.emit('TradeContract', cfg.symbol, direction * marginToContracts(margin), c.c);
 }
 
-module.exports = { plug: plug }
+module.exports = { plug: plug };

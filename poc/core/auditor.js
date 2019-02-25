@@ -26,4 +26,4 @@ function onPreMarket (t)
   log.log(`pre-market: ${Date.now() - start}ms`);
 }
 
-module.exports = { plug: plug }
+module.exports = { plug: plug };

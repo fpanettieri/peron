@@ -35,4 +35,4 @@ function onCandleAnalyzed (c)
   }
 }
 
-module.exports = { plug: plug }
+module.exports = { plug: plug };

@@ -60,7 +60,7 @@ function auth ()
   const auth_params = {
     op: 'authKeyExpires',
     args: [ process.env.BITMEX_KEY, expires, signature ]
-  }
+  };
   socket.send(JSON.stringify(auth_params));
 }
 
@@ -148,7 +148,7 @@ function onSyncAccount ()
   const sub_params = {
     op: 'subscribe',
     args: [ 'margin', 'position', 'order' ]
-  }
+  };
   send(sub_params);
 }
 
@@ -157,7 +157,7 @@ function onWatchMarket ()
   const sub_params = {
     op: 'subscribe',
     args: [ `trade:${cfg.symbol}`, `tradeBin${cfg.timeframe}:${cfg.symbol}`, `quote:${cfg.symbol}` ]
-  }
+  };
   send(sub_params);
 }
 
@@ -178,4 +178,4 @@ function send (msg)
 module.exports = {
   plug: plug,
   send: send
-}
+};

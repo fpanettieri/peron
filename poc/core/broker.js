@@ -54,7 +54,7 @@ function genId ()
 
 function createJob (id, sym, qty, px, state, t)
 {
-  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t }
+  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t };
   jobs.push(job);
   process(job);
   if (!interval) { interval = setInterval(run, cfg.broker.interval); }
@@ -85,7 +85,7 @@ async function proccessIntent (job)
     clOrdID: job.id,
     ordType: 'Limit',
     execInst: 'ParticipateDoNotInitiate'
-  }
+  };
 
   if (job.qty > 0) {
     params.side = 'Buy';
@@ -121,4 +121,4 @@ function proccessDone (job)
   // Take the job from the list
 }
 
-module.exports = { plug: plug }
+module.exports = { plug: plug };

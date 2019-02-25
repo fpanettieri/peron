@@ -64,7 +64,7 @@ function closeCandle ()
 
   if (state == STATES.CANDLE) {
     bb.emit('CandleClosed', candle);
-  };
+  }
 
   let close = candle.c;
   resetCandle();
@@ -83,4 +83,4 @@ function resetCandle ()
   candle = {o: null, h: Number.MIN_SAFE_INTEGER, l: Number.MAX_SAFE_INTEGER, c: null, v: 0, t: (Math.round(Date.now() / CANDLE_STEP) + 1) * CANDLE_STEP};
 }
 
-module.exports = { plug: plug }
+module.exports = { plug: plug };

@@ -22,4 +22,4 @@ async function onDownloadHistory ()
   bb.emit('HistoryDownloaded', ohlcs);
 }
 
-module.exports = { plug: plug }
+module.exports = { plug: plug };
