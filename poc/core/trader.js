@@ -62,7 +62,7 @@ function usableMargin ()
 
 function marginToContracts (m)
 {
-  return Math.round(Math.max(margin * STB * quote.askPrice, 1));
+  return Math.round(Math.max(m * STB * quote.askPrice, 1));
 }
 
 function open (t, c)
