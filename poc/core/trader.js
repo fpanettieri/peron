@@ -36,22 +36,12 @@ function onMarginUpdated (m)
 
 function onOpenLong (c)
 {
-  let margin = usableMargin();
-  if (margin <= 0) {
-    log.warn('OpenLong signal ignored. Not enough margin.');
-    return;
-  }
-  bb.emit('TradeContract', cfg.symbol, marginToContracts(margin), c.c);
+  open('long', c);
 }
 
 function onOpenShort (c)
 {
-  let margin = usableMargin();
-  if (margin <= 0) {
-    log.warn('OpenShort signal ignored. Not enough margin.');
-    return;
-  }
-  bb.emit('TradeContract', cfg.symbol, -1 * marginToContracts(margin), c.c);
+  open('short', c);
 }
 
 function usableMargin ()
@@ -59,12 +49,29 @@ function usableMargin ()
   let max = (cfg.trader.positions * cfg.trader.size);
   let used = 1 - margin.availableMargin / margin.walletBalance;
   let free = Math.max(max - used, 0);
+
+  log.log('max margin ', max);
+  log.log('used margin', used);
+  log.log('free margin', free);
+
   return Math.floor(Math.min(free, cfg.trader.size) * margin.walletBalance);
 }
 
 function marginToContracts (m)
 {
   return Math.round(Math.max(margin * STB * quote.askPrice, 1));
+}
+
+function open (t, c)
+{
+  let margin = usableMargin();
+  if (margin <= 0) {
+    log.log('Signal ignored. Not enough margin.');
+    return;
+  }
+
+  let direction = t == 'short' ? -1 : 1;
+  bb.emit('TradeContract', cfg.symbol, direction * marginToContracts(margin), c.c);
 }
 
 module.exports = { plug: plug }
