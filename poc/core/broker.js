@@ -155,6 +155,8 @@ async function proccessOrder (job)
   if (job.qty > 0) { // LONG
     if (job.order.price == quote.bidPrice) { return; }
 
+    // FIXME: this validation actually has more priority than the bidprice check.
+    // If the MA moved past the order, no matter what moved first, the order needs to be canceled
     if (quote.bidPrice > candle.bb_ma) {
       method = 'DELETE';
       params.clOrdID = job.id;
@@ -165,6 +167,8 @@ async function proccessOrder (job)
   } else { // SHORT
     if (job.order.price == quote.askPrice) { return; }
 
+    // FIXME: this validation actually has more priority than the bidprice check.
+    // If the MA moved past the order, no matter what moved first, the order needs to be canceled
     if (quote.askPrice < candle.bb_ma) {
       method = 'DELETE';
       params.clOrdID = job.id;

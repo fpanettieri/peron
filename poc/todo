@@ -12,12 +12,18 @@
       - Watch orders progress
       - Amend orders!!!
       - Detect when the order is filled
-    . Position: Update SL & Close orders
-      . Overviews the market and determines when to cancel orders
+      ! Invalid signature on candle update (create PUT test)
+      ! Greedy cancel of order when BB_MA moves
+      ! Greedy cancel of order if lifetime > X
+
+    . Position: Create SL & Close orders
       . ReduceOnly SL
 
-  . Handle 503 errors => https://testnet.bitmex.com/app/restAPI#Overload
-  . Handle 429 error => https://testnet.bitmex.com/app/restAPI
+    . Position: Update SL & Close orders
+      . Overviews the market and updates prices
+
+  - Handle 503 errors => https://testnet.bitmex.com/app/restAPI#Overload
+  - Handle 429 error => https://testnet.bitmex.com/app/restAPI
 
   . If there is an existing position when the trader starts, close it first
     . Close other orders
