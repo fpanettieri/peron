@@ -15,18 +15,12 @@ const create_params = {
   timeInForce: 'GoodTillCancel',
   clOrdID: cl_id,
   ordType: 'Limit',
-  price: 3000,
+  price: 2000,
   execInst: 'ParticipateDoNotInitiate'
 };
 
-const update_params = {
-  origClOrdID: cl_id,
-  price: 2900
-};
-
-const delete_params = {
-  clOrdID: cl_id
-};
+const update_params = { origClOrdID: cl_id, price: 1900 };
+const delete_params = { clOrdID: cl_id };
 
 let rsp = null;
 
