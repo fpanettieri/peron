@@ -9,7 +9,7 @@ const secret = process.env.BITMEX_SECRET
 const method = 'POST';
 const path = '/api/v1/order';
 const expires = 1580526000;
-const body = 'symbol=XBTUSD&side=Buy&orderQty=1&price=3000&clOrdID=ag-1231231cx&ordType=Limit&timeInForce=GoodTillCancel&execInst=ParticipateDoNotInitiate';
+const data = 'symbol=XBTUSD&side=Buy&orderQty=1&price=3000&clOrdID=ag-1231231cx&ordType=Limit&timeInForce=GoodTillCancel&execInst=ParticipateDoNotInitiate';
 
 const unsigned = `${method}${path}${expires}${data}`;
 
