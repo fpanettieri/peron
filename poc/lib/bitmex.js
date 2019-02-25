@@ -15,7 +15,6 @@ async function api (opts, params)
   // ~~(n) == fast toInt
   const expires = ~~(Date.now() / 1000 + AUTH_EXPIRES);
   const path = `/api/v1/${opts.api}`;
-  // const data = Object.entries(params).map(([k, v]) => `${k}=${v}`).join('&');
   const data = JSON.stringify(params);
   const unsigned = `${opts.method}${path}${expires}${data}`;
   const signature = crypto.createHmac('sha256', process.env.BITMEX_SECRET).update(unsigned).digest('hex');
