@@ -94,6 +94,7 @@ async function proccessIntent (job)
     params.side = 'Sell';
     params.price = quote.askPrice;
   }
+  // TODO: handle qty == 0 ??
 
   const options = { method: 'POST', api: 'order', testnet: cfg.testnet };
   const rsp = await bitmex.api(options, params);
@@ -110,7 +111,14 @@ async function proccessIntent (job)
 function proccessOrder (job)
 {
   // Check if the order needs to be amended
+  if (job.qty > 0) {
+    if (job.order.price == quote.bidPrice) { return; }
+  } else {
+    if (job.order.price == quote.askPrice) { return; }
+  }
 
+  log.log('order needs to be ammended');
+  // TODO: handle qty == 0 ??
 }
 
 function proccessPosition (job)
@@ -120,7 +128,7 @@ function proccessPosition (job)
 
 function proccessDone (job)
 {
-  // Take the job from the list
+  // Take the job from the list & log
 }
 
 module.exports = { plug: plug };
