@@ -28,18 +28,12 @@ async function api (opts, params)
   const unsigned = `${opts.method}${url}${expires}${body}`;
   const signature = crypto.createHmac('sha256', process.env.BITMEX_SECRET).update(unsigned).digest('hex');
 
-  log.log('expires', expires);
-  log.log('data', data);
-  log.log('url', url);
-  log.log('body', body);
-  log.log('unsigned', unsigned);
-  log.log('signature', signature);
-
   const headers = {
     'api-expires': expires,
     'api-key': process.env.BITMEX_KEY,
     'api-signature': signature,
-    'content-type': 'application/x-www-form-urlencoded'
+    'content-type': 'application/x-www-form-urlencoded',
+    'content-length': body.length
   };
 
   const host = `https://${opts.testnet ? 'testnet' : 'www'}.bitmex.com`;
