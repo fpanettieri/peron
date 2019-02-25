@@ -10,7 +10,7 @@ const params = {
   symbol: 'XBTUSD',
   binSize: '1m',
   partial: false,
-  count: 50,
+  count: 2,
   reverse: true
 };
 
