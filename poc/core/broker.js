@@ -21,6 +21,7 @@ function plug (_bb)
   bb.on('QuoteUpdated', onQuoteUpdated);
   bb.on('CandleAnalyzed', onCandleAnalyzed);
   bb.on('PositionSynced', onPositionSynced);
+  bb.on('OrderUpdated', onOrderUpdated);
   bb.on('TradeContract', onTradeContract);
 }
 
@@ -42,6 +43,23 @@ function onPositionSynced (arr)
   createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.POSITION, t);
 }
 
+function onOrderUpdated (o)
+{
+  const stop = o.clOrdID.includes('-sl');
+  const job = jobs.find(j => findJob(j, o, stop));
+
+  if (!job) {
+    log.error('HANDLE JOB NOT FOUND');
+    return;
+  }
+
+  if (stop) {
+    job.sl = {...job.sl, ...o};
+  } else {
+    job.order = {...job.order, ...o};
+  }
+}
+
 function onTradeContract (sym, qty, px)
 {
   if (jobs.length >= cfg.broker.max_jobs) { log.log('max amount of jobs'); return; }
@@ -59,6 +77,15 @@ function createJob (id, sym, qty, px, state, t)
   jobs.push(job);
   process(job);
   if (!interval) { interval = setInterval(run, cfg.broker.interval); }
+}
+
+function findJob (job, order, stop)
+{
+  if (stop) {
+    return job.sl && job.sl.clOrdID == order.clOrdID;
+  } else {
+    return job.order && job.order.clOrdID == order.clOrdID;
+  }
 }
 
 function run ()
