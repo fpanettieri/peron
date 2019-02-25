@@ -16,6 +16,7 @@
       ! Greedy cancel of order when BB_MA moves
         ! Consider min_profit
       ! Greedy cancel of order if lifetime > X
+      ! Re design order - job relationship
 
     . Position: Create SL & Close orders
       . ReduceOnly SL
