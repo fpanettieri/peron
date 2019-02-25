@@ -37,7 +37,7 @@ function sleep (ms)
     rsp = await bitmex.api(options, create_params);
     // log.log(rsp);
 
-    await sleep(1000);
+    await sleep(500);
 
     // Update
     log.info('################ UPDATE');
@@ -45,14 +45,13 @@ function sleep (ms)
     rsp = await bitmex.api(options, update_params);
     // log.log(rsp);
 
-    await sleep(1000);
+    await sleep(500);
 
     // Delete
     log.info('################ DELETE');
     options.method = 'DELETE';
     rsp = await bitmex.api(options, delete_params);
     log.log(rsp);
-
 
   } catch(err) {
     log.error(err);

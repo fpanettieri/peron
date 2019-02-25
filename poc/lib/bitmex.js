@@ -13,7 +13,7 @@ const log = new Logger('[lib/bitmex]');
 async function api (opts, params)
 {
   // ~~(n) == fast toInt
-  const expires = 1580526000;//~~(Date.now() / 1000 + AUTH_EXPIRES);
+  const expires = ~~(Date.now() / 1000 + AUTH_EXPIRES);
   const data = Object.entries(params).map(([k, v]) => `${k}=${v}`).join('&');
 
   let url = `/api/v1/${opts.api}`;
@@ -38,8 +38,8 @@ async function api (opts, params)
   const headers = {
     'api-expires': expires,
     'api-key': process.env.BITMEX_KEY,
-    'api-signature': signature,
-    'content-type': 'application/x-www-form-urlencoded'
+    'api-signature': signature
+    // 'content-type': 'application/x-www-form-urlencoded'
   };
 
   const host = `https://${opts.testnet ? 'testnet' : 'www'}.bitmex.com`;
