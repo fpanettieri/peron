@@ -45,6 +45,10 @@ function onPositionSynced (arr)
 
 function onOrderUpdated (o)
 {
+  log.log('========================================================================');
+  log.log(o);
+  log.log('========================================================================');
+
   const stop = o.clOrdID.includes('-sl');
   const job = jobs.find(j => findJob(j, o, stop));
 
@@ -122,7 +126,7 @@ async function proccessIntent (job)
     params.side = 'Sell';
     params.price = quote.askPrice;
   }
-  // TODO: handle qty == 0 ??
+  // FIXME: handle qty == 0 ??
 
   const options = { method: 'POST', api: 'order', testnet: cfg.testnet };
   const rsp = await bitmex.api(options, params);
@@ -138,10 +142,10 @@ async function proccessIntent (job)
 
 function proccessOrder (job)
 {
-  log.log('job.qty', job.qty);
-  log.log('job.order.price', job.order.price);
-  log.log('quote.bidPrice', quote.bidPrice);
-  log.log('quote.askPrice', quote.askPrice);
+  // log.log('job.qty', job.qty);
+  // log.log('job.order.price', job.order.price);
+  // log.log('quote.bidPrice', quote.bidPrice);
+  // log.log('quote.askPrice', quote.askPrice);
 
   // Check if the order needs to be amended
   if (job.qty > 0) {
@@ -150,8 +154,7 @@ function proccessOrder (job)
     if (job.order.price == quote.askPrice) { return; }
   }
 
-
-  // log.log('order needs to be ammended');
+  log.warn('order needs to be ammended');
   // TODO: handle qty == 0 ??
 }
 
