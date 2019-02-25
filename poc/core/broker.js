@@ -104,6 +104,7 @@ function run ()
   if (jobs.length == 0) { clearInterval(interval); }
 }
 
+// TODO: extract this to it's own file?
 function process (job)
 {
   switch (job.state){
