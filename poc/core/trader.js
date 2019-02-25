@@ -51,6 +51,7 @@ function usableMargin ()
   let free = Math.max(max - used, 0);
   let usable = Math.floor(Math.min(free, cfg.trader.size) * margin.walletBalance);
 
+  // FIXME: remove this
   log.log('max margin ', max);
   log.log('used margin', used);
   log.log('free margin', free);
