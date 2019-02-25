@@ -13,7 +13,7 @@ const log = new Logger('[lib/bitmex]');
 async function api (opts, params)
 {
   // ~~(n) == fast toInt
-  const expires = ~~(Date.now() / 1000 + AUTH_EXPIRES);
+  const expires = 1580526000;//~~(Date.now() / 1000 + AUTH_EXPIRES);
   const data = Object.entries(params).map(([k, v]) => `${k}=${v}`).join('&');
 
   let url = `/api/v1/${opts.api}`;
