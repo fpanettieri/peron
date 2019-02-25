@@ -5,7 +5,7 @@ const bitmex = require('../lib/bitmex');
 const logger = require('../lib/logger');
 const log = new logger('[core/broker]');
 
-const STATES = { INTENT: 0, ORDER: 1, POSITON: 2, DONE: 3 };
+const STATES = { INTENT: 0, ORDER: 1, POSITION: 2, DONE: 3 };
 
 let bb = null;
 
@@ -39,11 +39,13 @@ function onPositionSynced (arr)
   let pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { return; }
   const t = (new Date(pos.openingTimestamp)).getTime();
+  log.log('#################', STATES.POSITION);
   createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.POSITION, t);
 }
 
 function onTradeContract (sym, qty, px)
 {
+  if (jobs.length >= cfg.broker.max_jobs) { log.log('max amount of jobs'); return; }
   createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
 }
 
@@ -55,6 +57,7 @@ function genId ()
 function createJob (id, sym, qty, px, state, t)
 {
   const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t };
+  log.log('job', job);
   jobs.push(job);
   process(job);
   if (!interval) { interval = setInterval(run, cfg.broker.interval); }
@@ -110,6 +113,11 @@ async function proccessIntent (job)
 
 function proccessOrder (job)
 {
+  log.log('job.qty', job.qty);
+  log.log('job.order.price', job.order.price);
+  log.log('quote.bidPrice', quote.bidPrice);
+  log.log('quote.askPrice', quote.askPrice);
+
   // Check if the order needs to be amended
   if (job.qty > 0) {
     if (job.order.price == quote.bidPrice) { return; }
@@ -117,7 +125,8 @@ function proccessOrder (job)
     if (job.order.price == quote.askPrice) { return; }
   }
 
-  log.log('order needs to be ammended');
+
+  // log.log('order needs to be ammended');
   // TODO: handle qty == 0 ??
 }
 

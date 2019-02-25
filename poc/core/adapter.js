@@ -117,7 +117,7 @@ function broadcast (json)
     case 'position': {
       const map = { 'partial': 'Synced', 'insert': 'Opened', 'update': 'Updated', 'delete': 'Closed' };
       const action = `Position${map[json.action]}`;
-      bb.emit(action, json.data);
+      bb.silent(action, json.data);
     } break;
 
     case `tradeBin${cfg.timeframe}`: {
