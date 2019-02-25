@@ -18,6 +18,8 @@
   "broker": {
     "max_jobs": 1,
     "interval": 5000,
-    "sl": 0.05
+    "sl": 0.05,
+    "min_profit": 0.5,
+    
   }
 }
