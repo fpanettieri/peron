@@ -98,12 +98,12 @@ async function proccessIntent (job)
   // FIXME: REMOVE THIS LINE
   params.orderQty = job.qty > 0 ? 1 : -1;
 
-  // const options = { method: 'POST', api: 'order', testnet: cfg.testnet };
-  // const rsp = await bitmex.api(options, params);
+  const options = { method: 'POST', api: 'order', testnet: cfg.testnet };
+  const rsp = await bitmex.api(options, params);
 
-  // log.log(rsp);
+  log.log(rsp);
 
-  // if (rsp.status.code == 200){ job.state = STATES.ORDER; }
+  if (rsp.status.code == 200){ job.state = STATES.ORDER; }
 }
 
 function proccessOrder (job)
