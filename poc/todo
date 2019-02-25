@@ -52,6 +52,9 @@
     . Update: This could be caused by event nesting. The CandleClose event cascades other events, making the auditor use the old timestamp
   . Cancel all orders on start (by symbol??)
   . When a position is manually closed, check jobs for updates
+  . When an order is manually updated, update the job locally
+  . When an order is manually closed, update the job locally
+  . Remove dead code
 
 ===============
   Backlog
