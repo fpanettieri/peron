@@ -6,10 +6,10 @@ const assert = require('assert');
 const key = process.env.BITMEX_KEY
 const secret = process.env.BITMEX_SECRET
 
-const method = 'POST';
+const method = 'DELETE';
 const path = '/api/v1/order';
 const expires = 1580526000;
-const data = 'symbol=XBTUSD&side=Buy&orderQty=1&price=3000&clOrdID=ag-1231231cx&ordType=Limit&timeInForce=GoodTillCancel&execInst=ParticipateDoNotInitiate';
+const data = 'clOrdID=ag-yyrljifl';
 
 const unsigned = `${method}${path}${expires}${data}`;
 
