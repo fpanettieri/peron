@@ -133,8 +133,7 @@ function broadcast (json)
     } break;
 
     case 'order': {
-      log.warn('######################## orders: ', json.data.length);
-      bb.silent('OrderUpdated', json.data[0]);
+      for (let i = 0; i < json.data.length; i++) { bb.emit('OrderUpdated', json.data[i]); }
     } break;
 
     default: {
