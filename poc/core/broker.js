@@ -162,6 +162,7 @@ async function proccessOrder (job)
       method = 'DELETE';
       params.clOrdID = job.id;
     } else {
+      method = 'PUT';
       params.price = quote.bidPrice;
       params.origClOrdID = job.id;
     }
