@@ -42,6 +42,7 @@
   . CloseShort called at unexpected times
   . Auditor  said execTime was 6002.
     . Update: This could be caused by event nesting. The CandleClose event cascades other events, making the auditor use the old timestamp
+  . Cancel all orders on start (by symbol??)
 
 ===============
   Backlog
