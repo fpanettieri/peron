@@ -19,9 +19,6 @@ const create_params = {
   execInst: 'ParticipateDoNotInitiate'
 };
 
-const update_params = { origClOrdID: cl_id, price: 1900 };
-const delete_params = { clOrdID: cl_id };
-
 let rsp = null;
 
 function sleep (ms)
@@ -35,23 +32,25 @@ function sleep (ms)
     log.info('################ CREATE');
     options.method = 'POST';
     rsp = await bitmex.api(options, create_params);
-    // log.log(rsp);
+    log.log('\n\n\n', rsp, '\n\n\n');
 
     await sleep(500);
 
     // Update
     log.info('################ UPDATE');
     options.method = 'PUT';
+    const update_params = { origClOrdID: cl_id, price: 1900 };
     rsp = await bitmex.api(options, update_params);
-    // log.log(rsp);
+    log.log('\n\n\n', rsp, '\n\n\n');
 
     await sleep(500);
 
     // Delete
     log.info('################ DELETE');
     options.method = 'DELETE';
+    const delete_params = { clOrdID: cl_id };
     rsp = await bitmex.api(options, delete_params);
-    log.log(rsp);
+    log.log('\n\n\n', rsp, '\n\n\n');
 
   } catch(err) {
     log.error(err);

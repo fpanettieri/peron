@@ -38,8 +38,8 @@ async function api (opts, params)
   const headers = {
     'api-expires': expires,
     'api-key': process.env.BITMEX_KEY,
-    'api-signature': signature
-    // 'content-type': 'application/x-www-form-urlencoded'
+    'api-signature': signature,
+    'content-type': 'application/x-www-form-urlencoded'
   };
 
   const host = `https://${opts.testnet ? 'testnet' : 'www'}.bitmex.com`;
