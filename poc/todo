@@ -4,7 +4,7 @@
 . Broker (Execute the strategy)
   - Watch order book
   - Receives orders from the trader
-  . Design Jobs state machine
+  - Design Jobs state machine
   . Handle job states
     . Intent: Post order to the books
       . Send orders to the market
@@ -20,6 +20,7 @@
 
   . If there is an existing position when the trader starts, close it first
     . Close other orders
+    . If there are existing orders, create them!
   . Find best interval config to update orders (1~3 secs?)
 
 . Auditor (Tracks the bot performance)
