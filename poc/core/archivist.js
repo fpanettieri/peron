@@ -17,7 +17,7 @@ async function onDownloadHistory ()
 {
   try {
     const options = { method: 'GET', api: 'trade/bucketed', testnet: cfg.testnet };
-    const params = { symbol: cfg.symbol, binSize: cfg.timeframe, count: cfg.history, partial: false, reverse: true };
+    const params = { binSize: cfg.timeframe, partial: false, symbol: cfg.symbol, count: cfg.history, reverse: true };
     const rsp = await bitmex.api(options, params);
     const ohlcs = rsp.body.map((k) => bitmex.toOhlc(k)).reverse();
     bb.emit('HistoryDownloaded', ohlcs);

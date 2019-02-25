@@ -18,8 +18,8 @@ async function api (opts, params)
   // ~~(n) == fast toInt
   const expires = ~~(Date.now() / 1000 + AUTH_EXPIRES);
   const path = `/api/v1/${opts.api}`;
-  const data = JSON.stringify(params);
-  // const data = Object.entries(params).map(([k, v]) => `${k}=${v}`).join('&');
+  // const data = JSON.stringify(params);
+  const data = Object.entries(params).map(([k, v]) => `${k}=${v}`).join('&');
   const unsigned = `${opts.method}${path}${expires}${data}`;
   const signature = crypto.createHmac('sha256', process.env.BITMEX_SECRET).update(unsigned).digest('hex');
 
@@ -33,7 +33,7 @@ async function api (opts, params)
     'api-expires': expires,
     'api-key': process.env.BITMEX_KEY,
     'api-signature': signature,
-    'content-type': 'application/json'
+    'content-type': 'application/x-www-form-urlencoded',
     // 'content-type' : 'application/json',
     // 'Accept': 'application/json',
     // 'X-Requested-With': 'XMLHttpRequest'
