@@ -19,6 +19,12 @@ async function api (opts, params)
   const unsigned = `${opts.method}${path}${expires}${data}`;
   const signature = crypto.createHmac('sha256', process.env.BITMEX_SECRET).update(unsigned).digest('hex');
 
+  log.log('expires', expires);
+  log.log('path', path);
+  log.log('data', data);
+  log.log('unsigned', unsigned);
+  log.log('signature', signature);
+
   const headers = {
     'api-expires': expires,
     'api-key': process.env.BITMEX_KEY,
@@ -30,6 +36,7 @@ async function api (opts, params)
 
   const host = `https://${opts.testnet ? 'testnet' : 'www'}.bitmex.com`;
   const rsp = await https.send(`${host}${path}`, data, {method: opts.method, headers: headers});
+  log.log(rsp);
   rsp.body = JSON.parse(rsp.body);
 
   log.warn('x-ratelimit-remaining', rsp.headers['x-ratelimit-remaining']);
