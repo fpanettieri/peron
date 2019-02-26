@@ -10,6 +10,7 @@ const STATES = { INTENT: 0, ORDER: 1, POSITION: 2, FILLED: 3, DONE: 4 };
 let bb = null;
 
 const jobs = [];
+const orders = [];
 let interval = null;
 
 let quote = {};
@@ -45,6 +46,9 @@ function onPositionSynced (arr)
 
 function onOrderUpdated (o)
 {
+  log.log('onOrderUpdated');
+  
+  return;
   log.log('========================================================================');
   log.log(o);
   log.log('========================================================================');

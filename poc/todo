@@ -12,8 +12,8 @@
       - Watch orders progress
       - Amend orders!!!
       - Detect when the order is filled
->     ! Invalid signature on candle update (create PUT test)
-      ! Greedy cancel of order when BB_MA moves
+     - Invalid signature on candle update (create PUT test)
+>    ! Greedy cancel of order when BB_MA moves
         ! Consider min_profit
       ! Greedy cancel of order if lifetime > X
       ! Re design order - job relationship
