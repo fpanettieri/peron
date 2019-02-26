@@ -23,6 +23,7 @@ function plug (_bb)
   bb.on('PositionSynced', onPositionSynced);
 
   bb.on('OrderSynced', onOrderUpdated);
+  bb.on('OrderOpened', onOrderUpdated);
   bb.on('OrderUpdated', onOrderUpdated);
 
   bb.on('TradeContract', onTradeContract);
