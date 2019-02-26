@@ -36,11 +36,7 @@ async function create (id, sym, qty, px)
   params.orderQty = qty > 0 ? 1 : -1;
 
   const rsp = await bitmex.api(options, params);
-
-  if (rsp.status.code != 200){
-    log.error(rsp.error);
-    return null;
-  }
+  if (rsp.status.code != 200){ return log.error(rsp.error); }
 
   const order = rsp.body;
   orders.push(order);
@@ -59,17 +55,19 @@ async function cancel (id)
   const params = { clOrdID: id };
   options.method = 'DELETE';
 
-  const order = await bitmex.api(options, params);
-  // TODO: Remove from list
+  const rsp = await bitmex.api(options, params);
+  if (rsp.status.code != 200){ return log.error(rsp.error); }
 
-  return order;
+  return orders.splice(findIndex(id), 1);
 }
 
 async function discard (id)
 {
   const params = { orderID: id };
   options.method = 'DELETE';
-  return await bitmex.api(options, params);
+
+  const rsp = await bitmex.api(options, params);
+  if (rsp.status.code != 200){ log.error(rsp.error); }
 }
 
 module.exports = {
