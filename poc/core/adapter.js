@@ -112,35 +112,39 @@ function broadcast (json)
   const map = { 'partial': 'Synced', 'insert': 'Opened', 'update': 'Updated', 'delete': 'Closed' };
 
   switch (json.table) {
-    case 'margin': {
-      bb.emit('MarginUpdated', json.data[0]);
-    } break;
+    // case 'margin': {
+    //   bb.emit('MarginUpdated', json.data[0]);
+    // } break;
 
-    case 'position': {
-      const action = `Position${map[json.action]}`;
-      bb.silent(action, json.data);
-    } break;
+    // case 'position': {
+    //   const action = `Position${map[json.action]}`;
+    //   bb.silent(action, json.data);
+    // } break;
+
+    // case 'trade': {
+    //   bb.silent('TradeReceived', json.data);
+    // } break;
+
+    // case 'order': {
+    //   const action = `Order${map[json.action]}`;
+    //   for (let i = 0; i < json.data.length; i++) { bb.emit('OrderUpdated', json.data[i]); }
+    // } break;
+
+    // case 'quote': {
+    //   const action = `Quote${map[json.action]}`;
+    //   bb.emit(action, json.data);
+    // } break;
 
     case `tradeBin${cfg.timeframe}`: {
       bb.emit('CandleReceived', bitmex.toOhlc(json.data[0]));
     } break;
 
-    case 'trade': {
-      bb.silent('TradeReceived', json.data);
-    } break;
-
-    case 'quote': {
-      const action = `Quote${map[json.action]}`;
-      log.log('########################################', action);
-      // bb.emit(action, json.data);
-    } break;
-
-    case 'order': {
-      for (let i = 0; i < json.data.length; i++) { bb.emit('OrderUpdated', json.data[i]); }
-    } break;
-
     default: {
-      log.warn('Unexpected msg:', json);
+      const action = `${json.action[0].toUpperCase()}${json.action.substring(1)}${map[json.action]}`;
+      log.warn('########################################', action);
+      log.log(json.data);
+      log.warn('########################################', action, '\n\n\n\n');
+      // bb.emit(action, json.data);
     }
   }
 }
