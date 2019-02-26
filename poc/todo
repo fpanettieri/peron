@@ -18,11 +18,15 @@
       - Greedy cancel of order if lifetime > X
       - Re design order - job relationship
 
-    . Position: Create SL & Close orders
+>   . Position: Create SL & Close orders
       . ReduceOnly SL
+      . Target MA for profit
+      . Soft SL trigger
 
-    . Position: Update SL & Close orders
+    . StopLoss: MinimizeLoss
+      . Burst interval speed on enter
       . Overviews the market and updates prices
+      . Restore interval speed on close
 
   - Handle 503 errors => https://testnet.bitmex.com/app/restAPI#Overload
   - Handle 429 error => https://testnet.bitmex.com/app/restAPI
@@ -30,7 +34,7 @@
   . If there is an existing position when the trader starts, close it first
     . Close other orders
     . If there are existing orders, create them!
-  . Find best interval config to update orders (1~3 secs?)
+
 
 . Auditor (Tracks the bot performance)
   . Improve event queueing / nesting using setImmediate / nextTick?
@@ -69,6 +73,9 @@
   . Consider funding before opening positions?
   . 'Magic' SL. After an open position, if the price breaks out again, try to close at a good price?
   . Check if we need to do anything on 'CloseX' msgs
+
+. Broker
+  . Find best interval config to update orders (1~3 secs?)
 
 . Double check with BitMEX support about auth params use case in both ws and http
   . const expires = ~~(Date.now() / 1000 + 30);

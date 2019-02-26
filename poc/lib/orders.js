@@ -70,6 +70,11 @@ function findIndex (id)
   return orders.findIndex(o => o.clOrdID === id);
 }
 
+function add (o)
+{
+  orders.push(o);
+}
+
 function update (o)
 {
   let idx = findIndex(o.clOrdID);
