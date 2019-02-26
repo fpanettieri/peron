@@ -5,6 +5,11 @@ function clone (o)
   return JSON.parse(JSON.stringify(o));
 }
 
+function sleep (ms)
+{
+  return new Promise(resolve =>{ setTimeout(resolve, ms); });
+}
+
 function humanize (size)
 {
   let i = size === 0 ? 0 : Math.floor( Math.log(size) / Math.log(1024) );
@@ -33,6 +38,7 @@ function intervalToMs (interval)
 
 module.exports = {
   clone: clone,
+  sleep: sleep,
   humanize: humanize,
   intervalToMs: intervalToMs
 };

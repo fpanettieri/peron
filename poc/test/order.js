@@ -27,14 +27,14 @@ let rsp = null;
 
 function sleep (ms)
 {
-  return new Promise(resolve=>{ setTimeout(resolve,ms); });
+  return new Promise(resolve=>{ setTimeout(resolve, ms); });
 }
 
 (async () => {
   try {
     // Create
     log.info('################ CREATE');
-    options.method = 'POST';
+    // options.method = 'POST';
     // rsp = await bitmex.api(options, create_params);
     rsp = await orders.create(cl_id, 'XBTUSD', 1, 2000);
     log.log(rsp);
