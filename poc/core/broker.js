@@ -48,48 +48,52 @@ function onPositionSynced (arr)
 
 function onOrderSynced (arr)
 {
-  // Ignore non-peronist orders
   log.debug('$$$$$$$$$$$$$$$$ onOrderSynced:', arr);
 
   for (let i = 0; i < arr.length; i++) {
     const o = arr[i];
 
-    if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) { log.log('ignored non-peronist order'); continue; }
+    if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) { continue; }
+    if (orders.find(o.clOrdID)){ return; }
 
-    // Double check if somehow we managed to create it before the sync msg
-    const order = orders.find(o.clOrdID);
-    if (order){ return; }
-
-    // Cleanup unknown order
-    orders.cancel(o.orderID);
+    orders.cancel(o.clOrdID);
   }
 }
 
-function onOrderUpdated (o)
+function onOrderUpdated (arr)
 {
+  log.debug('$$$$$$$$$$$$$$$$ onOrderUpdated:', arr);
 
-  log.debug('$$$$$$$$$$$$$$$$ onOrderUpdated:', o);
-  return;
-  // Ignore non-peronist orders
-  if (/^ag-/.test(o.clOrdID)) { log.log('ignored non-peronist order'); return; }
+  for (let i = 0; i < arr.length; i++) {
+    const o = arr[i];
 
-  // return orders.discard(o.orderID);
-  //}
+    if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) { continue; }
 
-  return;
+    const order = orders.find(o.clOrdID);
+    if (!order) {
+      log.debug('unknown order', o);
+      orders.cancel(o.clOrdID);
+      return;
+    }
+    orders.update(o);
 
-  const order = orders.find(o.clOrdID);
-  const jid = o.clOrdID.substr(0, 11);
-  const job = jobs.find(j => j.id == jid);
+    if (o.ordStatus == 'Canceled') {
+      orders.remove(o);
+      return;
+    }
 
-  if (!order || !job) { return; }
-  orders.update(o);
+    const jid = o.clOrdID.substr(0, 11);
+    const job = jobs.find(j => j.id == jid);
+    if (!job) {
+      log.debug('unknown job', o);
+      orders.cancel(o.clOrdID);
+      return;
+    }
 
-  if (o.ordStatus == 'Filled' && o.leavesQty == 0) {
-    updateJob(job, job.qty, o.avgPx, STATES.FILLED, Date.now());
-
-    orders.remove(o);
-    orders.debug();
+    if (o.ordStatus == 'Filled' && o.leavesQty == 0) {
+      orders.remove(o);
+      updateJob(job, job.qty, o.avgPx, STATES.FILLED, Date.now());
+    }
   }
 }
 

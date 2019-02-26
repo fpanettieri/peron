@@ -37,7 +37,12 @@ async function amend (id, price)
 {
   const params = { origClOrdID: id, price: price };
   options.method = 'PUT';
-  return await bitmex.api(options, params);
+
+  const rsp = await bitmex.api(options, params);
+  if (rsp.status.code != 200){ return log.error(rsp.error); }
+
+  log.debug(rsp);
+  // TODO: return what?
 }
 
 async function cancel (id)
@@ -48,7 +53,8 @@ async function cancel (id)
   const rsp = await bitmex.api(options, params);
   if (rsp.status.code != 200){ return log.error(rsp.error); }
 
-  return orders.splice(findIndex(id), 1);
+  log.debug(rsp);
+  // TODO: return what?
 }
 
 async function discard (id)
