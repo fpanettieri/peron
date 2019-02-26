@@ -39,7 +39,7 @@ function onPositionSynced (arr)
   let pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { return; }
   const t = (new Date(pos.openingTimestamp)).getTime();
-  createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.POSITION, t);
+  createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.FILLED, t);
 }
 
 function onOrderUpdated (o)
@@ -59,8 +59,10 @@ function onOrderUpdated (o)
   orders.update(o);
 
   if (o.ordStatus == 'Filled' && o.leavesQty == 0) {
-    job.price = o.avgPx;
-    job.state = STATES.FILLED;
+    updateJob(job, job.qty, o.avgPx, STATES.FILLED, Date.now());
+
+    orders.remove(o);
+    orders.debug();
   }
 }
 
@@ -79,6 +81,7 @@ function createJob (id, sym, qty, px, state, t)
 {
   const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t };
   // TODO: stats - reports?
+  log.log('Job Created');
 
   jobs.push(job);
   process(job);
@@ -92,12 +95,14 @@ function updateJob (job, qty, px, state, t)
   job.state = state;
   job.t = t;
   // TODO: track job change somewhere
+  log.log('Job Updated');
 }
 
-function deleteJob (job)
+function destroyJob (job)
 {
   jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
   // TODO: track job change somewhere
+  log.log('Job Destroyed');
 }
 
 function run ()
@@ -179,7 +184,7 @@ function proccessDone (job)
 function cancelOrder (id, reason, job)
 {
   orders.cancel(id, reason);
-  deleteJob(job);
+  destroyJob(job);
   bb.emit('OrderCanceled');
 }
 

@@ -74,7 +74,16 @@ function update (o)
 {
   let idx = findIndex(o.clOrdID);
   orders[idx] = {...orders[idx], ...o};
-  log.log('merged order', orders[idx]);
+}
+
+function remove (o)
+{
+  orders.splice(findIndex(o), 1);
+}
+
+function debug ()
+{
+  log.log(orders);
 }
 
 module.exports = {
@@ -84,5 +93,7 @@ module.exports = {
   discard: discard,
   find: find,
   findIndex: findIndex,
-  update: update
+  update: update,
+  remove: remove,
+  debug: debug
 };
