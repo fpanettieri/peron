@@ -67,7 +67,10 @@ function onOrderUpdated (arr)
   for (let i = 0; i < arr.length; i++) {
     const o = arr[i];
 
-    if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) { continue; }
+    if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
+      log.debug('Ignored non-peronist order');
+      continue;
+    }
 
     const order = orders.find(o.clOrdID);
     if (!order) {
