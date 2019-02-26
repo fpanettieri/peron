@@ -126,10 +126,11 @@ function process (job)
 async function proccessIntent (job)
 {
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
-  const order = orders.create(`${job.id}-in`, job.sym, job.qty, price);
+  const order = await orders.create(`${job.id}-in`, job.sym, job.qty, price);
   if (order) {
     updateJob(job, job.qty, price, STATES.ORDER, Date.now());
     bb.emit('OrderPlaced');
+    log.log('\n\n\n\n\n', order, '\n\n\n\n\n');
   } else {
     bb.emit('OrderFailed');
   }
