@@ -22,7 +22,7 @@ function plug (_bb)
   bb.on('CandleAnalyzed', onCandleAnalyzed);
   bb.on('PositionSynced', onPositionSynced);
 
-  bb.on('OrderSynced', onOrderSynced);
+  bb.on('OrderSynced', onOrderUpdated);
   bb.on('OrderUpdated', onOrderUpdated);
 
   bb.on('TradeContract', onTradeContract);
@@ -44,20 +44,6 @@ function onPositionSynced (arr)
   if (!pos || !pos.isOpen) { return; }
   const t = (new Date(pos.openingTimestamp)).getTime();
   createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.FILLED, t);
-}
-
-function onOrderSynced (arr)
-{
-  log.debug('$$$$$$$$$$$$$$$$ onOrderSynced:', arr);
-
-  for (let i = 0; i < arr.length; i++) {
-    const o = arr[i];
-
-    if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) { continue; }
-    if (orders.find(o.clOrdID)){ return; }
-
-    orders.cancel(o.clOrdID);
-  }
 }
 
 function onOrderUpdated (arr)

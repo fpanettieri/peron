@@ -57,15 +57,6 @@ async function cancel (id)
   // TODO: return what?
 }
 
-async function discard (id)
-{
-  const params = { orderID: id };
-  options.method = 'DELETE';
-
-  const rsp = await bitmex.api(options, params);
-  if (rsp.status.code != 200){ log.error(rsp.error); }
-}
-
 function find (id)
 {
   return orders.find(o => o.clOrdID === id);
@@ -103,7 +94,6 @@ module.exports = {
   create: create,
   amend: amend,
   cancel: cancel,
-  discard: discard,
   find: find,
   findIndex: findIndex,
   update: update,

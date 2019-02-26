@@ -24,8 +24,12 @@
       - Greedy cancel of order if lifetime > X
       - Re design order - job relationship
 
+    . Partial: When a position is partially filled
+      . Target MA for Profit
+      . ReduceOnly hidden SL
+
 >   . Position: Create SL & Close orders
-      . ReduceOnly SL
+      . ReduceOnly hidden SL
       . Target MA for profit
       . Soft SL trigger
 
@@ -72,6 +76,9 @@
 ===============
   Backlog
 ===============
+. Adapter
+  . Handle multi msgs
+
 . Maker Icebergs. Similar to icebergs
   . Only a small order is put on the market
   . When it's filled, other maker orders are created
