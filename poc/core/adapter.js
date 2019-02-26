@@ -131,7 +131,8 @@ function broadcast (json)
 
     case 'quote': {
       const action = `Quote${map[json.action]}`;
-      bb.emit(action, json.data);
+      log.log('########################################', action);
+      // bb.emit(action, json.data);
     } break;
 
     case 'order': {

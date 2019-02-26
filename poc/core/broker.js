@@ -49,8 +49,10 @@ function onOrderUpdated (o)
     log.log('\n\n\n', '============================================');
     log.log(o);
     log.log('============================================', '\n\n\n');
-    return; }
-    // return orders.discard(o.orderID); }
+    return;
+  }
+  // return orders.discard(o.orderID); 
+  //}
 
   const order = orders.find(o.clOrdID);
   const jid = o.clOrdID.substr(0, 11);
