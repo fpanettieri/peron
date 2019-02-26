@@ -44,10 +44,26 @@ function onPositionSynced (arr)
   createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.POSITION, t);
 }
 
-function onOrderUpdated (o)
+function onOrderUpdated (order)
 {
-  log.log('onOrderUpdated');
-  
+  //
+  let idx = orders.findIndex(o => o.orderID == order.orderID);
+  log.log('idx', idx);
+  return;
+  //
+  // function getIndex (pos)
+  // {
+  //   return positions.findIndex(p => samePosition(p, pos));
+  // }
+  //
+  // for (let i = 0; i < data.length; i++) {
+  //   let pos = data[i];
+  //   let idx = getIndex(pos);
+  //   positions[idx] = {...positions[idx], ...pos};
+  // }
+  //
+  // log.log('onOrderUpdated');
+
   return;
   log.log('========================================================================');
   log.log(o);
