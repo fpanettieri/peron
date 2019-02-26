@@ -1,6 +1,5 @@
 'use strict';
 
-const querystring = require('querystring');
 const crypto = require('crypto');
 
 const https = require('./https');

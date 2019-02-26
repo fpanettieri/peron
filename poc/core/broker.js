@@ -1,7 +1,7 @@
 'use strict';
 
 const cfg = require('../cfg/peron');
-const bitmex = require('../lib/bitmex');
+const orders = require('../lib/orders');
 const logger = require('../lib/logger');
 const log = new logger('[core/broker]');
 
@@ -10,9 +10,7 @@ const STATES = { INTENT: 0, ORDER: 1, POSITION: 2, FILLED: 3, DONE: 4 };
 let bb = null;
 
 const jobs = [];
-const orders = [];
 let interval = null;
-
 let quote = {};
 let candle = null;
 
@@ -48,6 +46,10 @@ function onOrderUpdated (order)
 {
   //
   let idx = orders.findIndex(o => o.orderID == order.orderID);
+
+  if (idx === -1) {
+    bitmex.cancle
+  }
   log.log('idx', idx);
   return;
   //
@@ -138,33 +140,13 @@ function process (job)
 
 async function proccessIntent (job)
 {
-  const params = {
-    symbol: job.sym,
-    orderQty: job.qty,
-    timeInForce: 'GoodTillCancel',
-    clOrdID: job.id,
-    ordType: 'Limit',
-    execInst: 'ParticipateDoNotInitiate'
-  };
-
-  if (job.qty > 0) {
-    params.side = 'Buy';
-    params.price = quote.bidPrice;
-  } else {
-    params.side = 'Sell';
-    params.price = quote.askPrice;
-  }
-  // FIXME: handle qty == 0 ??
-
-  const options = { method: 'POST', api: 'order', testnet: cfg.testnet };
-  const rsp = await bitmex.api(options, params);
-
-  if (rsp.status.code == 200){
+  let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
+  const order = orders.create(job.sym, job.qty, price, job.id);
+  if (order) {
     job.state = STATES.ORDER;
-    job.order = rsp.body;
-    bb.emit('OrderPlaced', job.sym, params.side, job.qty, params.price, job.id);
+    bb.emit('OrderPlaced', job.sym, job.qty, price, job.id);
   } else {
-    log.error(rsp.error);
+    bb.emit('OrderFailed', job.sym, job.qty, price, job.id);
   }
 }
 
