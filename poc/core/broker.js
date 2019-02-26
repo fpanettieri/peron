@@ -6,7 +6,7 @@ const logger = require('../lib/logger');
 const log = new logger('[core/broker]');
 
 const ORDER_PREFIX_REGEX = /^ag-/;
-const STATES = { INTENT: 0, ORDER: 1, FILLED: 2, POSITION: 3, STOP: 4 };
+const STATES = { INTENT: 0, ORDER: 1, FILLED: 2, PARTIAL: 3, POSITION: 4, STOP: 5 };
 
 let bb = null;
 
@@ -78,6 +78,10 @@ function onOrderUpdated (arr)
       log.debug('unknown job', o);
       orders.cancel(o.clOrdID);
       return;
+    }
+
+    if (o.ordStatus == 'PartiallyFilled') {
+      updateJob(job, job.qty, o.avgPx, STATES.PARTIAL, Date.now());
     }
 
     if (o.ordStatus == 'Filled' && o.leavesQty == 0) {

@@ -20,6 +20,7 @@
     "interval": 1000,
     "sl": 0.05,
     "min_profit": 0.5,
-    "lifetime": 1
+    "order_life": 900000,
+    "partial_life": 300000
   }
 }
