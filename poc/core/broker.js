@@ -78,9 +78,26 @@ function genId ()
 function createJob (id, sym, qty, px, state, t)
 {
   const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t };
+  // TODO: stats - reports?
+
   jobs.push(job);
   process(job);
   if (!interval) { interval = setInterval(run, cfg.broker.interval); }
+}
+
+function updateJob (job, qty, px, state, t)
+{
+  job.qty = qty;
+  job.px = px;
+  job.state = state;
+  job.t = t;
+  // TODO: track job change somewhere
+}
+
+function deleteJob (job)
+{
+  jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
+  // TODO: track job change somewhere
 }
 
 function run ()
@@ -106,45 +123,39 @@ async function proccessIntent (job)
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
   const order = orders.create(`${job.id}-in`, job.sym, job.qty, price);
   if (order) {
-    job.state = STATES.ORDER;
-    bb.emit('OrderPlaced', job.sym, job.qty, price, job.id);
+    updateJob(job, job.qty, price, STATES.ORDER, Date.now());
+    bb.emit('OrderPlaced');
   } else {
-    bb.emit('OrderFailed', job.sym, job.qty, price, job.id);
+    bb.emit('OrderFailed');
   }
 }
 
 async function proccessOrder (job)
 {
   const order = orders.find(`${job.id}-in`);
+  // TODO: handle missing order?
+
+  if (Date.now() - job.t > cfg.broker.lifetime) {
+    cancelOrder(order.clOrdID, 'Expired', job);
+    return;
+  }
 
   if (job.qty > 0) {
     let price = quote.bidPrice;
 
     if (price > candle.bb_ma - cfg.broker.min_profit) {
-      orders.cancel(order.clOrdID);
-      bb.emit('OrderCanceled', job.sym, job.qty, price, job.id);
-
+      cancelOrder(order.clOrdID, 'MA Crossed', job);
     } else if (order.price != price){
-      orders.amend(order.clOrdID, price);
-      bb.emit('OrderAmended', job.sym, job.qty, price, job.id);
-
-    } else {
-      log.log('same price!');
+      amendOrder(order.clOrdID, price);
     }
 
   } else {
     let price = quote.askPrice;
 
     if (price < candle.bb_ma + cfg.broker.min_profit) {
-      orders.cancel(order.clOrdID);
-      bb.emit('OrderCanceled', job.sym, job.qty, price, job.id);
-
+      cancelOrder(order.clOrdID, 'MA Crossed', job);
     } else if (order.price != price){
-      orders.amend(order.clOrdID, price);
-      bb.emit('OrderAmended', job.sym, job.qty, price, job.id);
-
-    } else {
-      log.log('same price!');
+      amendOrder(order.clOrdID, price);
     }
   }
 }
@@ -163,6 +174,19 @@ function proccessPosition (job)
 function proccessDone (job)
 {
   // Take the job from the list & log
+}
+
+function cancelOrder (id, reason, job)
+{
+  orders.cancel(id, reason);
+  deleteJob(job);
+  bb.emit('OrderCanceled');
+}
+
+function amendOrder (id, price)
+{
+  orders.amend(id, price);
+  bb.emit('OrderAmended');
 }
 
 module.exports = { plug: plug };

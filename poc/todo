@@ -45,6 +45,7 @@
   . Success rate
   . Avg. Position Size
   . Avg. Time To Exit
+  . Most of the important stats can be tracked on broker.job updates
 
 . Bugfixing
   . Chandler managed to emit 2 candles somehow, triggering a 'this should never happen'
