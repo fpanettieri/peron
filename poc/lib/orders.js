@@ -83,6 +83,5 @@ module.exports = {
   cancel: cancel,
   discard: discard,
   find: find,
-  findIndex: findIndex,
   update: update
 };
