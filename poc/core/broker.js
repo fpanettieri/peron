@@ -5,7 +5,7 @@ const orders = require('../lib/orders');
 const logger = require('../lib/logger');
 const log = new logger('[core/broker]');
 
-const STATES = { INTENT: 0, ORDER: 1, POSITION: 2, STOP: 3 };
+const STATES = { INTENT: 0, ORDER: 1, FILLED: 2, POSITION: 3, STOP: 4 };
 
 let bb = null;
 
