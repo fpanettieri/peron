@@ -8,16 +8,6 @@ const log = new Logger('[lib/orders]');
 const orders = [];
 const options = { api: 'order', testnet: cfg.testnet };
 
-function find (id)
-{
-  return orders.find(o => o.clOrdID === id);
-}
-
-function findIndex (id)
-{
-  return orders.findIndex(o => o.clOrdID === id);
-}
-
 async function create (id, sym, qty, px)
 {
   const params = {
@@ -70,9 +60,29 @@ async function discard (id)
   if (rsp.status.code != 200){ log.error(rsp.error); }
 }
 
+function find (id)
+{
+  return orders.find(o => o.clOrdID === id);
+}
+
+function findIndex (id)
+{
+  return orders.findIndex(o => o.clOrdID === id);
+}
+
+function update (o)
+{
+  let idx = findIndex(o.clOrdID);
+  orders[idx] = {...orders[idx], ...o};
+  log.log('merged order', orders[idx]);
+}
+
 module.exports = {
   create: create,
   amend: amend,
   cancel: cancel,
   discard: discard,
+  find: find,
+  findIndex: findIndex,
+  update: update
 };
