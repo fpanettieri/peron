@@ -25,7 +25,7 @@ const broker = require('./core/broker');
   archivist.plug(bb);
   chandler.plug(bb);
   analyst.plug(bb);
-  brain.plug(bb);
+  // brain.plug(bb);
   // trader.plug(bb);
   broker.plug(bb);
   // auditor.plug(bb);
