@@ -130,7 +130,8 @@ async function proccessIntent (job)
   if (order) {
     updateJob(job, job.qty, price, STATES.ORDER, Date.now());
     bb.emit('OrderPlaced');
-    log.log('\n\n\n\n\n', order, '\n\n\n\n\n');
+
+    orders.debug();
   } else {
     bb.emit('OrderFailed');
   }
