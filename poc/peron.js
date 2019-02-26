@@ -31,7 +31,6 @@ const broker = require('./core/broker');
   // auditor.plug(bb);
 
   bb.chain('SocketConnected', 'DownloadHistory');
-  bb.chain('SocketConnected', 'SyncAccount');
   bb.chain('HistoryDownloaded', 'WatchMarket');
 
   bb.emit('ConnectSocket', `wss://${cfg.testnet ? 'testnet' : 'www'}.bitmex.com/realtime`);

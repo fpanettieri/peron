@@ -21,7 +21,6 @@ function plug (_bb)
 {
   bb = _bb;
   bb.on('ConnectSocket', onConnect);
-  bb.on('SyncAccount', onSyncAccount);
   bb.on('WatchMarket', onWatchMarket);
   bb.on('SendAdapterMsg', onSendAdapterMsg);
 }
@@ -140,7 +139,7 @@ function broadcast (json)
     } break;
 
     default: {
-      const action = `${json.action[0].toUpperCase()}${json.action.substring(1)}${map[json.action]}`;
+      const action = `${json.table[0].toUpperCase()}${json.table.substring(1)}${map[json.action]}`;
       log.warn('########################################', action);
       log.log(json.data);
       log.warn('########################################', action, '\n\n\n\n');
@@ -149,20 +148,19 @@ function broadcast (json)
   }
 }
 
-function onSyncAccount ()
-{
-  const sub_params = {
-    op: 'subscribe',
-    args: [ 'margin', `position:${cfg.symbol}`, `order:${cfg.symbol}` ]
-  };
-  send(sub_params);
-}
-
 function onWatchMarket ()
 {
   const sub_params = {
     op: 'subscribe',
-    args: [ `trade:${cfg.symbol}`, `tradeBin${cfg.timeframe}:${cfg.symbol}`, `quote:${cfg.symbol}` ]
+    args: [ `order:${cfg.symbol}` ]
+    // args: [
+    //   'margin',
+    //   `quote:${cfg.symbol}`,
+    //   `position:${cfg.symbol}`,
+    //   `order:${cfg.symbol}`,
+    //   `trade:${cfg.symbol}`,
+    //   `tradeBin${cfg.timeframe}:${cfg.symbol}`
+    // ]
   };
   send(sub_params);
 }

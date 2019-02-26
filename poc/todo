@@ -1,6 +1,11 @@
 ===============
   TODO
 ===============
+. Adapter
+  . Refactor msg creation
+  . Update msg handlers
+  . Debug orders
+
 . Broker (Execute the strategy)
   - Watch order book
   - Receives orders from the trader
@@ -36,7 +41,6 @@
     . If there is an existing position when the trader starts, close it first
     . Close other orders
     . If there are existing orders, create them!
-
 
 . Auditor (Tracks the bot performance)
   . Improve event queueing / nesting using setImmediate / nextTick?
