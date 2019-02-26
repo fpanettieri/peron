@@ -26,7 +26,7 @@ const broker = require('./core/broker');
   chandler.plug(bb);
   analyst.plug(bb);
   brain.plug(bb);
-  trader.plug(bb);
+  // trader.plug(bb);
   broker.plug(bb);
   // auditor.plug(bb);
 

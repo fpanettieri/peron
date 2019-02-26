@@ -45,7 +45,11 @@ function onPositionSynced (arr)
 function onOrderUpdated (o)
 {
   // Discard non-peronist orders
-  if (!o.clOrdID) { return orders.discard(o.orderID); }
+  if (!o.clOrdID) {
+    log.log('\n\n\n', '============================================');
+    log.log(o);
+    log.log('============================================', '\n\n\n');
+    return orders.discard(o.orderID); }
 
   const order = orders.find(o.clOrdID);
   const jid = o.clOrdID.substr(0, 11);
@@ -65,7 +69,7 @@ function onOrderUpdated (o)
 function onTradeContract (sym, qty, px)
 {
   if (jobs.length >= cfg.broker.max_jobs) { log.log('max amount of jobs'); return; }
-  // createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
+  createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
 }
 
 function genId ()
