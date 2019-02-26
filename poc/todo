@@ -31,7 +31,9 @@
   - Handle 503 errors => https://testnet.bitmex.com/app/restAPI#Overload
   - Handle 429 error => https://testnet.bitmex.com/app/restAPI
 
-  . If there is an existing position when the trader starts, close it first
+  . Orders updates
+    . Partial updates?
+    . If there is an existing position when the trader starts, close it first
     . Close other orders
     . If there are existing orders, create them!
 

@@ -109,13 +109,14 @@ function onMessage (data)
 
 function broadcast (json)
 {
+  const map = { 'partial': 'Synced', 'insert': 'Opened', 'update': 'Updated', 'delete': 'Closed' };
+
   switch (json.table) {
     case 'margin': {
       bb.emit('MarginUpdated', json.data[0]);
     } break;
 
     case 'position': {
-      const map = { 'partial': 'Synced', 'insert': 'Opened', 'update': 'Updated', 'delete': 'Closed' };
       const action = `Position${map[json.action]}`;
       bb.silent(action, json.data);
     } break;
@@ -129,7 +130,8 @@ function broadcast (json)
     } break;
 
     case 'quote': {
-      bb.silent('QuoteUpdated', json.data[0]);
+      const action = `Quote${map[json.action]}`;
+      bb.emit(action, json.data);
     } break;
 
     case 'order': {
