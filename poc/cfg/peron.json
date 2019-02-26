@@ -20,6 +20,6 @@
     "interval": 1000,
     "sl": 0.05,
     "min_profit": 0.5,
-    "lifetime": 900000,
+    "lifetime": 1
   }
 }
