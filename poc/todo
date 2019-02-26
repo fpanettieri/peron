@@ -12,11 +12,11 @@
       - Watch orders progress
       - Amend orders!!!
       - Detect when the order is filled
-     - Invalid signature on candle update (create PUT test)
->    ! Greedy cancel of order when BB_MA moves
-        ! Consider min_profit
-      ! Greedy cancel of order if lifetime > X
-      ! Re design order - job relationship
+      - Invalid signature on candle update (create PUT test)
+      - Greedy cancel of order when BB_MA moves
+        - Consider min_profit
+      - Greedy cancel of order if lifetime > X
+      - Re design order - job relationship
 
     . Position: Create SL & Close orders
       . ReduceOnly SL
@@ -78,6 +78,8 @@
 . Dynamic modules loading
   . Load modules from an array in a config file
   . Init modules and plug them to the backbone
+
+. Safe-check params
 
 ===============
   DONE

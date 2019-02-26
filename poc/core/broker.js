@@ -5,7 +5,7 @@ const orders = require('../lib/orders');
 const logger = require('../lib/logger');
 const log = new logger('[core/broker]');
 
-const STATES = { INTENT: 0, ORDER: 1, POSITION: 2, FILLED: 3, DONE: 4 };
+const STATES = { INTENT: 0, ORDER: 1, POSITION: 2, STOP: 3 };
 
 let bb = null;
 
@@ -42,54 +42,53 @@ function onPositionSynced (arr)
   createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.POSITION, t);
 }
 
-function onOrderUpdated (order)
+function onOrderUpdated (o)
 {
-  //
-  let idx = orders.findIndex(o => o.orderID == order.orderID);
+  const order = orders.find(o.clOrdID);
+  const jid = o.clOrdID.substr(0, 11);
+  const job = jobs.find(j => j.id == jid);
 
-  if (idx === -1) {
-    bitmex.cancle
-  }
-  log.log('idx', idx);
-  return;
-  //
-  // function getIndex (pos)
-  // {
-  //   return positions.findIndex(p => samePosition(p, pos));
-  // }
-  //
-  // for (let i = 0; i < data.length; i++) {
-  //   let pos = data[i];
-  //   let idx = getIndex(pos);
-  //   positions[idx] = {...positions[idx], ...pos};
-  // }
-  //
-  // log.log('onOrderUpdated');
-
-  return;
-  log.log('========================================================================');
-  log.log(o);
-  log.log('========================================================================');
-
-  const stop = o.clOrdID.includes('-sl');
-  const job = jobs.find(j => findJob(j, o, stop));
-
-  if (!job) {
-    log.error('HANDLE JOB NOT FOUND');
+  if (!order || !job) {
+    orders.discard(o.orderID);
     return;
   }
 
-  if (stop) {
-    job.sl = {...job.sl, ...o};
-  } else {
-    job.order = {...job.order, ...o};
+  orders.update(o);
 
-    // TODO: check what happens with large orders
-    log.log('job.order.ordStatus', job.order.ordStatus);
-    log.log('job.order.leavesQty', job.order.leavesQty);
-
-    if (job.order.ordStatus == 'Filled' && job.order.leavesQty == 0) { job.state = STATES.FILLED; }
+  if (o.ordStatus == 'Filled' && o.leavesQty == 0) {
+    job.state = STATES.FILLED;
   }
+
+
+  // Find related job
+  // If job not found, log and ignore, return
+
+  // If status == filled, change job status to Position, update price with avg price
+
+  return;
+  // log.log('========================================================================');
+  // log.log(o);
+  // log.log('========================================================================');
+  //
+  // const stop = o.clOrdID.includes('-sl');
+  // const job = jobs.find(j => findJob(j, o, stop));
+  //
+  // if (!job) {
+  //   log.error('HANDLE JOB NOT FOUND');
+  //   return;
+  // }
+  //
+  // if (stop) {
+  //   job.sl = {...job.sl, ...o};
+  // } else {
+  //   job.order = {...job.order, ...o};
+  //
+  //   // TODO: check what happens with large orders
+  //   log.log('job.order.ordStatus', job.order.ordStatus);
+  //   log.log('job.order.leavesQty', job.order.leavesQty);
+  //
+  //   if (job.order.ordStatus == 'Filled' && job.order.leavesQty == 0) { job.state = STATES.FILLED; }
+  // }
 }
 
 function onTradeContract (sym, qty, px)
@@ -109,15 +108,6 @@ function createJob (id, sym, qty, px, state, t)
   jobs.push(job);
   process(job);
   if (!interval) { interval = setInterval(run, cfg.broker.interval); }
-}
-
-function findJob (job, order, stop)
-{
-  if (stop) {
-    return job.sl && job.sl.clOrdID == order.clOrdID;
-  } else {
-    return job.order && job.order.clOrdID == order.clOrdID;
-  }
 }
 
 function run ()
@@ -141,7 +131,7 @@ function process (job)
 async function proccessIntent (job)
 {
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
-  const order = orders.create(job.sym, job.qty, price, job.id);
+  const order = orders.create(`${job.id}-in`, job.sym, job.qty, price);
   if (order) {
     job.state = STATES.ORDER;
     bb.emit('OrderPlaced', job.sym, job.qty, price, job.id);
@@ -152,49 +142,37 @@ async function proccessIntent (job)
 
 async function proccessOrder (job)
 {
-  let params = {};
-  let method = '';
+  const order = orders.find(`${job.id}-in`);
 
-  if (job.qty > 0) { // LONG
-    if (job.order.price == quote.bidPrice) { return; }
+  if (job.qty > 0) {
+    let price = quote.bidPrice;
 
-    // FIXME: this validation actually has more priority than the bidprice check.
-    // If the MA moved past the order, no matter what moved first, the order needs to be canceled
-    if (quote.bidPrice > candle.bb_ma) {
-      method = 'DELETE';
-      params.clOrdID = job.id;
+    if (price > candle.bb_ma - cfg.broker.min_profit) {
+      orders.cancel(order.clOrdID);
+      bb.emit('OrderCanceled', job.sym, job.qty, price, job.id);
+
+    } else if (order.price != price){
+      orders.amend(order.clOrdID, price);
+      bb.emit('OrderAmended', job.sym, job.qty, price, job.id);
+
     } else {
-      method = 'PUT';
-      params.price = quote.bidPrice;
-      params.origClOrdID = job.id;
+      log.log('same price!');
     }
-  } else { // SHORT
-    if (job.order.price == quote.askPrice) { return; }
-
-    // FIXME: this validation actually has more priority than the bidprice check.
-    // If the MA moved past the order, no matter what moved first, the order needs to be canceled
-    if (quote.askPrice < candle.bb_ma) {
-      method = 'DELETE';
-      params.clOrdID = job.id;
-    } else {
-      method = 'PUT';
-      params.price = quote.askPrice;
-      params.origClOrdID = job.id;
-    }
-  }
-  // FIXME: handle qty == 0 ??
-
-  const options = { method: method, api: 'order', testnet: cfg.testnet };
-  const rsp = await bitmex.api(options, params);
-
-  log.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
-  log.log(rsp);
-  log.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
-
-  if (rsp.status.code == 200){
 
   } else {
-    log.error(rsp.error);
+    let price = quote.askPrice;
+
+    if (price < candle.bb_ma + cfg.broker.min_profit) {
+      orders.cancel(order.clOrdID);
+      bb.emit('OrderCanceled', job.sym, job.qty, price, job.id);
+
+    } else if (order.price != price){
+      orders.amend(order.clOrdID, price);
+      bb.emit('OrderAmended', job.sym, job.qty, price, job.id);
+
+    } else {
+      log.log('same price!');
+    }
   }
 }
 

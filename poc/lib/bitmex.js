@@ -4,10 +4,9 @@ const crypto = require('crypto');
 
 const https = require('./https');
 const Logger = require('./logger');
+const log = new Logger('[lib/bitmex]');
 
 const AUTH_EXPIRES = 30;
-
-const log = new Logger('[lib/bitmex]');
 
 async function api (opts, params)
 {

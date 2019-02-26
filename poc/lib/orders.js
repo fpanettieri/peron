@@ -2,23 +2,24 @@
 
 const cfg = require('../cfg/peron');
 const bitmex = require('../lib/bitmex');
+const Logger = require('./logger');
+const log = new Logger('[lib/orders]');
 
 const orders = [];
+const options = { api: 'order', testnet: cfg.testnet };
 
-function get (o)
+function find (id)
 {
-
+  return orders.find(o => o.clOrdID === id);
 }
 
-function add (o)
+function findIndex (id)
 {
-
+  return orders.findIndex(o => o.clOrdID === id);
 }
 
-function create (sym, qty, px, id)
+async function create (id, sym, qty, px)
 {
-  // TODO: safe-check params
-
   const params = {
     symbol: sym,
     side: qty > 0 ? 'Buy' : 'Sell',
@@ -29,23 +30,51 @@ function create (sym, qty, px, id)
     price: px,
     execInst: 'ParticipateDoNotInitiate'
   };
+  options.method = 'POST';
 
-  const options = { method: 'POST', api: 'order', testnet: cfg.testnet };
+  // FIXME: hotfix to test broker 'safely'. Remove this line!
+  params.orderQty = qty > 0 ? 1 : -1;
 
+  const rsp = await bitmex.api(options, params);
+
+  if (rsp.status.code != 200){
+    log.error(rsp.error);
+    return null;
+  }
+
+  const order = rsp.body;
+  orders.push(order);
+  return order;
 }
 
-function amend (o)
+async function amend (id, price)
 {
-
+  const params = { origClOrdID: id, price: price };
+  options.method = 'PUT';
+  return await bitmex.api(options, params);
 }
 
-function cancel (o)
+async function cancel (id)
 {
+  const params = { clOrdID: id };
+  options.method = 'DELETE';
 
+  const order = await bitmex.api(options, params);
+  // TODO: Remove from list
+
+  return order;
+}
+
+async function discard (id)
+{
+  const params = { orderID: id };
+  options.method = 'DELETE';
+  return await bitmex.api(options, params);
 }
 
 module.exports = {
   create: create,
   amend: amend,
-  cancel: cancel
+  cancel: cancel,
+  discard: discard,
 };
