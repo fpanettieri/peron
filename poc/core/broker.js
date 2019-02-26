@@ -119,7 +119,7 @@ function process (job)
     case STATES.ORDER: proccessOrder(job); break;
     case STATES.FILLED: proccessFilled(job); break;
     case STATES.POSITION: proccessPosition(job); break;
-    case STATES.DONE: proccessDone(job); break;
+    case STATES.STOP: proccessStop(job); break;
   }
 }
 
@@ -169,16 +169,17 @@ function proccessFilled (job)
 {
   // Create sell order
   // Create stop-loss order
+  // Move to position state
 }
 
 function proccessPosition (job)
 {
-  // Check if the sell order needs to be amended
+  // Micro manage order, targeting MA
 }
 
-function proccessDone (job)
+function proccessStop (job)
 {
-  // Take the job from the list & log
+  // Minimize Loss, Burst inteval speed
 }
 
 function cancelOrder (id, reason, job)
