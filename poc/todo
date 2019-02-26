@@ -2,7 +2,8 @@
   TODO
 ===============
 . Adapter
-  . Refactor msg creation
+  - Refactor msg creation
+  . Handle multi msgs
   . Update msg handlers
   . Debug orders
 

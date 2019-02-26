@@ -20,7 +20,10 @@ function plug (_bb)
   bb.on('QuoteUpdated', onQuoteUpdated);
   bb.on('CandleAnalyzed', onCandleAnalyzed);
   bb.on('PositionSynced', onPositionSynced);
+
+  bb.on('OrderSynced', onOrderSynced);
   bb.on('OrderUpdated', onOrderUpdated);
+
   bb.on('TradeContract', onTradeContract);
 }
 
@@ -42,17 +45,30 @@ function onPositionSynced (arr)
   createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.FILLED, t);
 }
 
+function onOrderSynced (o)
+{
+  // Ignore non-peronist orders
+  log.log('$$$$$$$$$$$$$$$$', onOrderSynced);
+  if (!/^ag-/.test(o.clOrdID)) { log.log('ignored non-peronist order'); return; }
+
+  // Double check if somehow we managed to create it before the sync msg
+  const order = orders.find(o.clOrdID);
+  if (order){ return; }
+
+  // Cleanup unknown order
+  orders.cancel(o.orderID);
+}
+
 function onOrderUpdated (o)
 {
-  // Discard non-peronist orders
-  if (!o.clOrdID) {
-    log.log('\n\n\n', '============================================');
-    log.log(o);
-    log.log('============================================', '\n\n\n');
-    return;
-  }
-  // return orders.discard(o.orderID); 
+  return;
+  // Ignore non-peronist orders
+  if (/^ag-/.test(o.clOrdID)) { log.log('ignored non-peronist order'); return; }
+
+  // return orders.discard(o.orderID);
   //}
+
+  return;
 
   const order = orders.find(o.clOrdID);
   const jid = o.clOrdID.substr(0, 11);

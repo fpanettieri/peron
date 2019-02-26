@@ -140,10 +140,11 @@ function broadcast (json)
 
     default: {
       const action = `${json.table[0].toUpperCase()}${json.table.substring(1)}${map[json.action]}`;
-      log.warn('########################################', action);
-      log.log(json.data);
-      log.warn('########################################', action, '\n\n\n\n');
-      // bb.emit(action, json.data);
+      // FIXME: dead code
+      // log.warn('########################################', action);
+      // log.log(json.data);
+      // log.warn('########################################', action, '\n\n\n\n');
+      bb.emit(action, json.data);
     }
   }
 }
@@ -153,6 +154,7 @@ function onWatchMarket ()
   const sub_params = {
     op: 'subscribe',
     args: [ `order:${cfg.symbol}` ]
+    // FIXME: full msgs sync
     // args: [
     //   'margin',
     //   `quote:${cfg.symbol}`,
