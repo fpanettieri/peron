@@ -44,51 +44,24 @@ function onPositionSynced (arr)
 
 function onOrderUpdated (o)
 {
+  log.log('======================================================================');
+  log.log('\n\n\n', o, '\n\n\n');
+
   const order = orders.find(o.clOrdID);
   const jid = o.clOrdID.substr(0, 11);
   const job = jobs.find(j => j.id == jid);
 
   if (!order || !job) {
-    orders.discard(o.orderID);
-    return;
+    log.log('unknown order!');
+    log.log('======================================================================');
+    return orders.discard(o.orderID);
   }
-
   orders.update(o);
 
   if (o.ordStatus == 'Filled' && o.leavesQty == 0) {
+    job.price = o.avgPx;
     job.state = STATES.FILLED;
   }
-
-
-  // Find related job
-  // If job not found, log and ignore, return
-
-  // If status == filled, change job status to Position, update price with avg price
-
-  return;
-  // log.log('========================================================================');
-  // log.log(o);
-  // log.log('========================================================================');
-  //
-  // const stop = o.clOrdID.includes('-sl');
-  // const job = jobs.find(j => findJob(j, o, stop));
-  //
-  // if (!job) {
-  //   log.error('HANDLE JOB NOT FOUND');
-  //   return;
-  // }
-  //
-  // if (stop) {
-  //   job.sl = {...job.sl, ...o};
-  // } else {
-  //   job.order = {...job.order, ...o};
-  //
-  //   // TODO: check what happens with large orders
-  //   log.log('job.order.ordStatus', job.order.ordStatus);
-  //   log.log('job.order.leavesQty', job.order.leavesQty);
-  //
-  //   if (job.order.ordStatus == 'Filled' && job.order.leavesQty == 0) { job.state = STATES.FILLED; }
-  // }
 }
 
 function onTradeContract (sym, qty, px)
