@@ -37,7 +37,8 @@ const colors = {
 class Logger
 {
   constructor(prefix) { this.prefix = prefix; }
-  date () { return `[${new Date().toISOString()}]`; }
+  date ()  { return `[${new Date().toISOString()}]`; }
+  debug () { console.info(colors.fg.cyan + this.date(), this.prefix, ...arguments, colors.base.reset); }
   log ()   { console.log(this.date(), this.prefix, ...arguments); }
   info ()  { console.info(colors.fg.green + this.date(), this.prefix, ...arguments, colors.base.reset); }
   warn ()  { console.warn(colors.fg.yellow + this.date(), this.prefix, ...arguments, colors.base.reset); }

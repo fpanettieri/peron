@@ -5,6 +5,7 @@ const orders = require('../lib/orders');
 const logger = require('../lib/logger');
 const log = new logger('[core/broker]');
 
+const ORDER_PREFIX_REGEX = /^ag-/;
 const STATES = { INTENT: 0, ORDER: 1, FILLED: 2, POSITION: 3, STOP: 4 };
 
 let bb = null;
@@ -45,22 +46,29 @@ function onPositionSynced (arr)
   createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.FILLED, t);
 }
 
-function onOrderSynced (o)
+function onOrderSynced (arr)
 {
   // Ignore non-peronist orders
-  log.log('$$$$$$$$$$$$$$$$', onOrderSynced);
-  if (!/^ag-/.test(o.clOrdID)) { log.log('ignored non-peronist order'); return; }
+  log.debug('$$$$$$$$$$$$$$$$ onOrderSynced:', arr);
 
-  // Double check if somehow we managed to create it before the sync msg
-  const order = orders.find(o.clOrdID);
-  if (order){ return; }
+  for (let i = 0; i < arr.length; i++) {
+    const o = arr[i];
 
-  // Cleanup unknown order
-  orders.cancel(o.orderID);
+    if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) { log.log('ignored non-peronist order'); continue; }
+
+    // Double check if somehow we managed to create it before the sync msg
+    const order = orders.find(o.clOrdID);
+    if (order){ return; }
+
+    // Cleanup unknown order
+    orders.cancel(o.orderID);
+  }
 }
 
 function onOrderUpdated (o)
 {
+
+  log.debug('$$$$$$$$$$$$$$$$ onOrderUpdated:', o);
   return;
   // Ignore non-peronist orders
   if (/^ag-/.test(o.clOrdID)) { log.log('ignored non-peronist order'); return; }
