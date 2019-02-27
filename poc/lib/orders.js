@@ -8,29 +8,22 @@ const log = new Logger('[lib/orders]');
 const orders = [];
 const options = { api: 'order', testnet: cfg.testnet };
 
-async function create (id, sym, qty, type, px, exec)
+async function create (id, sym, qty, params)
 {
-  const params = {
-    symbol: sym,
-    side: qty > 0 ? 'Buy' : 'Sell',
-    orderQty: qty,
-    timeInForce: 'GoodTillCancel',
+  const _params = {...{
     clOrdID: id,
-    ordType: type,
-    execInst: exec
-  };
-
-  switch (type) {
-    case 'Limit': { params.price = px; } break;
-    case 'Stop': { params.stopPx = px; } break;
-  }
+    symbol: sym,
+    orderQty: qty,
+    side: qty > 0 ? 'Buy' : 'Sell',
+    timeInForce: 'GoodTillCancel'
+  }, ...params};
 
   options.method = 'POST';
 
   // FIXME: hotfix to test broker 'safely'. Remove this line!
   params.orderQty = qty > 0 ? 1 : -1;
 
-  const rsp = await bitmex.api(options, params);
+  const rsp = await bitmex.api(options, _params);
   if (rsp.status.code != 200){ return log.error(rsp); }
 
   const order = rsp.body;
@@ -38,13 +31,48 @@ async function create (id, sym, qty, type, px, exec)
   return order;
 }
 
-async function amend (id, price)
+function market (id, sym, qty)
 {
-  const params = { origClOrdID: id, price: price };
+  return create(id, sym, qty, {
+    ordType: 'Market',
+    timeInForce: 'ImmediateOrCancel'
+  });
+}
+
+function limit (id, sym, qty, px)
+{
+  return create(id, sym, qty, {
+    ordType: 'Limit',
+    execInst: 'ParticipateDoNotInitiate',
+    price: px
+  });
+}
+
+function profit (id, sym, qty, px)
+{
+  return create(id, sym, qty, {
+    ordType: 'Limit',
+    execInst: 'ReduceOnly',
+    price: px
+  });
+}
+
+function stop (id, sym, qty, px)
+{
+  return create(id, sym, qty, {
+    ordType: 'Stop',
+    execInst: 'ReduceOnly',
+    stopPx: px
+  });
+}
+
+async function amend (id, params)
+{
+  const p = { origClOrdID: id };
   options.method = 'PUT';
 
-  const rsp = await bitmex.api(options, params);
-  if (rsp.status.code != 200){ return log.error(rsp.error); }
+  const rsp = await bitmex.api(options, {...p, ...params});
+  if (rsp.status.code != 200){ return log.error(rsp); }
 
   log.debug(rsp);
   // TODO: return what?
@@ -56,7 +84,7 @@ async function cancel (id)
   options.method = 'DELETE';
 
   const rsp = await bitmex.api(options, params);
-  if (rsp.status.code != 200){ return log.error(rsp.error); }
+  if (rsp.status.code != 200){ return log.error(rsp); }
 
   log.debug(rsp);
   // TODO: return what?
@@ -88,20 +116,18 @@ function remove (o)
   orders.splice(findIndex(o), 1);
 }
 
-function debug ()
-{
-  log.log('\n\n\n\n','======================================================================');
-  log.log(orders);
-  log.log('======================================================================', '\n\n\n\n');
-}
-
 module.exports = {
   create: create,
+  market: market,
+  limit: limit,
+  profit: profit,
+  stop: stop,
+
   amend: amend,
   cancel: cancel,
+
   find: find,
   findIndex: findIndex,
   update: update,
-  remove: remove,
-  debug: debug
+  remove: remove
 };
