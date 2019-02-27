@@ -19,7 +19,7 @@ function sleep (ms)
   try {
     log.info('################ CREATE');
     // await orders.create(`${cl_id}-lm`, 'XBTUSD', 1, price, 'Limit', 'ParticipateDoNotInitiate');
-    await orders.create(`${cl_id}-lm`, 'XBTUSD', 1, price, 'Market', 'MarkPrice');
+    await orders.create(`${cl_id}-lm`, 'XBTUSD', 1, price, 'Market');
 
     // return;
     // await sleep(3000);
