@@ -18,38 +18,24 @@ function sleep (ms)
 (async () => {
   try {
     log.info('########### CREATE');
-    log.debug('Market Order');
     await orders.market(`${cl_id}-mk`, 'XBTUSD', 1);
-
-    log.debug('Limit Order');
     await orders.limit(`${cl_id}-lm`, 'XBTUSD', 1, price);
-
-    log.debug('Take Profit');
     await orders.profit(`${cl_id}-tp`, 'XBTUSD', -1, price + 2000);
-
-    log.debug('Hard Stop');
     await orders.stop(`${cl_id}-sl`, 'XBTUSD', -1, price - 2000);
 
-    await sleep(5000);
+    await sleep(3000);
 
     log.info('########### UPDATE');
-    log.debug('Limit Order');
     await orders.amend(`${cl_id}-lm`, {price: price - 17});
-
-    log.debug('Take Profit');
     await orders.amend(`${cl_id}-tp`, {price: price + 2017});
-
-    log.debug('Hard Stop');
     await orders.amend(`${cl_id}-sl`, {stopPx: price - 2017});
 
-    // log.info('################ UPDATE');
-    // rsp = await orders.amend(`${cl_id}`, Math.round(Math.random() * 1000 + 1000));
-    //
-    // await sleep(5000);
-    //
-    // log.info('################ DELETE');
-    // rsp = await orders.cancel(`${cl_id}`);
-    // log.log(rsp);
+    await sleep(3000);
+
+    log.info('########### DELETE');
+    await orders.cancel(`${cl_id}-lm`);
+    await orders.cancel(`${cl_id}-tp`);
+    await orders.cancel(`${cl_id}-sl`);
 
   } catch(err) {
     log.error(err);

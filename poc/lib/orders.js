@@ -74,8 +74,7 @@ async function amend (id, params)
   const rsp = await bitmex.api(options, {...p, ...params});
   if (rsp.status.code != 200){ return log.error(rsp); }
 
-  log.debug(rsp);
-  // TODO: return what?
+  return rsp.body;
 }
 
 async function cancel (id)
