@@ -1,8 +1,6 @@
 ===============
   TODO
 ===============
-> Test SL and Take Profit orders
-
 . Broker (Execute the strategy)
   - Watch order book
   - Receives orders from the trader
@@ -148,6 +146,8 @@
   - Handle multi msgs
   - Update msg handlers
   - Debug orders
+
+- Test SL and Take Profit orders
 
 ===============
   IGNORE
