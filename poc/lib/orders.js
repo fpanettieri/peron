@@ -8,7 +8,7 @@ const log = new Logger('[lib/orders]');
 const orders = [];
 const options = { api: 'order', testnet: cfg.testnet };
 
-async function create (id, sym, qty, px, type, exec)
+async function create (id, sym, qty, type, px, exec)
 {
   const params = {
     symbol: sym,
@@ -31,7 +31,7 @@ async function create (id, sym, qty, px, type, exec)
   params.orderQty = qty > 0 ? 1 : -1;
 
   const rsp = await bitmex.api(options, params);
-  if (rsp.status.code != 200){ return log.error(rsp.error); }
+  if (rsp.status.code != 200){ return log.error(rsp); }
 
   const order = rsp.body;
   orders.push(order);
