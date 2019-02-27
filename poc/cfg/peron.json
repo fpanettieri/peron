@@ -17,10 +17,15 @@
   },
   "broker": {
     "max_jobs": 1,
-    "interval": 1000,
-    "sl": 0.05,
+    "speed": {
+      "normal": 1000,
+      "burst": 200
+    },
     "min_profit": 0.5,
-    "order_life": 900000,
-    "partial_life": 300000
+    "lifetime": 900000,
+    "sl": {
+      "soft": 0.0025,
+      "hard": 0.005,
+    }
   }
 }

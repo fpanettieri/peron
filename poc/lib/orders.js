@@ -8,7 +8,7 @@ const log = new Logger('[lib/orders]');
 const orders = [];
 const options = { api: 'order', testnet: cfg.testnet };
 
-async function create (id, sym, qty, px)
+async function limit (id, sym, qty, px)
 {
   const params = {
     symbol: sym,

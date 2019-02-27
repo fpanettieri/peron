@@ -150,11 +150,14 @@ function process (job)
 async function proccessIntent (job)
 {
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
-  const order = await orders.create(`${job.id}-in`, job.sym, job.qty, price);
+
+  const order_in = await orders.create(`${job.id}-in`, job.sym, job.qty, price);
+  const order_tp = await orders.create(`${job.id}-tp`, job.sym, job.qty, price);
+  const order_sl = await orders.create(`${job.id}-sl`, job.sym, job.qty, price);
 
   // Create take profit order
   // Create stop-loss order
-  
+
   if (order) {
     updateJob(job, job.qty, price, STATES.ORDER, Date.now());
     bb.emit('OrderPlaced');
