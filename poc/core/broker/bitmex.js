@@ -132,8 +132,10 @@ async function proccessOrder (job)
 {
   const order = orders.find(`${job.id}-lm`);
   if (!order){
-    log.error('order lost?!', job);
-    if (job.state == STATES.ORDER){ destroyJob(job); }
+    if (job.state == STATES.ORDER){
+      log.error('order lost?!', job);
+      destroyJob(job);
+    }
     return;
   }
 
@@ -148,7 +150,7 @@ async function proccessOrder (job)
     if (price > candle.bb_ma - cfg.broker.min_profit) {
       cancelOrder(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
-      amendOrder(order.clOrdID, price);
+      amendOrder(order.clOrdID, {price: price});
     }
 
   } else {
@@ -157,7 +159,7 @@ async function proccessOrder (job)
     if (price < candle.bb_ma + cfg.broker.min_profit) {
       cancelOrder(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
-      amendOrder(order.clOrdID, price);
+      amendOrder(order.clOrdID, {price: price});
     }
   }
 }
@@ -225,10 +227,9 @@ function cancelOrder (id, reason)
   bb.emit('OrderCanceled');
 }
 
-function amendOrder (id, price)
+function amendOrder (id, params)
 {
-  // FIXME: check if this makes sense
-  orders.amend(id, price);
+  orders.amend(id, params);
   bb.emit('OrderAmended');
 }
 
