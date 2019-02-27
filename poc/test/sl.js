@@ -8,7 +8,7 @@ const log = new logger('[test/auth]');
 const cl_id = `ag-${Math.random().toString(36).substr(2, 8)}`;
 let rsp = null;
 
-const price = 3807;
+const price = 3809;
 
 function sleep (ms)
 {
@@ -17,18 +17,21 @@ function sleep (ms)
 
 (async () => {
   try {
-    log.info('################ CREATE');
-    // await orders.create(`${cl_id}-lm`, 'XBTUSD', 1, price, 'Limit', 'ParticipateDoNotInitiate');
-    await orders.create(`${cl_id}-lm`, 'XBTUSD', 1, price, 'Market');
-
-    // return;
+    // log.debug('Limit Order');
+    // await orders.create(`${cl_id}-lm`, 'XBTUSD', 1, price - 1, 'Limit', 'ParticipateDoNotInitiate');
     // await sleep(3000);
-
-    // Take Profit seems to work
+    //
+    // log.debug('Market Order');
+    await orders.create(`${cl_id}-lm`, 'XBTUSD', 1, price, 'Market');
+    // await sleep(3000);
+    //
+    // log.debug('Take Profit');
     // await orders.create(`${cl_id}-tp`, 'XBTUSD', -1, price + 5, 'Limit', 'ReduceOnly');
-
-    // Stop Loss working!
+    // await sleep(3000);
+    //
+    // log.debug('Hard Stop');
     // await orders.create(`${cl_id}-sl`, 'XBTUSD', -1, price - 5, 'Stop', 'ReduceOnly');
+    // await sleep(3000);
 
     //
     // await sleep(5000);
