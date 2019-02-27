@@ -53,9 +53,6 @@ function onPositionSynced (arr)
 
 function onOrderUpdated (arr)
 {
-  log.log(arr);
-  return;
-
   for (let i = 0; i < arr.length; i++) {
     const o = arr[i];
 
@@ -70,13 +67,13 @@ function onOrderUpdated (arr)
       cancelOrder(o.clOrdID, 'Unknown order');
 
       orders.cancel(o.clOrdID);
-      return;
+      continue;
     }
     orders.update(o);
 
     if (o.ordStatus == 'Canceled') {
       orders.remove(o);
-      return;
+      continue;
     }
 
     const jid = o.clOrdID.substr(0, 11);
@@ -86,10 +83,10 @@ function onOrderUpdated (arr)
       log.warn('jobs', jobs);
       log.warn('order', o);
       orders.cancel(o.clOrdID);
-      return;
+      continue;
     }
 
-    if (!LIMIT_ORDER_REGEX.test(o.clOrdID)) { return; }
+    if (!LIMIT_ORDER_REGEX.test(o.clOrdID)) { continue; }
 
     if (o.ordStatus == 'PartiallyFilled' || o.ordStatus == 'Filled' ) {
       updateJob(job, job.qty, o.avgPx, STATES.POSITION, Date.now());

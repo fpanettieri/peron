@@ -17,7 +17,7 @@
         - Consider min_profit
       - Greedy cancel of order if lifetime > X
       - Re design order - job relationship
->     . Double check order lifecycle
+      - Double check order lifecycle
 
     . Position: Create SL & Close orders
       . ReduceOnly hidden SL
