@@ -20,16 +20,16 @@
       - Double check order lifecycle
 
     . Position: Create SL & Close orders
->     . Add created_at to Job
-      . Use created_at to Expire Order
+      - Add created_at to Job
+      - Use created_at to Expire Order
 
-      . ReduceOnly hidden SL
-      . Target MA for profit
+>     . ReduceOnly hidden SL
+      - Target MA for profit
       . Soft SL trigger
 
-      . Add switch to order lifecycle
-        . When SL filled, cancel TP
-        . When TP filled, cancel SL
+      - Add switch to order lifecycle
+        - When SL filled, cancel TP
+        - When TP filled, cancel SL
 
     . StopLoss: MinimizeLoss
       . Burst interval speed on enter

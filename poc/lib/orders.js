@@ -86,6 +86,19 @@ async function cancel (id, reason)
   return rsp.body;
 }
 
+async function cancel_all (reason)
+{
+  const params = { text: reason };
+  options.api = 'order/all';
+  options.method = 'DELETE';
+
+  const rsp = await bitmex.api(options, params);
+  if (rsp.status.code != 200){ return log.error(rsp); }
+
+  // TODO: check what reply makes sense
+  log.log(rsp);
+}
+
 function find (id)
 {
   return orders.find(o => o.clOrdID === id);

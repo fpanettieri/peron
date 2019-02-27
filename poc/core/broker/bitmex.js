@@ -198,21 +198,41 @@ function onOrderUpdated (arr)
       continue;
     }
 
-    if (!LIMIT_ORDER_REGEX.test(o.clOrdID)) { continue; }
+    // Stop Loss or Take Profit Filled
+    if (!LIMIT_ORDER_REGEX.test(o.clOrdID) && o.ordStatus == 'Filled') {
+      orders.cancel_all(order.symbol);
+      continue;
+    }
 
-    if (o.ordStatus == 'PartiallyFilled' || o.ordStatus == 'Filled' ) {
+    if (o.ordStatus == 'PartiallyFilled' || o.ordStatus == 'Filled') {
       updateTargets(order);
       updateJob(job, job.qty, order.avgPx, STATES.POSITION, Date.now());
     }
 
-    if (o.ordStatus == 'Filled' && o.leavesQty == 0) { orders.remove(o); }
+    if (o.ordStatus == 'Filled') { orders.remove(o); }
   }
 }
 
 function proccessPosition (job)
 {
   proccessOrder(job);
-  // Micro manage orders, targeting MA
+
+  const profit_order = orders.find(`${job.id}-tp`);
+  if (!profit_order){
+    log.error('order lost?!', job);
+    destroyJob(job);
+    return;
+  }
+
+  // TODO: micro manage long
+  let price = Math.round(candle.bb_ma * 2) / 2;
+  log.log('target price', price);
+
+  if (profit_order.price != price){
+    amendOrder(profit_order.clOrdID, {price: price});
+  }
+
+  // TODO: check if the soft SL is triggered!
 }
 
 function proccessStop (job)
