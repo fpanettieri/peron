@@ -22,7 +22,9 @@
       "burst": 200
     },
     "min_profit": 0.5,
-    "lifetime": 900000,
+    "order": {
+      "expires": 900000
+    },
     "sl": {
       "soft": 0.0025,
       "hard": 0.005

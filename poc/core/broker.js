@@ -110,7 +110,7 @@ function createJob (id, sym, qty, px, state, t)
 
   jobs.push(job);
   process(job);
-  if (!interval) { interval = setInterval(run, cfg.broker.interval); }
+  if (!interval) { interval = setInterval(run, cfg.broker.speed.normal); }
 }
 
 function updateJob (job, qty, px, state, t)
@@ -151,13 +151,7 @@ async function proccessIntent (job)
 {
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
 
-  const order_in = await orders.create(`${job.id}-in`, job.sym, job.qty, price);
-  const order_tp = await orders.create(`${job.id}-tp`, job.sym, job.qty, price);
-  const order_sl = await orders.create(`${job.id}-sl`, job.sym, job.qty, price);
-
-  // Create take profit order
-  // Create stop-loss order
-
+  const order = await orders.limit(`${job.id}-in`, job.sym, job.qty, price);
   if (order) {
     updateJob(job, job.qty, price, STATES.ORDER, Date.now());
     bb.emit('OrderPlaced');
@@ -173,7 +167,7 @@ async function proccessOrder (job)
   const order = orders.find(`${job.id}-in`);
   // TODO: handle missing order?
 
-  if (Date.now() - job.t > cfg.broker.order_life) {
+  if (Date.now() - job.t > cfg.broker.order.expiration) {
     cancelOrder(order.clOrdID, 'Expired', job);
     return;
   }

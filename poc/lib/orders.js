@@ -76,9 +76,9 @@ async function amend (id, params)
   return rsp.body;
 }
 
-async function cancel (id)
+async function cancel (id, reason)
 {
-  const params = { clOrdID: id };
+  const params = { clOrdID: id, text: reason };
   options.method = 'DELETE';
 
   const rsp = await bitmex.api(options, params);
