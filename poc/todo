@@ -20,9 +20,16 @@
       - Double check order lifecycle
 
     . Position: Create SL & Close orders
+>     . Add created_at to Job
+      . Use created_at to Expire Order
+
       . ReduceOnly hidden SL
       . Target MA for profit
       . Soft SL trigger
+
+      . Add switch to order lifecycle
+        . When SL filled, cancel TP
+        . When TP filled, cancel SL
 
     . StopLoss: MinimizeLoss
       . Burst interval speed on enter
@@ -32,11 +39,11 @@
   - Handle 503 errors => https://testnet.bitmex.com/app/restAPI#Overload
   - Handle 429 error => https://testnet.bitmex.com/app/restAPI
 
-  . Orders updates
-    . Partial updates?
-    . If there is an existing position when the trader starts, close it first
-    . Close other orders
-    . If there are existing orders, create them!
+  - Orders updates
+    - Partial updates?
+    - If there is an existing position when the trader starts, close it first
+    - Close other orders
+    - If there are existing orders, create them!
 
 . Auditor (Tracks the bot performance)
   . Improve event queueing / nesting using setImmediate / nextTick?

@@ -72,7 +72,8 @@ function genId ()
 
 function createJob (id, sym, qty, px, state, t)
 {
-  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t };
+  // TODO: add created at
+  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now() };
   // TODO: stats - reports?
   log.debug('Job Created');
 
@@ -139,7 +140,7 @@ async function proccessOrder (job)
     return;
   }
 
-  if (Date.now() - job.t > cfg.broker.order.expiration) {
+  if (Date.now() - job.created_at > cfg.broker.order.expiration) {
     cancelOrder(order.clOrdID, 'Expired');
     return;
   }
@@ -191,10 +192,8 @@ function onOrderUpdated (arr)
     const jid = o.clOrdID.substr(0, 11);
     const job = jobs.find(j => j.id == jid);
     if (!job) {
-      // FIXME: remove this logs
-      log.error('unknown job', jid);
-      log.error('jobs', jobs);
-      log.error('order', o);
+      // FIXME: remove this log
+      log.error('unknown job', job, o);
       orders.cancel(o.clOrdID);
       continue;
     }
@@ -235,6 +234,9 @@ function amendOrder (id, params)
 
 function updateTargets (o)
 {
+  log.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
+  log.log(o);
+  //
   // Based on the order fetch profit and SL targets
   // If they exist
   //   Amend quantity
