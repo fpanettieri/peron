@@ -18,9 +18,9 @@ function sleep (ms)
 (async () => {
   try {
     log.info('################ CREATE');
-    await orders.limit(`${cl_id}-lm`, 'XBTUSD', 1, price);
-    await orders.take_profit(`${cl_id}-tp`, 'XBTUSD', 1, price + 5);
-    await orders.stop_loss(`${cl_id}-sl`, 'XBTUSD', 1, price - 5);
+    await orders.create(`${cl_id}-lm`, 'XBTUSD', 1, price, 'Limit', 'ParticipateDoNotInitiate');
+    await orders.create(`${cl_id}-tp`, 'XBTUSD', -1, price + 5, 'Limit', 'ReduceOnly');
+    await orders.create(`${cl_id}-sl`, 'XBTUSD', 1, price - 5, 'Limit', 'ReduceOnly');
     //
     // await sleep(5000);
     //

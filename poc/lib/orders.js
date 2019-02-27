@@ -8,7 +8,7 @@ const log = new Logger('[lib/orders]');
 const orders = [];
 const options = { api: 'order', testnet: cfg.testnet };
 
-async function limit (id, sym, qty, px)
+async function create (id, sym, qty, px, type, exec)
 {
   const params = {
     symbol: sym,
@@ -16,9 +16,9 @@ async function limit (id, sym, qty, px)
     orderQty: qty,
     timeInForce: 'GoodTillCancel',
     clOrdID: id,
-    ordType: 'Limit',
+    ordType: type,
     price: px,
-    execInst: 'ParticipateDoNotInitiate'
+    execInst: exec
   };
   options.method = 'POST';
 
@@ -31,6 +31,16 @@ async function limit (id, sym, qty, px)
   const order = rsp.body;
   orders.push(order);
   return order;
+}
+
+async function limit (id, sym, qty, px)
+{
+  return await create(id, sym, qty, px, 'Limit', 'ParticipateDoNotInitiate');
+}
+
+async function stop_loss (id, sym, qty, px)
+{
+  return await create(id, sym, qty, px, 'Limit', 'ReduceOnly');
 }
 
 async function amend (id, price)
