@@ -17,9 +17,19 @@ async function create (id, sym, qty, px, type, exec)
     timeInForce: 'GoodTillCancel',
     clOrdID: id,
     ordType: type,
-    price: px,
     execInst: exec
   };
+
+  switch (type) {
+    case 'Limit': {
+      params.price = px;
+    } break;
+
+    case 'Stop': {
+      params.stopPx = px;
+    } break;
+  }
+
   options.method = 'POST';
 
   // FIXME: hotfix to test broker 'safely'. Remove this line!
@@ -31,16 +41,6 @@ async function create (id, sym, qty, px, type, exec)
   const order = rsp.body;
   orders.push(order);
   return order;
-}
-
-async function limit (id, sym, qty, px)
-{
-  return await create(id, sym, qty, px, 'Limit', 'ParticipateDoNotInitiate');
-}
-
-async function stop_loss (id, sym, qty, px)
-{
-  return await create(id, sym, qty, px, 'Limit', 'ReduceOnly');
 }
 
 async function amend (id, price)
