@@ -17,10 +17,7 @@
         - Consider min_profit
       - Greedy cancel of order if lifetime > X
       - Re design order - job relationship
-
->   . Partial: When a position is partially filled
-      . Target MA for Profit
-      . ReduceOnly hidden SL
+>     . Double check order lifecycle
 
     . Position: Create SL & Close orders
       . ReduceOnly hidden SL
