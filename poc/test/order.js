@@ -8,7 +8,7 @@ const log = new logger('[test/auth]');
 const cl_id = `ag-${Math.random().toString(36).substr(2, 8)}`;
 let rsp = null;
 
-const price = 3817.5;
+const price = 3814.5;
 
 function sleep (ms)
 {
@@ -18,9 +18,12 @@ function sleep (ms)
 (async () => {
   try {
     log.info('################ CREATE');
-    await orders.create(`${cl_id}-lm`, 'XBTUSD', 1, price, 'Limit', 'ParticipateDoNotInitiate');
+    // await orders.create(`${cl_id}-lm`, 'XBTUSD', 1, price, 'Limit', 'ParticipateDoNotInitiate');
+    await orders.create(`${cl_id}-lm`, 'XBTUSD', 1, price, 'Limit', 'LastPrice');
+    await sleep(3000);
     await orders.create(`${cl_id}-tp`, 'XBTUSD', -1, price + 5, 'Limit', 'ReduceOnly');
-    await orders.create(`${cl_id}-sl`, 'XBTUSD', 1, price - 5, 'Stop', 'ReduceOnly');
+    // await orders.create(`${cl_id}-sl`, 'XBTUSD', 1, price - 5, 'Stop', 'ReduceOnly');
+
     //
     // await sleep(5000);
     //
