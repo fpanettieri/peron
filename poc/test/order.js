@@ -5,10 +5,8 @@ const orders = require('../lib/orders');
 const logger = require('../lib/logger');
 const log = new logger('[test/auth]');
 
-const cl_id = `ag-${Math.random().toString(36).substr(2, 8)}`;
+const cl_id = `ag-${Math.random().toString(36).substr(2, 8)}-in`;
 let rsp = null;
-
-const price = 3814.5;
 
 function sleep (ms)
 {
@@ -18,23 +16,19 @@ function sleep (ms)
 (async () => {
   try {
     log.info('################ CREATE');
-    // await orders.create(`${cl_id}-lm`, 'XBTUSD', 1, price, 'Limit', 'ParticipateDoNotInitiate');
-    await orders.create(`${cl_id}-lm`, 'XBTUSD', 1, price, 'Limit', 'LastPrice');
-    await sleep(3000);
-    await orders.create(`${cl_id}-tp`, 'XBTUSD', -1, price + 5, 'Limit', 'ReduceOnly');
-    // await orders.create(`${cl_id}-sl`, 'XBTUSD', 1, price - 5, 'Stop', 'ReduceOnly');
+    rsp = await orders.create(cl_id, 'XBTUSD', 1, 2000);
+    log.log(rsp);
 
-    //
-    // await sleep(5000);
-    //
-    // log.info('################ UPDATE');
-    // rsp = await orders.amend(`${cl_id}`, Math.round(Math.random() * 1000 + 1000));
-    //
-    // await sleep(5000);
-    //
-    // log.info('################ DELETE');
-    // rsp = await orders.cancel(`${cl_id}`);
-    // log.log(rsp);
+    await sleep(5000);
+
+    log.info('################ UPDATE');
+    rsp = await orders.amend(cl_id, Math.round(Math.random() * 1000 + 1000));
+
+    await sleep(5000);
+
+    log.info('################ DELETE');
+    rsp = await orders.cancel(cl_id);
+    log.log(rsp);
 
   } catch(err) {
     log.error(err);
