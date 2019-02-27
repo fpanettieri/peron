@@ -51,6 +51,7 @@ function onOrderUpdated (arr)
 {
   // log.debug('$$$$$$$$$$$$$$$$ onOrderUpdated:', arr);
 
+  // FIXME: check what happens with this lifecycle, and target orders!
   for (let i = 0; i < arr.length; i++) {
     const o = arr[i];
 
@@ -82,12 +83,16 @@ function onOrderUpdated (arr)
 
     if (o.ordStatus == 'PartiallyFilled') {
       updateJob(job, job.qty, o.avgPx, STATES.PARTIAL, Date.now());
+      // FIXME: updatetargets
     }
 
     if (o.ordStatus == 'Filled' && o.leavesQty == 0) {
       orders.remove(o);
       updateJob(job, job.qty, o.avgPx, STATES.FILLED, Date.now());
+      // FIXME: updatetargets
     }
+
+    // create or amend targets?
   }
 }
 
@@ -151,7 +156,7 @@ async function proccessIntent (job)
 {
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
 
-  const order = await orders.limit(`${job.id}-in`, job.sym, job.qty, price);
+  const order = await orders.limit(`${job.id}-lm`, job.sym, job.qty, price);
   if (order) {
     updateJob(job, job.qty, price, STATES.ORDER, Date.now());
     bb.emit('OrderPlaced');
@@ -164,10 +169,15 @@ async function proccessIntent (job)
 
 async function proccessOrder (job)
 {
-  const order = orders.find(`${job.id}-in`);
-  // TODO: handle missing order?
+  const order = orders.find(`${job.id}-lm`);
+  if (!order){
+    log.warn('order lost?!', job);
+    destroyJob(job);
+    return;
+  }
 
   if (Date.now() - job.t > cfg.broker.order.expiration) {
+    // FIXME: check if this cancels the job, or what happens
     cancelOrder(order.clOrdID, 'Expired', job);
     return;
   }
@@ -192,31 +202,19 @@ async function proccessOrder (job)
   }
 }
 
-function proccessPartial (job)
-{
-  // Check timeout
-
-}
-
-function proccessFilled (job)
-{
-  // Create sell order
-  // Create stop-loss order
-  // Move to position state
-}
-
 function proccessPosition (job)
 {
-  // Micro manage order, targeting MA
+  // Micro manage orders, targeting MA
 }
 
 function proccessStop (job)
 {
-  // Minimize Loss, Burst inteval speed
+  // Minimize Loss, Burst interval speed
 }
 
 function cancelOrder (id, reason, job)
 {
+  // FIXME: check if this should destroy the job, or not
   orders.cancel(id, reason);
   destroyJob(job);
   bb.emit('OrderCanceled');
@@ -224,8 +222,18 @@ function cancelOrder (id, reason, job)
 
 function amendOrder (id, price)
 {
+  // FIXME: check if this makes sense
   orders.amend(id, price);
   bb.emit('OrderAmended');
+}
+
+function updateTargets (o)
+{
+  // Based on the order fetch profit and SL targets
+  // If they exist
+  //   Amend quantity
+  // else
+  //   Create targets
 }
 
 module.exports = { plug: plug };
