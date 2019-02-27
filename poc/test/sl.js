@@ -24,14 +24,14 @@ function sleep (ms)
     log.debug('Market Order');
     await orders.create(`${cl_id}-mk`, 'XBTUSD', 1, 'Market');
     await sleep(3000);
-    //
-    // log.debug('Take Profit');
-    // await orders.create(`${cl_id}-tp`, 'XBTUSD', -1, price + 5, 'Limit', 'ReduceOnly');
-    // await sleep(3000);
-    //
-    // log.debug('Hard Stop');
-    // await orders.create(`${cl_id}-sl`, 'XBTUSD', -1, price - 5, 'Stop', 'ReduceOnly');
-    // await sleep(3000);
+
+    log.debug('Take Profit');
+    await orders.create(`${cl_id}-tp`, 'XBTUSD', -1, 'Limit', price + 5, 'ReduceOnly');
+    await sleep(3000);
+
+    log.debug('Hard Stop');
+    await orders.create(`${cl_id}-sl`, 'XBTUSD', -1, 'Stop', price - 5, 'ReduceOnly');
+    await sleep(3000);
 
     //
     // await sleep(5000);
