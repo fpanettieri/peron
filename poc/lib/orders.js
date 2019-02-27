@@ -16,18 +16,13 @@ async function create (id, sym, qty, px, type, exec)
     orderQty: qty,
     timeInForce: 'GoodTillCancel',
     clOrdID: id,
-    ordType: type,
-    execInst: exec
+    ordType: type
   };
 
   switch (type) {
-    case 'Limit': {
-      params.price = px;
-    } break;
-
-    case 'Stop': {
-      params.stopPx = px;
-    } break;
+    case 'Limit': { params.price = px; params.execInst = exec; } break;
+    case 'Market': { } break;
+    case 'Stop': { params.stopPx = px; params.execInst = exec; } break;
   }
 
   options.method = 'POST';

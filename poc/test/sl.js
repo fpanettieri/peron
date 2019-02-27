@@ -19,8 +19,7 @@ function sleep (ms)
   try {
     log.info('################ CREATE');
     // await orders.create(`${cl_id}-lm`, 'XBTUSD', 1, price, 'Limit', 'ParticipateDoNotInitiate');
-    rsp = await orders.create(`${cl_id}-lm`, 'XBTUSD', 1, price, 'Market', 'MarkPrice');
-    // log.log(rsp);
+    await orders.create(`${cl_id}-lm`, 'XBTUSD', 1, price, 'Market', 'MarkPrice');
 
     // return;
     // await sleep(3000);
@@ -28,8 +27,8 @@ function sleep (ms)
     // Take Profit seems to work
     // await orders.create(`${cl_id}-tp`, 'XBTUSD', -1, price + 5, 'Limit', 'ReduceOnly');
 
-    // Stop Loss not working yet
-    await orders.create(`${cl_id}-sl`, 'XBTUSD', -1, price - 5, 'Stop', 'ReduceOnly');
+    // Stop Loss working!
+    // await orders.create(`${cl_id}-sl`, 'XBTUSD', -1, price - 5, 'Stop', 'ReduceOnly');
 
     //
     // await sleep(5000);
