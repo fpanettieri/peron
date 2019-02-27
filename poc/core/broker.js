@@ -6,7 +6,7 @@ const logger = require('../lib/logger');
 const log = new logger('[core/broker]');
 
 const ORDER_PREFIX_REGEX = /^ag-/;
-const STATES = { INTENT: 0, ORDER: 1, FILLED: 2, PARTIAL: 3, POSITION: 4, STOP: 5 };
+const STATES = { INTENT: 0, ORDER: 1, POSITION: 2, STOP: 3 };
 
 let bb = null;
 
@@ -49,7 +49,7 @@ function onPositionSynced (arr)
 
 function onOrderUpdated (arr)
 {
-  log.debug('$$$$$$$$$$$$$$$$ onOrderUpdated:', arr);
+  // log.debug('$$$$$$$$$$$$$$$$ onOrderUpdated:', arr);
 
   for (let i = 0; i < arr.length; i++) {
     const o = arr[i];
@@ -142,7 +142,6 @@ function process (job)
   switch (job.state){
     case STATES.INTENT: proccessIntent(job); break;
     case STATES.ORDER: proccessOrder(job); break;
-    case STATES.FILLED: proccessFilled(job); break;
     case STATES.POSITION: proccessPosition(job); break;
     case STATES.STOP: proccessStop(job); break;
   }
@@ -152,6 +151,10 @@ async function proccessIntent (job)
 {
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
   const order = await orders.create(`${job.id}-in`, job.sym, job.qty, price);
+
+  // Create take profit order
+  // Create stop-loss order
+  
   if (order) {
     updateJob(job, job.qty, price, STATES.ORDER, Date.now());
     bb.emit('OrderPlaced');
@@ -167,7 +170,7 @@ async function proccessOrder (job)
   const order = orders.find(`${job.id}-in`);
   // TODO: handle missing order?
 
-  if (Date.now() - job.t > cfg.broker.lifetime) {
+  if (Date.now() - job.t > cfg.broker.order_life) {
     cancelOrder(order.clOrdID, 'Expired', job);
     return;
   }
@@ -190,6 +193,12 @@ async function proccessOrder (job)
       amendOrder(order.clOrdID, price);
     }
   }
+}
+
+function proccessPartial (job)
+{
+  // Check timeout
+
 }
 
 function proccessFilled (job)
