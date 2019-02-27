@@ -58,52 +58,6 @@ function onPositionUpdated (p)
   log.debug(p);
 }
 
-function onOrderUpdated (arr)
-{
-  for (let i = 0; i < arr.length; i++) {
-    const o = arr[i];
-
-    if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
-      log.debug('Ignored non-peronist order');
-      continue;
-    }
-
-    const order = orders.find(o.clOrdID);
-    if (!order) {
-      // FIXME: remove this log
-      log.error('Unknown order');
-      cancelOrder(o.clOrdID, 'Unknown Order');
-      continue;
-    }
-    orders.update(o);
-
-    if (o.ordStatus == 'Canceled') {
-      orders.remove(o);
-      continue;
-    }
-
-    const jid = o.clOrdID.substr(0, 11);
-    const job = jobs.find(j => j.id == jid);
-    if (!job) {
-      // FIXME: remove this logs
-      log.error('unknown job', jid);
-      log.error('jobs', jobs);
-      log.error('order', o);
-      orders.cancel(o.clOrdID);
-      continue;
-    }
-
-    if (!LIMIT_ORDER_REGEX.test(o.clOrdID)) { continue; }
-
-    if (o.ordStatus == 'PartiallyFilled' || o.ordStatus == 'Filled' ) {
-      updateTargets(order);
-      updateJob(job, job.qty, order.avgPx, STATES.POSITION, Date.now());
-    }
-
-    if (o.ordStatus == 'Filled' && o.leavesQty == 0) { orders.remove(o); }
-  }
-}
-
 function onTradeContract (sym, qty, px)
 {
   // FIXME: check if this limit makes sense V
@@ -179,7 +133,7 @@ async function proccessOrder (job)
   const order = orders.find(`${job.id}-lm`);
   if (!order){
     log.error('order lost?!', job);
-    destroyJob(job);
+    if (job.state == STATES.ORDER){ destroyJob(job); }
     return;
   }
 
@@ -208,9 +162,55 @@ async function proccessOrder (job)
   }
 }
 
+function onOrderUpdated (arr)
+{
+  for (let i = 0; i < arr.length; i++) {
+    const o = arr[i];
+
+    if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
+      log.debug('Ignored non-peronist order');
+      continue;
+    }
+
+    const order = orders.find(o.clOrdID);
+    if (!order) {
+      // FIXME: remove this log
+      log.error('Unknown order');
+      cancelOrder(o.clOrdID, 'Unknown Order');
+      continue;
+    }
+    orders.update(o);
+
+    if (o.ordStatus == 'Canceled') {
+      orders.remove(o);
+      continue;
+    }
+
+    const jid = o.clOrdID.substr(0, 11);
+    const job = jobs.find(j => j.id == jid);
+    if (!job) {
+      // FIXME: remove this logs
+      log.error('unknown job', jid);
+      log.error('jobs', jobs);
+      log.error('order', o);
+      orders.cancel(o.clOrdID);
+      continue;
+    }
+
+    if (!LIMIT_ORDER_REGEX.test(o.clOrdID)) { continue; }
+
+    if (o.ordStatus == 'PartiallyFilled' || o.ordStatus == 'Filled' ) {
+      updateTargets(order);
+      updateJob(job, job.qty, order.avgPx, STATES.POSITION, Date.now());
+    }
+
+    if (o.ordStatus == 'Filled' && o.leavesQty == 0) { orders.remove(o); }
+  }
+}
+
 function proccessPosition (job)
 {
-  // updateTargets(job);
+  proccessOrder(job);
   // Micro manage orders, targeting MA
 }
 
