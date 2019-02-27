@@ -70,10 +70,9 @@ function onOrderUpdated (arr)
 
     const order = orders.find(o.clOrdID);
     if (!order) {
-      log.warn('unknown order', o);
-      cancelOrder(o.clOrdID, 'Unknown order');
-
-      orders.cancel(o.clOrdID);
+      // FIXME: remove this log
+      log.error('Unknown order');
+      cancelOrder(o.clOrdID, 'Unknown Order');
       continue;
     }
     orders.update(o);
@@ -86,9 +85,10 @@ function onOrderUpdated (arr)
     const jid = o.clOrdID.substr(0, 11);
     const job = jobs.find(j => j.id == jid);
     if (!job) {
-      log.warn('unknown job', jid);
-      log.warn('jobs', jobs);
-      log.warn('order', o);
+      // FIXME: remove this logs
+      log.error('unknown job', jid);
+      log.error('jobs', jobs);
+      log.error('order', o);
       orders.cancel(o.clOrdID);
       continue;
     }
@@ -106,7 +106,7 @@ function onOrderUpdated (arr)
 
 function onTradeContract (sym, qty, px)
 {
-  // FIXME: check if this makes sense V
+  // FIXME: check if this limit makes sense V
   if (jobs.length >= cfg.broker.max_jobs) { log.log('max amount of jobs'); return; }
   createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
 }
@@ -178,7 +178,7 @@ async function proccessOrder (job)
 {
   const order = orders.find(`${job.id}-lm`);
   if (!order){
-    log.warn('order lost?!', job);
+    log.error('order lost?!', job);
     destroyJob(job);
     return;
   }
