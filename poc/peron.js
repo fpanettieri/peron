@@ -13,7 +13,7 @@ const chandler = require('./core/chandler');
 const analyst = require('./core/analyst');
 const brain = require('./core/brain/greedy');
 const trader = require('./core/trader');
-const broker = require('./core/broker');
+const broker = require('./core/broker/bitmex');
 // const auditor = require('./core/auditor');
 
 (async () => {

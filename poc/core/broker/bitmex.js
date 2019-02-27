@@ -1,12 +1,15 @@
 'use strict';
 
-const cfg = require('../cfg/peron');
-const orders = require('../lib/orders');
-const logger = require('../lib/logger');
-const log = new logger('[core/broker]');
+const cfg = require('../../cfg/peron');
+const orders = require('../../lib/orders');
+const logger = require('../../lib/logger');
+const log = new logger('[broker/bitmex]');
 
 const ORDER_PREFIX_REGEX = /^ag-/;
 const LIMIT_ORDER_REGEX = /-lm$/;
+const PROFIT_ORDER_REGEX = /-tp$/;
+const STOP_ORDER_REGEX = /-sl$/;
+
 const STATES = { INTENT: 0, ORDER: 1, POSITION: 2, STOP: 3 };
 
 let bb = null;
@@ -23,6 +26,7 @@ function plug (_bb)
   bb.on('QuoteUpdated', onQuoteUpdated);
   bb.on('CandleAnalyzed', onCandleAnalyzed);
   bb.on('PositionSynced', onPositionSynced);
+  bb.on('PositionUpdated', onPositionUpdated);
 
   bb.on('OrderSynced', onOrderUpdated);
   bb.on('OrderOpened', onOrderUpdated);
@@ -46,9 +50,12 @@ function onPositionSynced (arr)
   let pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { return; }
   const t = (new Date(pos.openingTimestamp)).getTime();
-
   createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.POSITION, t);
-  // TODO: updateTargets();
+}
+
+function onPositionUpdated (p)
+{
+  log.debug(p);
 }
 
 function onOrderUpdated (arr)
@@ -89,7 +96,8 @@ function onOrderUpdated (arr)
     if (!LIMIT_ORDER_REGEX.test(o.clOrdID)) { continue; }
 
     if (o.ordStatus == 'PartiallyFilled' || o.ordStatus == 'Filled' ) {
-      updateJob(job, job.qty, o.avgPx, STATES.POSITION, Date.now());
+      updateTargets(order);
+      updateJob(job, job.qty, order.avgPx, STATES.POSITION, Date.now());
     }
 
     if (o.ordStatus == 'Filled' && o.leavesQty == 0) { orders.remove(o); }
@@ -98,6 +106,7 @@ function onOrderUpdated (arr)
 
 function onTradeContract (sym, qty, px)
 {
+  // FIXME: check if this makes sense V
   if (jobs.length >= cfg.broker.max_jobs) { log.log('max amount of jobs'); return; }
   createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
 }
@@ -111,7 +120,7 @@ function createJob (id, sym, qty, px, state, t)
 {
   const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t };
   // TODO: stats - reports?
-  log.log('Job Created');
+  log.debug('Job Created');
 
   jobs.push(job);
   process(job);
@@ -125,14 +134,14 @@ function updateJob (job, qty, px, state, t)
   job.state = state;
   job.t = t;
   // TODO: track job change somewhere
-  log.log('Job Updated');
+  log.debug('Job Updated');
 }
 
 function destroyJob (job)
 {
   jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
   // TODO: track job change somewhere
-  log.log('Job Destroyed');
+  log.debug('Job Destroyed');
 }
 
 function run ()
@@ -160,8 +169,6 @@ async function proccessIntent (job)
   if (order) {
     updateJob(job, job.qty, price, STATES.ORDER, Date.now());
     bb.emit('OrderPlaced');
-
-    orders.debug();
   } else {
     bb.emit('OrderFailed');
   }
