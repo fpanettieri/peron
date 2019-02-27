@@ -6,6 +6,7 @@ const logger = require('../lib/logger');
 const log = new logger('[core/broker]');
 
 const ORDER_PREFIX_REGEX = /^ag-/;
+const LIMIT_ORDER_REGEX = /-lm$/;
 const STATES = { INTENT: 0, ORDER: 1, POSITION: 2, STOP: 3 };
 
 let bb = null;
@@ -18,6 +19,7 @@ let candle = null;
 function plug (_bb)
 {
   bb = _bb;
+
   bb.on('QuoteUpdated', onQuoteUpdated);
   bb.on('CandleAnalyzed', onCandleAnalyzed);
   bb.on('PositionSynced', onPositionSynced);
@@ -44,14 +46,16 @@ function onPositionSynced (arr)
   let pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { return; }
   const t = (new Date(pos.openingTimestamp)).getTime();
-  createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.FILLED, t);
+
+  createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.POSITION, t);
+  // TODO: updateTargets();
 }
 
 function onOrderUpdated (arr)
 {
-  // log.debug('$$$$$$$$$$$$$$$$ onOrderUpdated:', arr);
+  log.log(arr);
+  return;
 
-  // FIXME: check what happens with this lifecycle, and target orders!
   for (let i = 0; i < arr.length; i++) {
     const o = arr[i];
 
@@ -62,7 +66,9 @@ function onOrderUpdated (arr)
 
     const order = orders.find(o.clOrdID);
     if (!order) {
-      log.debug('unknown order', o);
+      log.warn('unknown order', o);
+      cancelOrder(o.clOrdID, 'Unknown order');
+
       orders.cancel(o.clOrdID);
       return;
     }
@@ -76,23 +82,20 @@ function onOrderUpdated (arr)
     const jid = o.clOrdID.substr(0, 11);
     const job = jobs.find(j => j.id == jid);
     if (!job) {
-      log.debug('unknown job', o);
+      log.warn('unknown job', jid);
+      log.warn('jobs', jobs);
+      log.warn('order', o);
       orders.cancel(o.clOrdID);
       return;
     }
 
-    if (o.ordStatus == 'PartiallyFilled') {
-      updateJob(job, job.qty, o.avgPx, STATES.PARTIAL, Date.now());
-      // FIXME: updatetargets
+    if (!LIMIT_ORDER_REGEX.test(o.clOrdID)) { return; }
+
+    if (o.ordStatus == 'PartiallyFilled' || o.ordStatus == 'Filled' ) {
+      updateJob(job, job.qty, o.avgPx, STATES.POSITION, Date.now());
     }
 
-    if (o.ordStatus == 'Filled' && o.leavesQty == 0) {
-      orders.remove(o);
-      updateJob(job, job.qty, o.avgPx, STATES.FILLED, Date.now());
-      // FIXME: updatetargets
-    }
-
-    // create or amend targets?
+    if (o.ordStatus == 'Filled' && o.leavesQty == 0) { orders.remove(o); }
   }
 }
 
@@ -177,8 +180,7 @@ async function proccessOrder (job)
   }
 
   if (Date.now() - job.t > cfg.broker.order.expiration) {
-    // FIXME: check if this cancels the job, or what happens
-    cancelOrder(order.clOrdID, 'Expired', job);
+    cancelOrder(order.clOrdID, 'Expired');
     return;
   }
 
@@ -186,7 +188,7 @@ async function proccessOrder (job)
     let price = quote.bidPrice;
 
     if (price > candle.bb_ma - cfg.broker.min_profit) {
-      cancelOrder(order.clOrdID, 'MA Crossed', job);
+      cancelOrder(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
       amendOrder(order.clOrdID, price);
     }
@@ -195,7 +197,7 @@ async function proccessOrder (job)
     let price = quote.askPrice;
 
     if (price < candle.bb_ma + cfg.broker.min_profit) {
-      cancelOrder(order.clOrdID, 'MA Crossed', job);
+      cancelOrder(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
       amendOrder(order.clOrdID, price);
     }
@@ -204,6 +206,7 @@ async function proccessOrder (job)
 
 function proccessPosition (job)
 {
+  // updateTargets(job);
   // Micro manage orders, targeting MA
 }
 
@@ -212,11 +215,9 @@ function proccessStop (job)
   // Minimize Loss, Burst interval speed
 }
 
-function cancelOrder (id, reason, job)
+function cancelOrder (id, reason)
 {
-  // FIXME: check if this should destroy the job, or not
   orders.cancel(id, reason);
-  destroyJob(job);
   bb.emit('OrderCanceled');
 }
 
