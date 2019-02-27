@@ -233,6 +233,14 @@ function proccessPosition (job)
   }
 
   // TODO: check if the soft SL is triggered!
+  if (job.qty > 0 && quote.askPrice < job.sl) {
+    updateJob(job, job.qty, price, STATES.STOP, Date.now());
+    burstSpeed(true);
+
+  } else if (job.qty < 0 && quote.bidPrice > job.sl) {
+    updateJob(job, job.qty, price, STATES.STOP, Date.now());
+    burstSpeed(true);
+  }
 }
 
 function proccessStop (job)
@@ -256,12 +264,21 @@ function updateTargets (o)
 {
   log.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
   log.log(o);
+
+
   //
   // Based on the order fetch profit and SL targets
   // If they exist
   //   Amend quantity
   // else
   //   Create targets
+}
+
+function burstSpeed (b)
+{
+  const speed = b ? cfg.broker.speed.burst : cfg.broker.speed.normal;
+  clearInterval(interval);
+  interval = setInterval(run, speed);
 }
 
 module.exports = { plug: plug };

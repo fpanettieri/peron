@@ -23,7 +23,7 @@
       - Add created_at to Job
       - Use created_at to Expire Order
 
->     . ReduceOnly hidden SL
+>     . Create ReduceOnly hidden SL
       - Target MA for profit
       . Soft SL trigger
 
@@ -32,7 +32,7 @@
         - When TP filled, cancel SL
 
     . StopLoss: MinimizeLoss
-      . Burst interval speed on enter
+      - Burst interval speed on enter
       . Overviews the market and updates prices
       . Restore interval speed on close
 
