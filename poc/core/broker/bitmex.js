@@ -60,7 +60,7 @@ function onPositionSynced (arr)
 
 function onPositionUpdated (p)
 {
-  log.debug(p);
+  log.debug('onPositionUpdated', p);
 }
 
 function onTradeContract (sym, qty, px)
