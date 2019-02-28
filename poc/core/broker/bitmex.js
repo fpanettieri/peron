@@ -68,10 +68,8 @@ async function onPositionSynced (arr)
 
 function onOrderSynced (arr)
 {
-  log.debug('onOrderSynced');
-
   for (let i = 0; i < arr.length; i++) {
-    log.debug('Discard old order', arr[i].orderID);
+    log.log('Discarding old order', arr[i].orderID);
     orders.discard(arr[i].orderID);
   }
 }
@@ -90,7 +88,7 @@ function onOrderUpdated (arr)
     const o = arr[i];
 
     if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
-      log.debug('Ignored non-peronist order');
+      log.log('Ignored non-peronist order');
       continue;
     }
 
