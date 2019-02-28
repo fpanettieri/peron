@@ -72,7 +72,6 @@ function genId ()
 
 function createJob (id, sym, qty, px, state, t)
 {
-  // TODO: add created at
   const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now() };
   // TODO: stats - reports?
   log.debug('Job Created');
@@ -88,14 +87,12 @@ function updateJob (job, qty, px, state, t)
   job.px = px;
   job.state = state;
   job.t = t;
-  // TODO: track job change somewhere
   log.debug('Job Updated');
 }
 
 function destroyJob (job)
 {
   jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
-  // TODO: track job change somewhere
   log.debug('Job Destroyed');
 }
 
@@ -105,7 +102,6 @@ function run ()
   if (jobs.length == 0) { clearInterval(interval); }
 }
 
-// TODO: extract this to it's own file?
 function process (job)
 {
   switch (job.state){
@@ -224,7 +220,6 @@ function proccessPosition (job)
     return;
   }
 
-  // TODO: micro manage long
   let price = Math.round(candle.bb_ma * 2) / 2;
   log.log('target price', price);
 
@@ -232,7 +227,6 @@ function proccessPosition (job)
     amendOrder(profit_order.clOrdID, {price: price});
   }
 
-  // TODO: check if the soft SL is triggered!
   if (job.qty > 0 && quote.askPrice < job.sl) {
     updateJob(job, job.qty, price, STATES.STOP, Date.now());
     burstSpeed(true);
@@ -265,8 +259,8 @@ function updateTargets (o)
   log.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
   log.log(o);
 
+  // TODO: continue here!
 
-  //
   // Based on the order fetch profit and SL targets
   // If they exist
   //   Amend quantity
