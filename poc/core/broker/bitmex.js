@@ -53,7 +53,12 @@ function onPositionSynced (arr)
   let pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { return; }
   const t = (new Date(pos.openingTimestamp)).getTime();
+
+  log.debug('################# pre create job');
+
   createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.POSITION, t);
+
+  log.debug('################# post create job');
 
   // FIXME: This fails! test by creating a position, and starting peron
 }
