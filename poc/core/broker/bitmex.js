@@ -38,9 +38,9 @@ function plug (_bb)
   bb.on('TradeContract', onTradeContract);
 }
 
-function onQuoteUpdated (q)
+function onQuoteUpdated (arr)
 {
-  quote = q;
+  quote = arr[arr.length - 1];
 }
 
 function onCandleAnalyzed (c)
@@ -119,10 +119,7 @@ async function proccessIntent (job)
 {
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
 
-  log.debug(`${job.id}-lm`, job.sym, job.qty, price);
   const order = await orders.limit(`${job.id}-lm`, job.sym, job.qty, price);
-  process.exit(-1);
-
   if (order) {
     updateJob(job, job.qty, price, STATES.ORDER, Date.now());
     bb.emit('OrderPlaced');
