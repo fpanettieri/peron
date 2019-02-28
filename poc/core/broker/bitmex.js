@@ -57,10 +57,10 @@ async function onPositionSynced (arr)
   const id = genId();
 
   log.debug('################# pre create job');
-  await updateTargets(id, pos.symbol, pos.currentQty, pos.avgCostPrice);
 
   const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.STOP, t);
-  job.sl = safePrice(job.px * (1 + cfg.broker.sl.soft * -Math.sign(pos.currentQty)));
+  await updateTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
+
   log.debug('soft sl:', job.sl);
 
   log.debug('################# post create job');
@@ -70,7 +70,8 @@ function onTradeContract (sym, qty, px)
 {
   // FIXME: check if this limit makes sense V
   if (jobs.length >= cfg.broker.max_jobs) { log.log('max amount of jobs'); return; }
-  createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
+  const job = createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
+  process(job);
 }
 
 function genId ()
@@ -83,11 +84,8 @@ function createJob (id, sym, qty, px, state, t)
   const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now() };
   // TODO: stats - reports?
   log.debug('Job Created');
-
   jobs.push(job);
-  process(job);
   if (!interval) { interval = setInterval(run, cfg.broker.speed.normal); }
-
   return job;
 }
 
@@ -218,7 +216,7 @@ function onOrderUpdated (arr)
     }
 
     if (o.ordStatus == 'PartiallyFilled' || o.ordStatus == 'Filled') {
-      updateTargets(job.id, job.sym, order.leavesQty, order.avgPx);
+      updateTargets(job, job.sym, order.leavesQty, order.avgPx);
       updateJob(job.id, {state: STATES.POSITION});
     }
 
@@ -285,19 +283,22 @@ function amendOrder (id, params)
   bb.emit('OrderAmended');
 }
 
-async function updateTargets (id, sym, qty, px)
+async function updateTargets (job, sym, qty, px)
 {
   log.info('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
   log.debug('px', px);
 
-  const sl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.hard));
-  log.debug('sl_px', sl_px);
+  job.sl = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.hard));
+  log.debug('soft sl_px', job.sl);
 
-  let sl = orders.find(`${id}-sl`);
+  const sl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.hard));
+  log.debug('hardsl_px', sl_px);
+
+  let sl = orders.find(`${job.id}-sl`);
   if (!sl) {
-    sl = await orders.stop(`${id}-sl`, sym, -qty, sl_px);
+    sl = await orders.stop(`${job.id}-sl`, sym, -qty, sl_px);
   } else {
-    sl = await orders.amend(`${id}-sl`, {orderQty: -qty, stopPx: sl_px});
+    sl = await orders.amend(`${job.id}-sl`, {orderQty: -qty, stopPx: sl_px});
   }
 
   log.debug('candle', candle);
@@ -305,11 +306,11 @@ async function updateTargets (id, sym, qty, px)
   const tp_px = safePrice(candle ? candle.bb_ma : px * (1 + Math.sign(qty) * cfg.broker.sl.hard));
   log.debug('tp_px', tp_px);
 
-  let tp = orders.find(`${id}-tp`);
+  let tp = orders.find(`${job.id}-tp`);
   if (!tp) {
-    tp = await orders.profit(`${id}-tp`, sym, -qty, tp_px);
+    tp = await orders.profit(`${job.id}-tp`, sym, -qty, tp_px);
   } else {
-    tp = await orders.amend(`${id}-tp`, {orderQty: -qty, price: tp_px});
+    tp = await orders.amend(`${job.id}-tp`, {orderQty: -qty, price: tp_px});
   }
 
   log.warn('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
