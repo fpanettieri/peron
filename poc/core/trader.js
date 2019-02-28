@@ -20,7 +20,9 @@ function plug (_bb)
 
   bb.on('MarginSynced', onMarginUpdated);
   bb.on('MarginUpdated', onMarginUpdated);
+
   bb.on('QuoteUpdated', onQuoteUpdated);
+
   bb.on('OpenLong', onOpenLong);
   bb.on('OpenShort', onOpenShort);
 }
