@@ -23,6 +23,7 @@ function plug (_bb)
 
   bb.on('QuoteSynced', onQuoteUpdated);
   bb.on('QuoteUpdated', onQuoteUpdated);
+  bb.on('QuoteOpened', onQuoteUpdated);
 
   bb.on('OpenLong', onOpenLong);
   bb.on('OpenShort', onOpenShort);

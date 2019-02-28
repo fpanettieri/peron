@@ -23,7 +23,10 @@ function plug (_bb)
 {
   bb = _bb;
 
+  bb.on('QuoteSynced', onQuoteUpdated);
   bb.on('QuoteUpdated', onQuoteUpdated);
+  bb.on('QuoteOpened', onQuoteUpdated);
+
   bb.on('CandleAnalyzed', onCandleAnalyzed);
   bb.on('PositionSynced', onPositionSynced);
   bb.on('PositionUpdated', onPositionUpdated);
