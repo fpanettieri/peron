@@ -36,7 +36,7 @@ function onQuoteUpdated (arr)
 
 function onMarginUpdated (arr)
 {
-  margin = {...margin, ...arr[arr.length - 1]};
+  margin = {...margin, ...arr[0]};
 }
 
 function onOpenLong (c)
