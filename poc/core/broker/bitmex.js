@@ -24,10 +24,6 @@ async function plug (_bb)
 {
   bb = _bb;
 
-  log.debug('creating fake market position');
-  const o = await orders.market(`test-mk`, 'XBTUSD', 1);
-  log.log(o);
-
   bb.on('QuoteSynced', onQuoteUpdated);
   bb.on('QuoteUpdated', onQuoteUpdated);
   bb.on('QuoteOpened', onQuoteUpdated);
@@ -291,11 +287,11 @@ async function updateTargets (job, sym, qty, px)
   log.info('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
   log.debug('px', px);
 
-  job.sl = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.hard));
+  job.sl = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
   log.debug('soft sl_px', job.sl);
 
   const sl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.hard));
-  log.debug('hardsl_px', sl_px);
+  log.debug('hard sl_px', sl_px);
 
   let sl = orders.find(`${job.id}-sl`);
   if (!sl) {
