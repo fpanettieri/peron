@@ -23,8 +23,6 @@ async function create (id, sym, qty, params)
   // FIXME: hotfix to test broker 'safely'. Remove this line!
   params.orderQty = qty > 0 ? 1 : -1;
 
-  log.log(_params);
-  
   const rsp = await bitmex.api(options, _params);
   if (rsp.status.code != 200){ return log.error(rsp); }
 
