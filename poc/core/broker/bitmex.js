@@ -24,6 +24,8 @@ function plug (_bb)
 {
   bb = _bb;
 
+
+
   bb.on('QuoteSynced', onQuoteUpdated);
   bb.on('QuoteUpdated', onQuoteUpdated);
   bb.on('QuoteOpened', onQuoteUpdated);
@@ -83,7 +85,7 @@ function createJob (id, sym, qty, px, state, t)
 {
   const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now() };
   // TODO: stats - reports?
-  log.debug('Job Created');
+  log.debug('Job Created', job);
   jobs.push(job);
   if (!interval) { interval = setInterval(run, cfg.broker.speed.normal); }
   return job;
@@ -91,8 +93,8 @@ function createJob (id, sym, qty, px, state, t)
 
 function updateJob (id, changes)
 {
-  log.debug('Job Updated');
   const idx = jobs.findIndex(j => j.id == id);
+  log.debug('Job Updated', jobs[idx]);
   jobs[idx] = {...jobs[idx], changes};
   return jobs[idx];
 }
