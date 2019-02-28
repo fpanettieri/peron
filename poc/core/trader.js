@@ -21,6 +21,7 @@ function plug (_bb)
   bb.on('MarginSynced', onMarginUpdated);
   bb.on('MarginUpdated', onMarginUpdated);
 
+  bb.on('QuoteSynced', onQuoteUpdated);
   bb.on('QuoteUpdated', onQuoteUpdated);
 
   bb.on('OpenLong', onOpenLong);
@@ -66,6 +67,8 @@ function usableMargin ()
 
 function marginToContracts (m)
 {
+  log.debug('m', m);
+  log.debug('quote.askPrice', quote.askPrice);
   return Math.round(Math.max(m * STB * quote.askPrice, 1));
 }
 
