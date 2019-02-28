@@ -18,6 +18,7 @@ function plug (_bb)
   margin.availableMargin = 1;
   margin.walletBalance = 1;
 
+  bb.on('MarginSynced', onMarginUpdated);
   bb.on('MarginUpdated', onMarginUpdated);
   bb.on('QuoteUpdated', onQuoteUpdated);
   bb.on('OpenLong', onOpenLong);
@@ -52,11 +53,11 @@ function usableMargin ()
   let usable = Math.floor(Math.min(free, cfg.trader.size) * margin.walletBalance);
 
   // FIXME: remove this
-  // log.log('max margin ', max);
-  // log.log('used margin', used);
-  // log.log('free margin', free);
-  // log.log('usable', usable);
-  // log.log('contracts', marginToContracts(usable));
+  log.log('max margin ', max);
+  log.log('used margin', used);
+  log.log('free margin', free);
+  log.log('usable', usable);
+  log.log('contracts', marginToContracts(usable));
 
   return usable;
 }
