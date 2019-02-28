@@ -48,15 +48,20 @@ function onCandleAnalyzed (c)
   candle = c;
 }
 
-function onPositionSynced (arr)
+async function onPositionSynced (arr)
 {
   let pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { return; }
+
   const t = (new Date(pos.openingTimestamp)).getTime();
+  const id = genId();
 
   log.debug('################# pre create job');
+  await updateTargets(id, pos.symbol, pos.currentQty, pos.avgCostPrice);
 
-  createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.POSITION, t);
+  const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.POSITION, t);
+  job.sl = job.px * (1 + cfg.broker.sl.soft * -Math.sign(pos.currentQty));
+  log.debug('soft sl:', job.sl);
 
   log.debug('################# post create job');
 
@@ -89,21 +94,22 @@ function createJob (id, sym, qty, px, state, t)
   jobs.push(job);
   process(job);
   if (!interval) { interval = setInterval(run, cfg.broker.speed.normal); }
+
+  return job;
 }
 
-function updateJob (job, qty, px, state, t)
+function updateJob (id, changes)
 {
-  job.qty = qty;
-  job.px = px;
-  job.state = state;
-  job.t = t;
   log.debug('Job Updated');
+  const idx = jobs.findIndex(j => j.id == id);
+  jobs[idx] = {...jobs[idx], changes};
+  return jobs[idx];
 }
 
 function destroyJob (job)
 {
-  jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
   log.debug('Job Destroyed');
+  jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
 }
 
 function run ()
@@ -128,7 +134,7 @@ async function proccessIntent (job)
 
   const order = await orders.limit(`${job.id}-lm`, job.sym, job.qty, price);
   if (order) {
-    updateJob(job, job.qty, price, STATES.ORDER, Date.now());
+    updateJob(job.id, {state: STATES.ORDER});
     bb.emit('OrderPlaced');
   } else {
     bb.emit('OrderFailed');
@@ -211,8 +217,8 @@ function onOrderUpdated (arr)
     }
 
     if (o.ordStatus == 'PartiallyFilled' || o.ordStatus == 'Filled') {
-      updateTargets(order);
-      updateJob(job, job.qty, order.avgPx, STATES.POSITION, Date.now());
+      updateTargets(job.id, job.sym, order.leavesQty, order.avgPx);
+      updateJob(job.id, {state: STATES.POSITION});
     }
 
     if (o.ordStatus == 'Filled') { orders.remove(o); }
@@ -238,11 +244,11 @@ function proccessPosition (job)
   }
 
   if (job.qty > 0 && quote.askPrice < job.sl) {
-    updateJob(job, job.qty, price, STATES.STOP, Date.now());
+    updateJob(job.id, {state: STATES.STOP});
     burstSpeed(true);
 
   } else if (job.qty < 0 && quote.bidPrice > job.sl) {
-    updateJob(job, job.qty, price, STATES.STOP, Date.now());
+    updateJob(job.id, {state: STATES.STOP});
     burstSpeed(true);
   }
 }
@@ -264,18 +270,24 @@ function amendOrder (id, params)
   bb.emit('OrderAmended');
 }
 
-function updateTargets (o)
+async function updateTargets (id, sym, qty, px)
 {
-  log.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
-  log.log(o);
+  log.info('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
 
-  // TODO: continue here!
+  const sl_px = px * (1 + -Math.sign(qty) * cfg.broker.sl.hard);
+  let sl = orders.find(`${id}-sl`);
+  if (!sl) {
+    sl = await orders.stop(`${id}-sl`, sym, -qty, sl_px);
+  } else {
+    sl = await orders.amend(`${id}-sl`, {orderQty: -qty, stopPx: sl_px});
+  }
 
-  // Based on the order fetch profit and SL targets
-  // If they exist
-  //   Amend quantity
-  // else
-  //   Create targets
+  let tp = orders.find(`${id}-tp`);
+  if (!tp) {
+    tp = await orders.profit(`${id}-tp`, sym, -qty, candle.bb_ma);
+  } else {
+    tp = await orders.amend(`${id}-tp`, {orderQty: -qty, price: sl_px});
+  }
 }
 
 function burstSpeed (b)
