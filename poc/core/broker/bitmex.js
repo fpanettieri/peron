@@ -20,11 +20,13 @@ let interval = null;
 let quote = {};
 let candle = null;
 
-function plug (_bb)
+async function plug (_bb)
 {
   bb = _bb;
 
-
+  log.debug('creating fake market position');
+  const o = await orders.market(`test-mk`, 'XBTUSD', 1);
+  log.log(o);
 
   bb.on('QuoteSynced', onQuoteUpdated);
   bb.on('QuoteUpdated', onQuoteUpdated);
@@ -126,7 +128,6 @@ async function proccessIntent (job)
   log.debug('proccessIntent');
 
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
-
   const order = await orders.limit(`${job.id}-lm`, job.sym, job.qty, price);
   if (order) {
     updateJob(job.id, {state: STATES.ORDER});
