@@ -29,14 +29,14 @@ function plug (_bb)
   bb.on('OpenShort', onOpenShort);
 }
 
-function onQuoteUpdated (q)
+function onQuoteUpdated (arr)
 {
-  quote = q;
+  quote = arr[arr.length - 1];
 }
 
-function onMarginUpdated (m)
+function onMarginUpdated (arr)
 {
-  margin = {...margin, ...m};
+  margin = {...margin, ...arr[arr.length - 1]};
 }
 
 function onOpenLong (c)
