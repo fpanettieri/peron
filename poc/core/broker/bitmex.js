@@ -123,6 +123,8 @@ function process (job)
 
 async function proccessIntent (job)
 {
+  log.debug('proccessIntent');
+
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
 
   const order = await orders.limit(`${job.id}-lm`, job.sym, job.qty, price);
@@ -136,6 +138,9 @@ async function proccessIntent (job)
 
 async function proccessOrder (job)
 {
+  log.debug('proccessOrder');
+
+
   const order = orders.find(`${job.id}-lm`);
   if (!order){
     if (job.state == STATES.ORDER){
@@ -172,6 +177,8 @@ async function proccessOrder (job)
 
 function onOrderUpdated (arr)
 {
+  log.debug('onOrderUpdated');
+
   for (let i = 0; i < arr.length; i++) {
     const o = arr[i];
 
@@ -221,6 +228,8 @@ function onOrderUpdated (arr)
 
 function proccessPosition (job)
 {
+  log.debug('proccessPosition');
+
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}-tp`);
@@ -249,6 +258,8 @@ function proccessPosition (job)
 
 function proccessStop (job)
 {
+  log.debug('proccessStop');
+
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}-tp`);
