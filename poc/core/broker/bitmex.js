@@ -31,8 +31,8 @@ async function plug (_bb)
   bb.on('CandleAnalyzed', onCandleAnalyzed);
   bb.on('PositionSynced', onPositionSynced);
 
-  bb.on('OrderSynced', onOrderUpdated);
-  bb.on('OrderOpened', onOrderUpdated);
+  bb.on('OrderSynced', onOrderSynced);
+  bb.on('OrderOpened', onOrderOpened);
   bb.on('OrderUpdated', onOrderUpdated);
 
   bb.on('TradeContract', onTradeContract);
@@ -64,6 +64,73 @@ async function onPositionSynced (arr)
   log.debug('soft sl:', job.sl);
 
   log.debug('################# post create job');
+}
+
+function onOrderSynced (arr)
+{
+  log.debug('onOrderSynced');
+
+  for (let i = 0; i < arr.length; i++) {
+    log.debug('Discard old order', arr[i].orderID);
+    orders.discard(arr[i].orderID);
+  }
+}
+
+function onOrderOpened (arr)
+{
+  log.log('onOrderOpened', arr);
+  for (let i = 0; i < arr.length; i++) { orders.add(arr[i]); }
+}
+
+function onOrderUpdated (arr)
+{
+  log.debug('onOrderUpdated');
+
+  for (let i = 0; i < arr.length; i++) {
+    const o = arr[i];
+
+    if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
+      log.debug('Ignored non-peronist order');
+      continue;
+    }
+
+    const order = orders.find(o.clOrdID);
+    if (!order) {
+      // FIXME: remove this log
+      log.error('Unknown order');
+      cancelOrder(o.clOrdID, 'Unknown Order');
+      continue;
+    }
+    orders.update(o);
+
+    if (o.ordStatus == 'Canceled') {
+      orders.remove(o);
+      continue;
+    }
+
+    const jid = o.clOrdID.substr(0, 11);
+    const job = jobs.find(j => j.id == jid);
+    if (!job) {
+      // FIXME: remove this log
+      log.error('unknown job', job, o);
+      orders.cancel(o.clOrdID);
+      continue;
+    }
+
+    // Stop Loss or Take Profit Filled
+    if (!LIMIT_ORDER_REGEX.test(o.clOrdID) && o.ordStatus == 'Filled') {
+      orders.cancel_all(order.symbol);
+      burstSpeed(false);
+      continue;
+    }
+
+    if (o.ordStatus == 'PartiallyFilled' || o.ordStatus == 'Filled') {
+      updateTargets(job, job.sym, order.leavesQty, order.avgPx);
+      updateJob(job.id, {state: STATES.POSITION});
+    }
+
+    if (o.ordStatus == 'Filled') { orders.remove(o); }
+  }
 }
 
 function onTradeContract (sym, qty, px)
@@ -168,57 +235,6 @@ async function proccessOrder (job)
     } else if (order.price != price){
       amendOrder(order.clOrdID, {price: price});
     }
-  }
-}
-
-function onOrderUpdated (arr)
-{
-  log.debug('onOrderUpdated');
-
-  for (let i = 0; i < arr.length; i++) {
-    const o = arr[i];
-
-    if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
-      log.debug('Ignored non-peronist order');
-      continue;
-    }
-
-    const order = orders.find(o.clOrdID);
-    if (!order) {
-      // FIXME: remove this log
-      log.error('Unknown order');
-      cancelOrder(o.clOrdID, 'Unknown Order');
-      continue;
-    }
-    orders.update(o);
-
-    if (o.ordStatus == 'Canceled') {
-      orders.remove(o);
-      continue;
-    }
-
-    const jid = o.clOrdID.substr(0, 11);
-    const job = jobs.find(j => j.id == jid);
-    if (!job) {
-      // FIXME: remove this log
-      log.error('unknown job', job, o);
-      orders.cancel(o.clOrdID);
-      continue;
-    }
-
-    // Stop Loss or Take Profit Filled
-    if (!LIMIT_ORDER_REGEX.test(o.clOrdID) && o.ordStatus == 'Filled') {
-      orders.cancel_all(order.symbol);
-      burstSpeed(false);
-      continue;
-    }
-
-    if (o.ordStatus == 'PartiallyFilled' || o.ordStatus == 'Filled') {
-      updateTargets(job, job.sym, order.leavesQty, order.avgPx);
-      updateJob(job.id, {state: STATES.POSITION});
-    }
-
-    if (o.ordStatus == 'Filled') { orders.remove(o); }
   }
 }
 

@@ -89,6 +89,15 @@ async function cancel (id, reason)
   return rsp.body;
 }
 
+async function discard (id)
+{
+  const params = { orderID: id };
+  options.method = 'DELETE';
+
+  const rsp = await bitmex.api(options, params);
+  if (rsp.status.code != 200){ log.error(rsp.error); }
+}
+
 async function cancel_all (reason)
 {
   log.debug('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ orders.cancel_all');
@@ -150,6 +159,7 @@ module.exports = {
 
   amend: amend,
   cancel: cancel,
+  discard: discard,
 
   find: find,
   findIndex: findIndex,
