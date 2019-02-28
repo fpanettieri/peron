@@ -150,6 +150,13 @@ function remove (o)
   orders.splice(findIndex(o), 1);
 }
 
+function debug ()
+{
+  log.info('############################## orders.debug');
+  log.log(orders);
+  log.error('############################## orders.debug');
+}
+
 module.exports = {
   create: create,
   market: market,
@@ -165,5 +172,7 @@ module.exports = {
   findIndex: findIndex,
   add: add,
   update: update,
-  remove: remove
+  remove: remove,
+
+  debug: debug
 };
