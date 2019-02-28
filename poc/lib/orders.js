@@ -20,18 +20,9 @@ async function create (id, sym, qty, params)
 
   options.method = 'POST';
 
-  // FIXME: hotfix to test broker 'safely'. Remove this line!
-  params.orderQty = qty > 0 ? 1 : -1;
-
   const rsp = await bitmex.api(options, _params);
   if (rsp.status.code != 200){ return log.error(rsp); }
-
-  const order = rsp.body;
-  orders.push(order);
-
-  log.debug('orders.create', 7);
-
-  return order;
+  return rsp.body;
 }
 
 function market (id, sym, qty)
