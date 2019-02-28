@@ -266,8 +266,11 @@ function amendOrder (id, params)
 async function updateTargets (id, sym, qty, px)
 {
   log.info('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
+  log.debug('px', px);
 
   const sl_px = px * (1 + -Math.sign(qty) * cfg.broker.sl.hard);
+  log.debug('sl_px', sl_px);
+
   let sl = orders.find(`${id}-sl`);
   if (!sl) {
     sl = await orders.stop(`${id}-sl`, sym, -qty, sl_px);
@@ -275,7 +278,11 @@ async function updateTargets (id, sym, qty, px)
     sl = await orders.amend(`${id}-sl`, {orderQty: -qty, stopPx: sl_px});
   }
 
-  const tp_px = candle.bb_ma || px * (1 + Math.sign(qty) * cfg.broker.sl.hard);
+  log.debug('candle', candle);
+
+  const tp_px = candle ? candle.bb_ma : px * (1 + Math.sign(qty) * cfg.broker.sl.hard);
+  log.debug('tp_px', tp_px);
+
   let tp = orders.find(`${id}-tp`);
   if (!tp) {
     tp = await orders.profit(`${id}-tp`, sym, -qty, candle.bb_ma);
@@ -283,10 +290,7 @@ async function updateTargets (id, sym, qty, px)
     tp = await orders.amend(`${id}-tp`, {orderQty: -qty, price: sl_px});
   }
 
-  log.debug('px', px);
-  log.debug('sl_px', sl_px);
-  log.debug('tp_px', tp_px);
-  log.debug('candle.bb_ma', candle.bb_ma);
+  log.warn('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
 }
 
 function burstSpeed (b)
