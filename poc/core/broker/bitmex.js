@@ -230,7 +230,7 @@ function proccessPosition (job)
   }
 
   let price = Math.round(candle.bb_ma * 2) / 2;
-  log.log('target price', price);
+  log.debug('target price', price);
 
   if (profit_order.price != price){
     amendOrder(profit_order.clOrdID, {price: price});
@@ -248,7 +248,21 @@ function proccessPosition (job)
 
 function proccessStop (job)
 {
-  // Minimize Loss, Burst interval speed
+  proccessOrder(job);
+
+  const profit_order = orders.find(`${job.id}-tp`);
+  if (!profit_order){
+    log.error('order lost?!', job);
+    destroyJob(job);
+    return;
+  }
+
+  if (job.qty > 0) {
+    updateJob(job.id, {price: quote.askPrice});
+
+  } else {
+    updateJob(job.id, {price: quote.bidPrice});
+  }
 }
 
 function cancelOrder (id, reason)
