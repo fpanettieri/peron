@@ -20,7 +20,9 @@ function plug (_bb)
   bb = _bb;
   bb.on('HistoryDownloaded', onHistoryDownloaded);
   bb.on('CandleReceived', onCandleReceived);
-  bb.on('TradeReceived', onTradeReceived);
+
+  bb.on('TradeSynced', onTradeReceived);
+  bb.on('TradeUpdated', onTradeReceived);
 
   resetCandle();
   setTimeout(closeCandle, getTimeout());

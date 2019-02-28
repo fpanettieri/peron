@@ -111,39 +111,12 @@ function broadcast (json)
   const map = { 'partial': 'Synced', 'insert': 'Opened', 'update': 'Updated', 'delete': 'Closed' };
 
   switch (json.table) {
-    // case 'margin': {
-    //   bb.emit('MarginUpdated', json.data[0]);
-    // } break;
-
-    // case 'position': {
-    //   const action = `Position${map[json.action]}`;
-    //   bb.silent(action, json.data);
-    // } break;
-
-    // case 'trade': {
-    //   bb.silent('TradeReceived', json.data);
-    // } break;
-
-    // case 'order': {
-    //   const action = `Order${map[json.action]}`;
-    //   for (let i = 0; i < json.data.length; i++) { bb.emit('OrderUpdated', json.data[i]); }
-    // } break;
-
-    // case 'quote': {
-    //   const action = `Quote${map[json.action]}`;
-    //   bb.emit(action, json.data);
-    // } break;
-
     case `tradeBin${cfg.timeframe}`: {
       bb.emit('CandleReceived', bitmex.toOhlc(json.data[0]));
     } break;
 
     default: {
       const action = `${json.table[0].toUpperCase()}${json.table.substring(1)}${map[json.action]}`;
-      // FIXME: dead code
-      // log.warn('########################################', action);
-      // log.log(json.data);
-      // log.warn('########################################', action, '\n\n\n\n');
       bb.emit(action, json.data);
     }
   }
@@ -153,16 +126,14 @@ function onWatchMarket ()
 {
   const sub_params = {
     op: 'subscribe',
-    args: [ `order:${cfg.symbol}` ]
-    // FIXME: full msgs sync
-    // args: [
-    //   'margin',
-    //   `quote:${cfg.symbol}`,
-    //   `position:${cfg.symbol}`,
-    //   `order:${cfg.symbol}`,
-    //   `trade:${cfg.symbol}`,
-    //   `tradeBin${cfg.timeframe}:${cfg.symbol}`
-    // ]
+    args: [
+      'margin',
+      `quote:${cfg.symbol}`,
+      `position:${cfg.symbol}`,
+      `order:${cfg.symbol}`,
+      `trade:${cfg.symbol}`,
+      `tradeBin${cfg.timeframe}:${cfg.symbol}`
+    ]
   };
   send(sub_params);
 }
