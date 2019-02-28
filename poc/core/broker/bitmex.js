@@ -118,10 +118,10 @@ function process (job)
 async function proccessIntent (job)
 {
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
-  const order = await orders.limit(`${job.id}-lm`, job.sym, job.qty, price);
 
-  log.log(order);
-  process.exit(-100);
+  log.debug(`${job.id}-lm`, job.sym, job.qty, price);
+  const order = await orders.limit(`${job.id}-lm`, job.sym, job.qty, price);
+  process.exit(-1);
 
   if (order) {
     updateJob(job, job.qty, price, STATES.ORDER, Date.now());
