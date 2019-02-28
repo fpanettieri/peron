@@ -54,22 +54,11 @@ function usableMargin ()
   let max = cfg.trader.positions * cfg.trader.size;
   let used = 1 - margin.availableMargin / margin.walletBalance;
   let free = Math.max(max - used, 0);
-  let usable = Math.min(free, cfg.trader.size) * margin.walletBalance;
-
-  // FIXME: remove this
-  log.debug('max margin ', max);
-  log.debug('used margin', used);
-  log.debug('free margin', free);
-  log.debug('usable', usable);
-  log.debug('contracts', marginToContracts(usable));
-
-  return usable;
+  return Math.min(free, cfg.trader.size) * margin.walletBalance;
 }
 
 function marginToContracts (m)
 {
-  log.debug('m', m);
-  log.debug('quote.askPrice', quote.askPrice);
   return Math.round(Math.max(m * STB * quote.askPrice, 1));
 }
 
