@@ -54,6 +54,8 @@ function onPositionSynced (arr)
   if (!pos || !pos.isOpen) { return; }
   const t = (new Date(pos.openingTimestamp)).getTime();
   createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.POSITION, t);
+
+  // FIXME: This fails! test by creating a position, and starting peron
 }
 
 function onPositionUpdated (p)
