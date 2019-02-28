@@ -19,13 +19,13 @@
       - Re design order - job relationship
       - Double check order lifecycle
 
-    . Position: Create SL & Close orders
+    - Position: Create SL & Close orders
       - Add created_at to Job
       - Use created_at to Expire Order
 
-      . Create target
-      . Store soft-sl
->     . Create ReduceOnly hidden SL
+      - Create target
+      - Store soft-sl
+>     - Create ReduceOnly hidden SL
       - Target MA for profit
       - Soft SL trigger
 

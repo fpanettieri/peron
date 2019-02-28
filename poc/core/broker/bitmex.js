@@ -16,6 +16,7 @@ let bb = null;
 
 const jobs = [];
 let interval = null;
+
 let quote = {};
 let candle = null;
 
@@ -29,7 +30,6 @@ function plug (_bb)
 
   bb.on('CandleAnalyzed', onCandleAnalyzed);
   bb.on('PositionSynced', onPositionSynced);
-  bb.on('PositionUpdated', onPositionUpdated);
 
   bb.on('OrderSynced', onOrderUpdated);
   bb.on('OrderOpened', onOrderUpdated);
@@ -50,7 +50,7 @@ function onCandleAnalyzed (c)
 
 async function onPositionSynced (arr)
 {
-  let pos = arr.find(i => i.symbol == cfg.symbol);
+  const pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { return; }
 
   const t = (new Date(pos.openingTimestamp)).getTime();
@@ -59,18 +59,11 @@ async function onPositionSynced (arr)
   log.debug('################# pre create job');
   await updateTargets(id, pos.symbol, pos.currentQty, pos.avgCostPrice);
 
-  const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.POSITION, t);
+  const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.STOP, t);
   job.sl = job.px * (1 + cfg.broker.sl.soft * -Math.sign(pos.currentQty));
   log.debug('soft sl:', job.sl);
 
   log.debug('################# post create job');
-
-  // FIXME: This fails! test by creating a position, and starting peron
-}
-
-function onPositionUpdated (p)
-{
-  log.debug('onPositionUpdated', p);
 }
 
 function onTradeContract (sym, qty, px)
@@ -282,12 +275,18 @@ async function updateTargets (id, sym, qty, px)
     sl = await orders.amend(`${id}-sl`, {orderQty: -qty, stopPx: sl_px});
   }
 
+  const tp_px = candle.bb_ma || px * (1 + Math.sign(qty) * cfg.broker.sl.hard);
   let tp = orders.find(`${id}-tp`);
   if (!tp) {
     tp = await orders.profit(`${id}-tp`, sym, -qty, candle.bb_ma);
   } else {
     tp = await orders.amend(`${id}-tp`, {orderQty: -qty, price: sl_px});
   }
+
+  log.debug('px', px);
+  log.debug('sl_px', sl_px);
+  log.debug('tp_px', tp_px);
+  log.debug('candle.bb_ma', candle.bb_ma);
 }
 
 function burstSpeed (b)
