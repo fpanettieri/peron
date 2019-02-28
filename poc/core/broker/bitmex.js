@@ -60,7 +60,7 @@ async function onPositionSynced (arr)
   await updateTargets(id, pos.symbol, pos.currentQty, pos.avgCostPrice);
 
   const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.STOP, t);
-  job.sl = job.px * (1 + cfg.broker.sl.soft * -Math.sign(pos.currentQty));
+  job.sl = safePrice(job.px * (1 + cfg.broker.sl.soft * -Math.sign(pos.currentQty)));
   log.debug('soft sl:', job.sl);
 
   log.debug('################# post create job');
@@ -230,7 +230,7 @@ function proccessPosition (job)
     return;
   }
 
-  let price = Math.round(candle.bb_ma * 2) / 2;
+  let price = safePrice(candle.bb_ma);
   log.debug('target price', price);
 
   if (profit_order.price != price){
@@ -279,7 +279,7 @@ async function updateTargets (id, sym, qty, px)
   log.info('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
   log.debug('px', px);
 
-  const sl_px = px * (1 + -Math.sign(qty) * cfg.broker.sl.hard);
+  const sl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.hard));
   log.debug('sl_px', sl_px);
 
   let sl = orders.find(`${id}-sl`);
@@ -291,14 +291,14 @@ async function updateTargets (id, sym, qty, px)
 
   log.debug('candle', candle);
 
-  const tp_px = candle ? candle.bb_ma : px * (1 + Math.sign(qty) * cfg.broker.sl.hard);
+  const tp_px = safePrice(candle ? candle.bb_ma : px * (1 + Math.sign(qty) * cfg.broker.sl.hard));
   log.debug('tp_px', tp_px);
 
   let tp = orders.find(`${id}-tp`);
   if (!tp) {
-    tp = await orders.profit(`${id}-tp`, sym, -qty, candle.bb_ma);
+    tp = await orders.profit(`${id}-tp`, sym, -qty, tp_px);
   } else {
-    tp = await orders.amend(`${id}-tp`, {orderQty: -qty, price: sl_px});
+    tp = await orders.amend(`${id}-tp`, {orderQty: -qty, price: tp_px});
   }
 
   log.warn('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
@@ -309,6 +309,11 @@ function burstSpeed (b)
   const speed = b ? cfg.broker.speed.burst : cfg.broker.speed.normal;
   clearInterval(interval);
   interval = setInterval(run, speed);
+}
+
+function safePrice (px)
+{
+  return Math.round(px * 2) / 2;
 }
 
 module.exports = { plug: plug };
