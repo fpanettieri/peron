@@ -137,7 +137,6 @@ async function proccessOrder (job)
 {
   log.debug('proccessOrder');
 
-
   const order = orders.find(`${job.id}-lm`);
   if (!order){
     if (job.state == STATES.ORDER){

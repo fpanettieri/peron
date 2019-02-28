@@ -10,6 +10,8 @@ const options = { api: 'order', testnet: cfg.testnet };
 
 async function create (id, sym, qty, params)
 {
+  log.debug('orders.create', 1);
+
   const _params = {...{
     clOrdID: id,
     symbol: sym,
@@ -20,14 +22,26 @@ async function create (id, sym, qty, params)
 
   options.method = 'POST';
 
+  log.debug('orders.create', 2);
+
   // FIXME: hotfix to test broker 'safely'. Remove this line!
   params.orderQty = qty > 0 ? 1 : -1;
 
+  log.debug('orders.create', 3);
   const rsp = await bitmex.api(options, _params);
+
+  log.debug('orders.create', 4);
   if (rsp.status.code != 200){ return log.error(rsp); }
 
+  log.debug('orders.create', 5);
+
   const order = rsp.body;
+
+  log.debug('orders.create', 6);
   orders.push(order);
+  
+  log.debug('orders.create', 7);
+
   return order;
 }
 
