@@ -50,17 +50,17 @@ function onOpenShort (c)
 
 function usableMargin ()
 {
-  let max = (cfg.trader.positions * cfg.trader.size);
+  let max = cfg.trader.positions * cfg.trader.size;
   let used = 1 - margin.availableMargin / margin.walletBalance;
   let free = Math.max(max - used, 0);
   let usable = Math.min(free, cfg.trader.size) * margin.walletBalance;
 
   // FIXME: remove this
-  log.log('max margin ', max);
-  log.log('used margin', used);
-  log.log('free margin', free);
-  log.log('usable', usable);
-  log.log('contracts', marginToContracts(usable));
+  // log.log('max margin ', max);
+  // log.log('used margin', used);
+  // log.log('free margin', free);
+  // log.log('usable', usable);
+  // log.log('contracts', marginToContracts(usable));
 
   return usable;
 }
