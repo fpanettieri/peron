@@ -207,6 +207,7 @@ async function proccessOrder (job)
   const order = orders.find(`${job.id}-lm`);
   if (!order){
     if (job.state == STATES.ORDER){
+      orders.error('%%%%%%%%%%%%%%%%%%%%%%%%%% HERE %%%%%%%%%%%%%%%%%%%%%%%%%%');
       log.error('order lost?!', job);
       destroyJob(job);
     }
