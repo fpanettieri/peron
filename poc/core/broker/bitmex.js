@@ -206,6 +206,7 @@ function onOrderUpdated (arr)
     // Stop Loss or Take Profit Filled
     if (!LIMIT_ORDER_REGEX.test(o.clOrdID) && o.ordStatus == 'Filled') {
       orders.cancel_all(order.symbol);
+      burstSpeed(false);
       continue;
     }
 
@@ -257,12 +258,8 @@ function proccessStop (job)
     return;
   }
 
-  if (job.qty > 0) {
-    updateJob(job.id, {price: quote.askPrice});
-
-  } else {
-    updateJob(job.id, {price: quote.bidPrice});
-  }
+  const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
+  updateJob(job.id, {price: price});
 }
 
 function cancelOrder (id, reason)

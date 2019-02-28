@@ -1,53 +1,6 @@
 ===============
   TODO
 ===============
-. Broker (Execute the strategy)
-  - Watch order book
-  - Receives orders from the trader
-  - Design Jobs state machine
-  . Handle job states
-    - Intent: Post order to the books
-      - Send orders to the market
-    - Order: Check if it needs to be amended
-      - Watch orders progress
-      - Amend orders!!!
-      - Detect when the order is filled
-      - Invalid signature on candle update (create PUT test)
-      - Greedy cancel of order when BB_MA moves
-        - Consider min_profit
-      - Greedy cancel of order if lifetime > X
-      - Re design order - job relationship
-      - Double check order lifecycle
-
-    - Position: Create SL & Close orders
-      - Add created_at to Job
-      - Use created_at to Expire Order
-
-      - Create target
-      - Store soft-sl
->     - Create ReduceOnly hidden SL
-      - Target MA for profit
-      - Soft SL trigger
-
-      - Add switch to order lifecycle
-        - When SL filled, cancel TP
-        - When TP filled, cancel SL
-
-    . StopLoss: MinimizeLoss
-      - Burst interval speed on enter
-      . Reuse profit order, bound to the ask price
-      . Overviews the market and updates prices
-      . Restore interval speed on close
-
-  - Handle 503 errors => https://testnet.bitmex.com/app/restAPI#Overload
-  - Handle 429 error => https://testnet.bitmex.com/app/restAPI
-
-  - Orders updates
-    - Partial updates?
-    - If there is an existing position when the trader starts, close it first
-    - Close other orders
-    - If there are existing orders, create them!
-
 . Auditor (Tracks the bot performance)
   . Improve event queueing / nesting using setImmediate / nextTick?
   . Listens to 2 events
@@ -155,6 +108,53 @@
   - Debug orders
 
 - Test SL and Take Profit orders
+
+- Broker (Execute the strategy)
+  - Watch order book
+  - Receives orders from the trader
+  - Design Jobs state machine
+  . Handle job states
+    - Intent: Post order to the books
+      - Send orders to the market
+    - Order: Check if it needs to be amended
+      - Watch orders progress
+      - Amend orders!!!
+      - Detect when the order is filled
+      - Invalid signature on candle update (create PUT test)
+      - Greedy cancel of order when BB_MA moves
+        - Consider min_profit
+      - Greedy cancel of order if lifetime > X
+      - Re design order - job relationship
+      - Double check order lifecycle
+
+    - Position: Create SL & Close orders
+      - Add created_at to Job
+      - Use created_at to Expire Order
+
+      - Create target
+      - Store soft-sl
+      - Create ReduceOnly hidden SL
+      - Target MA for profit
+      - Soft SL trigger
+
+      - Add switch to order lifecycle
+        - When SL filled, cancel TP
+        - When TP filled, cancel SL
+
+    - StopLoss: MinimizeLoss
+      - Burst interval speed on enter
+      - Reuse profit order, bound to the ask price
+      - Overviews the market and updates prices
+      - Restore interval speed on close
+
+  - Handle 503 errors => https://testnet.bitmex.com/app/restAPI#Overload
+  - Handle 429 error => https://testnet.bitmex.com/app/restAPI
+
+  - Orders updates
+    - Partial updates?
+    - If there is an existing position when the trader starts, close it first
+    - Close other orders
+    - If there are existing orders, create them!
 
 ===============
   IGNORE
