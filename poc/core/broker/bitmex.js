@@ -138,11 +138,13 @@ async function onOrderUpdated (arr)
       await updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
       updateJob(job.id, {state: STATES.POSITION, mutex: false});
       log.log('^^^^^^^^^^^^^^^^^^^^^^^', 'POSITIONS MUST EXIST HERE');
+      log.log(jobs);
+      log.log('^^^^^^^^^^^^^^^^^^^^^^^', 'POSITIONS MUST EXIST HERE');
     }
 
     if (order.ordStatus == 'Filled') {
       log.debug('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
-      log.debug('order filled,' order);
+      log.debug('order filled', order);
       log.debug('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
       orders.remove(o);
     }
