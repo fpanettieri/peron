@@ -113,8 +113,10 @@ async function onOrderUpdated (arr)
     }
     updateJob(job.id, {mutex: true});
 
+    const is_limit = LIMIT_ORDER_REGEX.test(order.clOrdID);
+
     // Stop Loss or Take Profit Filled
-    if (!LIMIT_ORDER_REGEX.test(order.clOrdID) && order.ordStatus == 'Filled') {
+    if (!is_limit && order.ordStatus == 'Filled') {
       orders.remove(order);
       destroyJob(job);
       orders.cancel_all(order.symbol);
@@ -122,19 +124,10 @@ async function onOrderUpdated (arr)
       continue;
     }
 
-    if (order.ordStatus == 'PartiallyFilled' || order.ordStatus == 'Filled') {
+    if (is_limit && (order.ordStatus == 'PartiallyFilled' || order.ordStatus == 'Filled')) {
+      orders.remove(order);
       updateJob(job.id, {state: STATES.POSITION});
 
-      log.debug('###################################');
-      // log.debug('order', orders.find(order.clOrdID));
-      log.debug('direction', job.qty > 0 ? 1 : -1);
-      log.debug('job.qty', job.qty);
-      log.debug('job.px', job.px);
-      log.debug('order.qty', order.orderQty - order.leavesQty);
-      log.debug('order.price', order.avgPx);
-      log.debug('###################################');
-
-      orders.remove(order);
       let direction = job.qty > 0 ? 1 : -1;
       await updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
       updateJob(job.id, {mutex: false});
@@ -142,13 +135,8 @@ async function onOrderUpdated (arr)
       log.log('^^^^^^^^^^^^^^^^^^^^^^^', 'POSITIONS MUST EXIST HERE');
       log.log(jobs);
       log.log('^^^^^^^^^^^^^^^^^^^^^^^', 'POSITIONS MUST EXIST HERE');
-    }
-
-    if (order.ordStatus == 'Filled') {
-      log.debug('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
-      log.debug('order filled', order);
-      log.debug('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
-      orders.remove(o);
+      orders.debug();
+      log.log('^^^^^^^^^^^^^^^^^^^^^^^', 'POSITIONS MUST EXIST HERE');
     }
   }
 }
