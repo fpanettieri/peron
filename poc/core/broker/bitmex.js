@@ -146,7 +146,7 @@ function createJob (id, sym, qty, px, state, t)
 {
   // TODO: stats - reports?
 
-  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now() };
+  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now(), mutex: false };
   jobs.push(job);
 
   if (!interval) { burstSpeed(false); }
@@ -176,20 +176,21 @@ function run ()
 
 function process (job)
 {
+  if (job.mutex) { return; }
+
   switch (job.state){
     case STATES.INTENT: proccessIntent(job); break;
     case STATES.ORDER: proccessOrder(job); break;
     case STATES.POSITION: proccessPosition(job); break;
     case STATES.STOP: proccessStop(job); break;
   }
+  job.mutex = false;
 }
 
 async function proccessIntent (job)
 {
-  log.debug('proccessIntent');
-
   if (!quote){ return; }
-  updateJob(job.id, {state: STATES.MUTEX});
+  job.mutex = true;
 
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
   const order = await orders.limit(`${job.id}-lm`, job.sym, job.qty, price);
@@ -197,15 +198,14 @@ async function proccessIntent (job)
     updateJob(job.id, {state: STATES.ORDER});
     bb.emit('OrderPlaced');
   } else {
-    updateJob(job.id, {state: STATES.INTENT});
     bb.emit('OrderFailed');
   }
 }
 
 async function proccessOrder (job)
 {
-  return;
   if (!quote){ return; }
+  job.mutex = true;
 
   const order = orders.find(`${job.id}-lm`);
   if (!order){
@@ -238,6 +238,8 @@ async function proccessOrder (job)
 function proccessPosition (job)
 {
   if (!quote || !candle){ return; }
+  job.mutex = true;
+
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}-tp`);
@@ -267,6 +269,8 @@ function proccessPosition (job)
 function proccessStop (job)
 {
   if (!quote){ return; }
+  job.mutex = true;
+  
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}-tp`);
