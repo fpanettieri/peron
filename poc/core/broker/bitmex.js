@@ -208,6 +208,8 @@ async function process (job)
 {
   if (!quote){ return; }
 
+  log.debug(`proccess? ${job.mutex} - state: ${job.state}`);
+
   if (job.mutex) { return; }
   updateJob(job.id, {mutex: true});
 
@@ -235,8 +237,6 @@ async function proccessIntent (job)
 
 async function proccessOrder (job)
 {
-  log.debug('proccessOrder');
-
   const order = orders.find(`${job.id}-lm`);
   if (!order){
     if (job.state == STATES.ORDER){ destroyJob(job); }
@@ -267,8 +267,6 @@ async function proccessOrder (job)
 
 async function proccessPosition (job)
 {
-  log.debug('proccessPosition', job.mutex);
-
   log.debug('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 
   if (!candle){ return; }
