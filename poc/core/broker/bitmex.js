@@ -148,7 +148,8 @@ function createJob (id, sym, qty, px, state, t)
 
   const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now() };
   jobs.push(job);
-  if (!interval) { interval = setInterval(run, cfg.broker.speed.normal); }
+
+  if (!interval) { burstSpeed(false); }
   return job;
 }
 
