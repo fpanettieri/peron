@@ -59,6 +59,8 @@ async function onPositionSynced (arr)
   const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.MUTEX, t);
   await updateTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
   updateJob(job.id, {state: STATES.STOP});
+
+  log.log(jobs);
 }
 
 function onOrderSynced (arr)
@@ -159,7 +161,7 @@ function updateJob (id, changes)
   // TODO: stats - reports?
 
   const idx = jobs.findIndex(j => j.id == id);
-  jobs[idx] = {...jobs[idx], changes};
+  jobs[idx] = {...jobs[idx], ...changes};
   return jobs[idx];
 }
 
@@ -177,6 +179,7 @@ function run ()
 
 function process (job)
 {
+  log.debug('process');
   switch (job.state){
     case STATES.INTENT: proccessIntent(job); break;
     case STATES.ORDER: proccessOrder(job); break;
