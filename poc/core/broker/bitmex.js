@@ -214,6 +214,11 @@ async function proccessOrder (job)
     return;
   }
 
+  log.debug('');
+  log.debug('life', Date.now() - job.created_at);
+  log.debug('expiration', cfg.broker.order.expiration);
+  log.debug('expired', Date.now() - job.created_at > cfg.broker.order.expiration);
+  log.debug('');
   if (Date.now() - job.created_at > cfg.broker.order.expiration) {
     await cancelOrder(order.clOrdID, 'Expired');
     return;
