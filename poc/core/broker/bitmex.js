@@ -91,40 +91,40 @@ async function onOrderUpdated (arr)
       continue;
     }
 
-    const order = orders.find(o.clOrdID);
+    let order = orders.find(o.clOrdID);
     if (!order) {
       log.debug('missing order', o);
       if (o.ordStatus != 'Canceled') { cancelOrder(o.clOrdID, 'Unknown Order'); }
       continue;
     }
-    orders.update(o);
+    order = orders.update(o);
 
-    if (o.ordStatus == 'Canceled') {
-      orders.remove(o);
+    if (order.ordStatus == 'Canceled') {
+      orders.remove(order);
       continue;
     }
 
-    const jid = o.clOrdID.substr(0, 11);
+    const jid = order.clOrdID.substr(0, 11);
     const job = jobs.find(j => j.id == jid);
     if (!job) {
       // FIXME: remove this log
-      log.error('unknown job', job, o);
+      log.error('unknown job', job, order);
       orders.cancel(o.clOrdID);
       continue;
     }
 
     // Stop Loss or Take Profit Filled
-    if (!LIMIT_ORDER_REGEX.test(o.clOrdID) && o.ordStatus == 'Filled') {
+    if (!LIMIT_ORDER_REGEX.test(order.clOrdID) && order.ordStatus == 'Filled') {
       destroyJob(job);
       orders.cancel_all(order.symbol);
       burstSpeed(false);
       continue;
     }
 
-    if (o.ordStatus == 'PartiallyFilled' || o.ordStatus == 'Filled') {
+    if (order.ordStatus == 'PartiallyFilled' || order.ordStatus == 'Filled') {
 
       log.debug('###################################');
-      log.debug('order', orders.find(o.clOrdID));
+      log.debug('order', orders.find(order.clOrdID));
       log.debug('direction', job.qty > 0 ? 1 : -1);
       log.debug('job.qty', job.qty);
       log.debug('job.px', job.px);

@@ -125,6 +125,7 @@ function update (o)
 {
   let idx = findIndex(o.clOrdID);
   orders[idx] = {...orders[idx], ...o};
+  return orders[idx];
 }
 
 function remove (o)
