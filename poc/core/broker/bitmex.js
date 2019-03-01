@@ -64,15 +64,13 @@ async function onPositionSynced (arr)
 function onOrderSynced (arr)
 {
   for (let i = 0; i < arr.length; i++) {
-    log.log('Discarding old order', arr[i].orderID);
+    log.debug('Discarding old order', arr[i].orderID);
     orders.discard(arr[i].orderID);
   }
 }
 
 function onOrderOpened (arr)
 {
-  // FIXME: dead code
-  // log.debug('onOrderOpened', arr);
   for (let i = 0; i < arr.length; i++) { orders.add(arr[i]); }
 }
 
