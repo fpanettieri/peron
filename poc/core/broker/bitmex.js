@@ -124,7 +124,7 @@ async function onOrderUpdated (arr)
 
     if (order.ordStatus == 'PartiallyFilled' || order.ordStatus == 'Filled') {
       updateJob(job.id, {state: STATES.POSITION});
-      
+
       log.debug('###################################');
       // log.debug('order', orders.find(order.clOrdID));
       log.debug('direction', job.qty > 0 ? 1 : -1);
@@ -347,11 +347,6 @@ async function updateTargets (job, sym, qty, px)
   } else {
     tp = await orders.amend(`${job.id}-tp`, {orderQty: -qty, price: tp_px});
   }
-
-  log.warn('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
-  log.warn(sl);
-  log.warn(tp);
-  log.warn('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
 }
 
 function burstSpeed (b)
