@@ -188,7 +188,7 @@ async function process (job)
 {
   if (!quote){ return; }
 
-  log.debug(`proccess? ${job.mutex} - state: ${job.state}`);
+  log.debug(`locked? ${job.mutex} - state: ${job.state}`);
 
   if (job.mutex) { return; }
   updateJob(job.id, {mutex: true});
