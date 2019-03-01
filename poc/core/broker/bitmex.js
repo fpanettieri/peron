@@ -56,12 +56,13 @@ async function onPositionSynced (arr)
   const t = (new Date(pos.openingTimestamp)).getTime();
   const id = genId();
 
-  log.debug('################# pre create job');
-
+  log.debug('[onPositionSynced]', '################# pre create job');
   const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.STOP, t);
-  await updateTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
+  log.debug('[onPositionSynced]', '################# post create job');
 
-  log.debug('################# post create job');
+  log.debug('[onPositionSynced]', '################# pre update targets');
+  await updateTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
+  log.debug('[onPositionSynced]', '################# post update targets');
 }
 
 function onOrderSynced (arr)
@@ -74,7 +75,8 @@ function onOrderSynced (arr)
 
 function onOrderOpened (arr)
 {
-  log.log('onOrderOpened', arr);
+  // FIXME: dead code
+  // log.debug('onOrderOpened', arr);
   for (let i = 0; i < arr.length; i++) { orders.add(arr[i]); }
 }
 
