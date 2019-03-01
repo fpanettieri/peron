@@ -205,6 +205,8 @@ async function proccessIntent (job)
 
 async function proccessOrder (job)
 {
+  log.log('proccessOrder');
+  
   const order = orders.find(`${job.id}-lm`);
   if (!order){
     if (job.state == STATES.ORDER){ destroyJob(job); }
