@@ -38,7 +38,8 @@ async function api (opts, params)
   const rsp = await https.send(`${host}${url}`, body, {method: opts.method, headers: headers});
   rsp.body = JSON.parse(rsp.body);
 
-  log.warn('x-ratelimit-remaining', rsp.headers['x-ratelimit-remaining']);
+  const limit = rsp.headers['x-ratelimit-remaining'];
+  if(limit < 100) { log.warn('Low limit remaining', rsp.headers['x-ratelimit-remaining']); }
 
   return rsp;
 }
