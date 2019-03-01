@@ -171,12 +171,17 @@ function destroyJob (job)
 function run ()
 {
   for (let i = jobs.length - 1; i > -1; i--){ process (jobs[i]); }
-  if (jobs.length == 0) { clearInterval(interval); }
+  if (jobs.length == 0) {
+    clearInterval(interval);
+    interval = null;
+  }
 }
 
 async function process (job)
 {
   if (!quote){ return; }
+
+  log.debug(`before id: ${job.id} - s: ${job.state} - m: ${job.mutex}, interval: ${interval}`);
 
   if (job.mutex) { return; }
   updateJob(job.id, {mutex: true});
@@ -189,10 +194,13 @@ async function process (job)
   }
 
   updateJob(job.id, {mutex: false});
+  log.debug(`after id: ${job.id} - s: ${job.state} - m: ${job.mutex}`);
 }
 
 async function proccessIntent (job)
 {
+  log.debug('proccessIntent');
+
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
   const order = await orders.limit(`${job.id}-lm`, job.sym, job.qty, price);
   if (order) {
@@ -205,7 +213,7 @@ async function proccessIntent (job)
 
 async function proccessOrder (job)
 {
-  log.log('proccessOrder');
+  log.debug('proccessOrder');
 
   const order = orders.find(`${job.id}-lm`);
   if (!order){
@@ -238,6 +246,7 @@ async function proccessOrder (job)
 async function proccessPosition (job)
 {
   log.debug('proccessPosition');
+
   return;
 
   if (!candle){ return; }
