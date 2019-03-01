@@ -82,23 +82,13 @@ async function cancel (id, reason)
 
 async function cancel_all (reason)
 {
-  log.debug('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ orders.cancel_all');
-
   const params = { text: reason };
   options.api = 'order/all';
   options.method = 'DELETE';
 
-  log.debug('orders.cancel_all', 1);
-
   const rsp = await bitmex.api(options, params);
-
-  log.debug('orders.cancel_all', 2);
   if (rsp.status.code != 200){ return log.error(rsp); }
-
-  log.debug('orders.cancel_all', 3);
-
-  // TODO: check what reply makes sense
-  log.log(rsp);
+  return rsp.body;
 }
 
 async function discard (id)
@@ -108,6 +98,7 @@ async function discard (id)
 
   const rsp = await bitmex.api(options, params);
   if (rsp.status.code != 200){ log.error(rsp.error); }
+  return rsp.body;
 }
 
 function find (id)
