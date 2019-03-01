@@ -108,7 +108,7 @@ async function onOrderUpdated (arr)
     if (!job) {
       // FIXME: remove this log
       log.error('unknown job', job, order);
-      orders.cancel(o.clOrdID);
+      orders.cancel(order.clOrdID);
       continue;
     }
     updateJob(job.id, {mutex: true});
@@ -124,7 +124,7 @@ async function onOrderUpdated (arr)
 
     if (order.ordStatus == 'PartiallyFilled' || order.ordStatus == 'Filled') {
       log.debug('###################################');
-      log.debug('order', orders.find(order.clOrdID));
+      // log.debug('order', orders.find(order.clOrdID));
       log.debug('direction', job.qty > 0 ? 1 : -1);
       log.debug('job.qty', job.qty);
       log.debug('job.px', job.px);
@@ -140,7 +140,12 @@ async function onOrderUpdated (arr)
       log.log('^^^^^^^^^^^^^^^^^^^^^^^', 'POSITIONS MUST EXIST HERE');
     }
 
-    if (o.ordStatus == 'Filled') { orders.remove(o); }
+    if (order.ordStatus == 'Filled') {
+      log.debug('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
+      log.debug('order filled,' order);
+      log.debug('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
+      orders.remove(o);
+    }
   }
 }
 
