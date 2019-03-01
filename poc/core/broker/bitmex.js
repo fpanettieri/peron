@@ -316,13 +316,13 @@ async function updateTargets (job, sym, qty, px)
     tp = await orders.amend(`${job.id}-tp`, {orderQty: -qty, price: tp_px});
   }
 
-  log.info('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
+  log.debug('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
   log.debug('px', px);
   log.debug('soft sl_px', job.sl);
   log.debug('hard sl_px', sl_px);
   log.debug('candle', candle);
   log.debug('tp_px', tp_px);
-  log.warn('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
+  log.debug('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
 }
 
 function burstSpeed (b)
