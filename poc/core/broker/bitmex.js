@@ -240,7 +240,7 @@ function proccessPosition (job)
 
   const profit_order = orders.find(`${job.id}-tp`);
   if (!profit_order){
-    log.error('profit order not found!');
+    log.error('proccessPosition', 'profit order not found!');
     destroyJob(job);
     return;
   }
@@ -270,7 +270,7 @@ function proccessStop (job)
 
   const profit_order = orders.find(`${job.id}-tp`);
   if (!profit_order){
-    log.error('order lost?!', job);
+    log.error('proccessStop', 'profit order not found!');
     destroyJob(job);
     return;
   }
