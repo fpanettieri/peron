@@ -82,6 +82,8 @@ function onOrderOpened (arr)
 
 async function onOrderUpdated (arr)
 {
+  log.warn('>>>>> onOrderUpdated.start');
+
   for (let i = 0; i < arr.length; i++) {
     const o = arr[i];
 
@@ -111,7 +113,7 @@ async function onOrderUpdated (arr)
       orders.cancel(order.clOrdID);
       continue;
     }
-    updateJob(job.id, {mutex: true});
+    updateJob(job.id, {locked: true});
 
     const is_limit = LIMIT_ORDER_REGEX.test(order.clOrdID);
 
@@ -132,10 +134,12 @@ async function onOrderUpdated (arr)
       log.warn('<<<<<<<<<<<<<<<<<< 1');
       await updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
       log.warn('<<<<<<<<<<<<<<<<<< 2');
-      updateJob(job.id, {mutex: false});
+      updateJob(job.id, {locked: false});
       log.warn('<<<<<<<<<<<<<<<<<< 3');
     }
   }
+
+  log.warn('>>>>> onOrderUpdated.end');
 }
 
 function onTradeContract (sym, qty, px)
@@ -156,7 +160,7 @@ function createJob (id, sym, qty, px, state, t)
 {
   // TODO: stats - reports?
 
-  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now(), mutex: false};
+  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now(), locked: false};
   jobs.push(job);
 
   if (!interval) { burstSpeed(false); }
@@ -165,7 +169,6 @@ function createJob (id, sym, qty, px, state, t)
 
 function updateJob (id, changes)
 {
-  log.debug('>>>>>>>>>>>>>>>>>>>>>>>>>>>> updateJob', id, changes);
   // TODO: stats - reports?
 
   const idx = jobs.findIndex(j => j.id == id);
@@ -182,6 +185,7 @@ function destroyJob (job)
 function run ()
 {
   for (let i = jobs.length - 1; i > -1; i--){ process (jobs[i]); }
+
   if (jobs.length == 0) {
     clearInterval(interval);
     interval = null;
@@ -191,11 +195,10 @@ function run ()
 async function process (job)
 {
   if (!quote){ return; }
+  if (job.locked) { return; }
 
-  log.debug(`locked? ${job.mutex} - state: ${job.state}`);
-
-  if (job.mutex) { return; }
-  updateJob(job.id, {mutex: true});
+  log.debug(`process.lock`);
+  updateJob(job.id, {locked: true});
 
   switch (job.state){
     case STATES.INTENT: await proccessIntent(job); break;
@@ -204,7 +207,8 @@ async function process (job)
     case STATES.STOP: await proccessStop(job); break;
   }
 
-  updateJob(job.id, {mutex: false});
+  updateJob(job.id, {locked: false});
+  log.debug(`process.unlock`);
 }
 
 async function proccessIntent (job)

@@ -19,7 +19,7 @@
     "max_jobs": 1,
     "speed": {
       "normal": 1000,
-      "burst": 250
+      "burst": 200
     },
     "min_profit": 0,
     "order": {
