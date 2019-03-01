@@ -10,7 +10,7 @@ const LIMIT_ORDER_REGEX = /-lm$/;
 const PROFIT_ORDER_REGEX = /-tp$/;
 const STOP_ORDER_REGEX = /-sl$/;
 
-const STATES = { MUTEX: -1, INTENT: 0, ORDER: 1, POSITION: 2, STOP: 3 };
+const STATES = { INTENT: 0, ORDER: 1, POSITION: 2, STOP: 3 };
 
 let bb = null;
 
@@ -56,9 +56,8 @@ async function onPositionSynced (arr)
   const t = (new Date(pos.openingTimestamp)).getTime();
   const id = genId();
 
-  const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.MUTEX, t);
+  const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.STOP, t);
   await updateTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
-  updateJob(job.id, {state: STATES.STOP});
   burstSpeed(true);
 }
 
@@ -113,6 +112,8 @@ async function onOrderUpdated (arr)
       continue;
     }
 
+    updateJob(job.id, {mutex: true});
+
     // Stop Loss or Take Profit Filled
     if (!LIMIT_ORDER_REGEX.test(order.clOrdID) && order.ordStatus == 'Filled') {
       orders.remove(order);
@@ -123,8 +124,6 @@ async function onOrderUpdated (arr)
     }
 
     if (order.ordStatus == 'PartiallyFilled' || order.ordStatus == 'Filled') {
-      updateJob(job.id, {state: STATES.POSITION});
-
       log.debug('###################################');
       log.debug('order', orders.find(order.clOrdID));
       log.debug('direction', job.qty > 0 ? 1 : -1);
@@ -138,7 +137,7 @@ async function onOrderUpdated (arr)
       orders.remove(order);
       let direction = job.qty > 0 ? 1 : -1;
       await updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
-
+      updateJob(job.id, {state: STATES.POSITION, mutex: false});
       log.log('^^^^^^^^^^^^^^^^^^^^^^^', 'POSITIONS MUST EXIST HERE');
     }
 
@@ -165,7 +164,7 @@ function createJob (id, sym, qty, px, state, t)
 {
   // TODO: stats - reports?
 
-  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now(), mutex: false };
+  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now(), mutex: false};
   jobs.push(job);
 
   if (!interval) { burstSpeed(false); }
@@ -259,7 +258,7 @@ async function proccessOrder (job)
 
 async function proccessPosition (job)
 {
-  log.debug('proccessPosition');
+  log.debug('proccessPosition', job.mutex);
 
   log.debug('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 
