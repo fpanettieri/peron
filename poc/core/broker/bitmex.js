@@ -299,6 +299,7 @@ async function updateTargets (job, sym, qty, px)
 {
   job.sl = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
   const sl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.hard));
+  const tp_px = safePrice(candle ? candle.bb_ma : px * (1 + Math.sign(qty) * cfg.broker.sl.hard));
 
   let sl = orders.find(`${job.id}-sl`);
   if (!sl) {
@@ -307,8 +308,6 @@ async function updateTargets (job, sym, qty, px)
     sl = await orders.amend(`${job.id}-sl`, {orderQty: -qty, stopPx: sl_px});
   }
 
-  const tp_px = safePrice(candle ? candle.bb_ma : px * (1 + Math.sign(qty) * cfg.broker.sl.hard));
-
   let tp = orders.find(`${job.id}-tp`);
   if (!tp) {
     tp = await orders.profit(`${job.id}-tp`, sym, -qty, tp_px);
@@ -316,6 +315,7 @@ async function updateTargets (job, sym, qty, px)
     tp = await orders.amend(`${job.id}-tp`, {orderQty: -qty, price: tp_px});
   }
 
+  // FIXME: remove this debug code
   log.debug('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
   log.debug('px', px);
   log.debug('soft sl_px', job.sl);
