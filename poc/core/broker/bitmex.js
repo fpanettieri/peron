@@ -277,20 +277,20 @@ function proccessStop (job)
   }
 
   const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
-  log.error('updating price', price);
-  updateJob(job.id, {price: price});
-  log.log('updated job', job);
+  if (profit_order.price != price){
+    amendOrder(profit_order.clOrdID, {price: price});
+  }
 }
 
-function cancelOrder (id, reason)
+async function cancelOrder (id, reason)
 {
-  orders.cancel(id, reason);
+  await orders.cancel(id, reason);
   bb.emit('OrderCanceled');
 }
 
-function amendOrder (id, params)
+async function amendOrder (id, params)
 {
-  orders.amend(id, params);
+  await orders.amend(id, params);
   bb.emit('OrderAmended');
 }
 
