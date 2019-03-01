@@ -123,6 +123,7 @@ async function onOrderUpdated (arr)
     }
 
     if (order.ordStatus == 'PartiallyFilled' || order.ordStatus == 'Filled') {
+      updateJob(job.id, {state: STATES.POSITION});
 
       log.debug('###################################');
       log.debug('order', orders.find(order.clOrdID));
@@ -139,7 +140,6 @@ async function onOrderUpdated (arr)
       await updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
 
       log.log('^^^^^^^^^^^^^^^^^^^^^^^', 'POSITIONS MUST EXIST HERE');
-      updateJob(job.id, {state: STATES.POSITION});
     }
 
     if (o.ordStatus == 'Filled') { orders.remove(o); }
