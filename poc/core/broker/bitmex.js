@@ -56,14 +56,8 @@ async function onPositionSynced (arr)
   const t = (new Date(pos.openingTimestamp)).getTime();
   const id = genId();
 
-  log.debug('[onPositionSynced]', '################# pre create job');
   const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.MUTEX, t);
-  log.debug('[onPositionSynced]', '################# post create job');
-
-  log.debug('[onPositionSynced]', '################# pre update targets');
   await updateTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
-  log.debug('[onPositionSynced]', '################# post update targets');
-
   updateJob(job.id, {state: STATES.STOP});
 }
 
@@ -146,9 +140,9 @@ function genId ()
 
 function createJob (id, sym, qty, px, state, t)
 {
-  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now() };
   // TODO: stats - reports?
-  log.debug('Job Created', job);
+
+  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now() };
   jobs.push(job);
   if (!interval) { interval = setInterval(run, cfg.broker.speed.normal); }
   return job;
@@ -156,8 +150,9 @@ function createJob (id, sym, qty, px, state, t)
 
 function updateJob (id, changes)
 {
+  // TODO: stats - reports?
+  
   const idx = jobs.findIndex(j => j.id == id);
-  log.debug('Job Updated', jobs[idx]);
   jobs[idx] = {...jobs[idx], changes};
   return jobs[idx];
 }

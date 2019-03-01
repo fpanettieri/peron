@@ -1,6 +1,9 @@
 ===============
   TODO
 ===============
+. // TODO: stats - reports?
+
+
 . Auditor (Tracks the bot performance)
   . Improve event queueing / nesting using setImmediate / nextTick?
   . Listens to 2 events
