@@ -265,6 +265,8 @@ async function proccessPosition (job)
     return;
   }
 
+  return;
+
   let price = safePrice(candle.bb_ma);
   log.debug('target price', price);
 
@@ -330,6 +332,11 @@ async function updateTargets (job, sym, qty, px)
   } else {
     tp = await orders.amend(`${job.id}-tp`, {orderQty: -qty, price: tp_px});
   }
+
+  log.warn('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
+  log.warn(sl);
+  log.warn(tp);
+  log.warn('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
 }
 
 function burstSpeed (b)
