@@ -265,10 +265,15 @@ async function proccessPosition (job)
     return;
   }
 
-  return;
-
   let price = safePrice(candle.bb_ma);
+
+
+  log.debug('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
   log.debug('target price', price);
+  log.debug(profit_order);
+  log.debug('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+
+  return;
 
   if (profit_order.price != price){
     await amendOrder(profit_order.clOrdID, {price: price});
