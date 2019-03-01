@@ -41,6 +41,7 @@ async function plug (_bb)
 function onQuoteUpdated (arr)
 {
   quote = arr[arr.length - 1];
+  log.log(quote);
 }
 
 function onCandleAnalyzed (c)

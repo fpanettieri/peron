@@ -115,7 +115,7 @@ function broadcast (json)
       bb.emit('CandleReceived', bitmex.toOhlc(json.data[0]));
     } break;
 
-    case 'margin': case 'quote': case 'order': case 'trade': case 'position': {
+    case 'margin':  case 'order': case 'trade': case 'position': {
       const action = `${json.table[0].toUpperCase()}${json.table.substring(1)}${map[json.action]}`;
       bb.silent(action, json.data);
     } break;
