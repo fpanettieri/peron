@@ -181,8 +181,6 @@ async function process (job)
 {
   if (!quote){ return; }
 
-  log.debug(`before id: ${job.id} - s: ${job.state} - m: ${job.mutex}, interval: ${interval}`);
-
   if (job.mutex) { return; }
   updateJob(job.id, {mutex: true});
 
@@ -194,7 +192,6 @@ async function process (job)
   }
 
   updateJob(job.id, {mutex: false});
-  log.debug(`after id: ${job.id} - s: ${job.state} - m: ${job.mutex}`);
 }
 
 async function proccessIntent (job)
