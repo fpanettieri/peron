@@ -10,7 +10,7 @@ const LIMIT_ORDER_REGEX = /-lm$/;
 const PROFIT_ORDER_REGEX = /-tp$/;
 const STOP_ORDER_REGEX = /-sl$/;
 
-const STATES = { INTENT: 0, ORDER: 1, POSITION: 2, STOP: 3 };
+const STATES = { MUTEX: -1, INTENT: 0, ORDER: 1, POSITION: 2, STOP: 3 };
 
 let bb = null;
 
@@ -57,12 +57,14 @@ async function onPositionSynced (arr)
   const id = genId();
 
   log.debug('[onPositionSynced]', '################# pre create job');
-  const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.STOP, t);
+  const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.MUTEX, t);
   log.debug('[onPositionSynced]', '################# post create job');
 
   log.debug('[onPositionSynced]', '################# pre update targets');
   await updateTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
   log.debug('[onPositionSynced]', '################# post update targets');
+
+  updateJob(job.id, {state: STATES.STOP});
 }
 
 function onOrderSynced (arr)
@@ -94,9 +96,7 @@ function onOrderUpdated (arr)
 
     const order = orders.find(o.clOrdID);
     if (!order) {
-      // FIXME: remove this log
-      log.error('Unknown order');
-      cancelOrder(o.clOrdID, 'Unknown Order');
+      if (o.ordStatus != 'Canceled') { cancelOrder(o.clOrdID, 'Unknown Order'); }
       continue;
     }
     orders.update(o);
@@ -298,7 +298,7 @@ function amendOrder (id, params)
 
 async function updateTargets (job, sym, qty, px)
 {
-  log.info('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
+  log.info('\n\n\n\n\n','$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
   log.debug('px', px);
 
   job.sl = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
