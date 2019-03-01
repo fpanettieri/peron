@@ -135,6 +135,8 @@ async function onOrderUpdated (arr)
 
       let direction = job.qty > 0 ? 1 : -1;
       await updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
+
+      log.log('^^^^^^^^^^^^^^^^^^^^^^^', 'POSITIONS MUST EXIST HERE');
       updateJob(job.id, {state: STATES.POSITION});
     }
 
@@ -223,6 +225,8 @@ async function proccessIntent (job)
 
 async function proccessOrder (job)
 {
+  log.debug('proccessOrder');
+
   const order = orders.find(`${job.id}-lm`);
   if (!order){
     if (job.state == STATES.ORDER){ destroyJob(job); }

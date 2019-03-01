@@ -25,35 +25,35 @@ async function create (id, sym, qty, params)
   return rsp.body;
 }
 
-function market (id, sym, qty)
+async function market (id, sym, qty)
 {
-  return create(id, sym, qty, {
+  return await create(id, sym, qty, {
     ordType: 'Market',
     timeInForce: 'ImmediateOrCancel'
   });
 }
 
-function limit (id, sym, qty, px)
+async function limit (id, sym, qty, px)
 {
-  return create(id, sym, qty, {
+  return await create(id, sym, qty, {
     ordType: 'Limit',
     execInst: 'ParticipateDoNotInitiate',
     price: px
   });
 }
 
-function profit (id, sym, qty, px)
+async function profit (id, sym, qty, px)
 {
-  return create(id, sym, qty, {
+  return await create(id, sym, qty, {
     ordType: 'Limit',
     execInst: 'ReduceOnly',
     price: px
   });
 }
 
-function stop (id, sym, qty, px)
+async function stop (id, sym, qty, px)
 {
-  return create(id, sym, qty, {
+  return await create(id, sym, qty, {
     ordType: 'Stop',
     execInst: 'ReduceOnly',
     stopPx: px
