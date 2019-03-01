@@ -131,6 +131,8 @@ function onOrderUpdated (arr)
 
 function onTradeContract (sym, qty, px)
 {
+  log.debug('onTradeContract', sym, qty, px);
+
   // FIXME: check if this limit makes sense V
   if (jobs.length >= cfg.broker.max_jobs) { log.log('max amount of jobs'); return; }
   const job = createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
@@ -216,10 +218,10 @@ async function proccessOrder (job)
 
   log.debug('');
   log.debug('life', Date.now() - job.created_at);
-  log.debug('expiration', cfg.broker.order.expiration);
-  log.debug('expired', Date.now() - job.created_at > cfg.broker.order.expiration);
+  log.debug('expiration', cfg.broker.order.expires);
+  log.debug('expired', Date.now() - job.created_at > cfg.broker.order.expires);
   log.debug('');
-  if (Date.now() - job.created_at > cfg.broker.order.expiration) {
+  if (Date.now() - job.created_at > cfg.broker.order.expires) {
     await cancelOrder(order.clOrdID, 'Expired');
     return;
   }
