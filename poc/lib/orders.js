@@ -10,6 +10,12 @@ const options = { api: 'order', testnet: cfg.testnet };
 
 async function create (id, sym, qty, params)
 {
+  log.debug('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+  log.debug('create', id);
+  log.debug('params', params);
+  log.debug('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+
+
   const _params = {...{
     clOrdID: id,
     symbol: sym,
@@ -65,6 +71,11 @@ async function stop (id, sym, qty, px)
 
 async function amend (id, params)
 {
+  log.debug('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+  log.debug('amend', id);
+  log.debug('params', params);
+  log.debug('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+
   const p = { origClOrdID: id };
   options.method = 'PUT';
 
@@ -75,6 +86,12 @@ async function amend (id, params)
 
 async function cancel (id, reason)
 {
+  log.debug('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+  log.debug('cancel', id);
+  log.debug('params', params);
+  log.debug('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+
+
   const params = { clOrdID: id, text: reason };
   options.method = 'DELETE';
 
