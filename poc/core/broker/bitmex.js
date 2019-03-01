@@ -81,7 +81,7 @@ function onOrderOpened (arr)
   for (let i = 0; i < arr.length; i++) { orders.add(arr[i]); }
 }
 
-function onOrderUpdated (arr)
+async function onOrderUpdated (arr)
 {
   for (let i = 0; i < arr.length; i++) {
     const o = arr[i];
@@ -122,8 +122,9 @@ function onOrderUpdated (arr)
     }
 
     if (o.ordStatus == 'PartiallyFilled' || o.ordStatus == 'Filled') {
+      let direction = job.qty > 0 ? 1 : -1;
+      await updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
       updateJob(job.id, {state: STATES.POSITION});
-      updateTargets(job, job.sym, order.leavesQty, order.avgPx);
     }
 
     if (o.ordStatus == 'Filled') { orders.remove(o); }
