@@ -177,7 +177,6 @@ function run ()
 async function process (job)
 {
   if (!quote){ return; }
-  log.debug('job', job);
 
   if (job.mutex) { return; }
   updateJob(job.id, {mutex: true});
