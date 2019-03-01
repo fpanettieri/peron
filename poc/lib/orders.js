@@ -80,15 +80,6 @@ async function cancel (id, reason)
   return rsp.body;
 }
 
-async function discard (id)
-{
-  const params = { orderID: id };
-  options.method = 'DELETE';
-
-  const rsp = await bitmex.api(options, params);
-  if (rsp.status.code != 200){ log.error(rsp.error); }
-}
-
 async function cancel_all (reason)
 {
   log.debug('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ orders.cancel_all');
@@ -108,6 +99,15 @@ async function cancel_all (reason)
 
   // TODO: check what reply makes sense
   log.log(rsp);
+}
+
+async function discard (id)
+{
+  const params = { orderID: id };
+  options.method = 'DELETE';
+
+  const rsp = await bitmex.api(options, params);
+  if (rsp.status.code != 200){ log.error(rsp.error); }
 }
 
 function find (id)
@@ -157,6 +157,7 @@ module.exports = {
 
   amend: amend,
   cancel: cancel,
+  cancel_all: cancel_all,
   discard: discard,
 
   find: find,
