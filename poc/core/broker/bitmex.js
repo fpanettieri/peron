@@ -61,8 +61,6 @@ async function onPositionSynced (arr)
   const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.STOP, t);
   await updateTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
 
-  log.debug('soft sl:', job.sl);
-
   log.debug('################# post create job');
 }
 
