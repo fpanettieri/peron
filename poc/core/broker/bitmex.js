@@ -131,20 +131,12 @@ async function onOrderUpdated (arr)
       let direction = job.qty > 0 ? 1 : -1;
       await updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
       updateJob(job.id, {mutex: false});
-
-      log.log('^^^^^^^^^^^^^^^^^^^^^^^', 'POSITIONS MUST EXIST HERE');
-      log.log(jobs);
-      log.log('^^^^^^^^^^^^^^^^^^^^^^^', 'POSITIONS MUST EXIST HERE');
-      orders.debug();
-      log.log('^^^^^^^^^^^^^^^^^^^^^^^', 'POSITIONS MUST EXIST HERE');
     }
   }
 }
 
 function onTradeContract (sym, qty, px)
 {
-  log.debug('onTradeContract', sym, qty, px);
-
   // FIXME: check if this limit makes sense V
   // (2019-03-1) It doesn't, but i'll keep it for now
   if (jobs.length >= cfg.broker.max_jobs) { log.log('max amount of jobs'); return; }
