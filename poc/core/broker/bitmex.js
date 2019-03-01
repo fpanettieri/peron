@@ -177,9 +177,10 @@ function run ()
 async function process (job)
 {
   if (!quote){ return; }
+  log.debug('job', job);
 
   if (job.mutex) { return; }
-  job.mutex = true;
+  updateJob(job.id, {mutex: true});
 
   switch (job.state){
     case STATES.INTENT: await proccessIntent(job); break;
@@ -188,7 +189,7 @@ async function process (job)
     case STATES.STOP: await proccessStop(job); break;
   }
 
-  job.mutex = false;
+  updateJob(job.id, {mutex: false});
 }
 
 async function proccessIntent (job)
@@ -206,7 +207,7 @@ async function proccessIntent (job)
 async function proccessOrder (job)
 {
   log.log('proccessOrder');
-  
+
   const order = orders.find(`${job.id}-lm`);
   if (!order){
     if (job.state == STATES.ORDER){ destroyJob(job); }
