@@ -174,16 +174,17 @@ function run ()
   if (jobs.length == 0) { clearInterval(interval); }
 }
 
-function process (job)
+async function process (job)
 {
   if (job.mutex) { return; }
 
   switch (job.state){
-    case STATES.INTENT: proccessIntent(job); break;
-    case STATES.ORDER: proccessOrder(job); break;
-    case STATES.POSITION: proccessPosition(job); break;
-    case STATES.STOP: proccessStop(job); break;
+    case STATES.INTENT: await proccessIntent(job); break;
+    case STATES.ORDER: await proccessOrder(job); break;
+    case STATES.POSITION: await proccessPosition(job); break;
+    case STATES.STOP: await proccessStop(job); break;
   }
+
   job.mutex = false;
 }
 
@@ -204,6 +205,8 @@ async function proccessIntent (job)
 
 async function proccessOrder (job)
 {
+  return;
+
   if (!quote){ return; }
   job.mutex = true;
 
@@ -270,7 +273,7 @@ function proccessStop (job)
 {
   if (!quote){ return; }
   job.mutex = true;
-  
+
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}-tp`);
