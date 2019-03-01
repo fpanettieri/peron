@@ -309,9 +309,7 @@ async function proccessStop (job)
   }
 
   const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
-  if (profit_order.price != price){
-    await amendOrder(profit_order.clOrdID, {price: price});
-  }
+  if (profit_order.price != price){ await amendOrder(profit_order.clOrdID, {price: price}); }
 }
 
 async function cancelOrder (id, reason)
@@ -328,17 +326,18 @@ async function amendOrder (id, params)
 
 async function updateTargets (job, sym, qty, px)
 {
-  job.sl = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
-  const sl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.hard));
-  const tp_px = safePrice(candle ? candle.bb_ma : px * (1 + Math.sign(qty) * cfg.broker.sl.hard));
+  const ssl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
+  updateJob(job.id, {sl: ssl_px});
 
+  const hsl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.hard));
   let sl = orders.find(`${job.id}-sl`);
   if (!sl) {
-    sl = await orders.stop(`${job.id}-sl`, sym, -qty, sl_px);
+    sl = await orders.stop(`${job.id}-sl`, sym, -qty, hsl_px);
   } else {
-    sl = await orders.amend(`${job.id}-sl`, {orderQty: -qty, stopPx: sl_px});
+    sl = await orders.amend(`${job.id}-sl`, {orderQty: -qty, stopPx: hsl_px});
   }
 
+  const tp_px = safePrice(candle ? candle.bb_ma : px * (1 + Math.sign(qty) * cfg.broker.sl.hard));
   let tp = orders.find(`${job.id}-tp`);
   if (!tp) {
     tp = await orders.profit(`${job.id}-tp`, sym, -qty, tp_px);
