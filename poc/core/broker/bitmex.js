@@ -111,7 +111,6 @@ async function onOrderUpdated (arr)
       orders.cancel(o.clOrdID);
       continue;
     }
-
     updateJob(job.id, {mutex: true});
 
     // Stop Loss or Take Profit Filled
@@ -150,6 +149,7 @@ function onTradeContract (sym, qty, px)
   log.debug('onTradeContract', sym, qty, px);
 
   // FIXME: check if this limit makes sense V
+  // (2019-03-1) It doesn't, but i'll keep it for now
   if (jobs.length >= cfg.broker.max_jobs) { log.log('max amount of jobs'); return; }
   const job = createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
   process(job);
