@@ -121,6 +121,15 @@ async function onOrderUpdated (arr)
       continue;
     }
 
+    log.debug('###################################');
+    log.debug('order', order);
+    log.debug('direction', job.qty > 0 ? 1 : -1);
+    log.debug('job.qty', job.qty);
+    log.debug('job.px', job.px);
+    log.debug('order.qty', order.orderQty - order.leavesQty);
+    log.debug('order.price', order.avgPx);
+    log.debug('###################################');
+
     if (o.ordStatus == 'PartiallyFilled' || o.ordStatus == 'Filled') {
       let direction = job.qty > 0 ? 1 : -1;
       await updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
