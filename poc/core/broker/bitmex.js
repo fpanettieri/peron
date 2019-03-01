@@ -122,8 +122,8 @@ function onOrderUpdated (arr)
     }
 
     if (o.ordStatus == 'PartiallyFilled' || o.ordStatus == 'Filled') {
-      updateTargets(job, job.sym, order.leavesQty, order.avgPx);
       updateJob(job.id, {state: STATES.POSITION});
+      updateTargets(job, job.sym, order.leavesQty, order.avgPx);
     }
 
     if (o.ordStatus == 'Filled') { orders.remove(o); }
