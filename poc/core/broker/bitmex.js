@@ -313,11 +313,11 @@ async function updateTargets (job, sym, qty, px)
 
   // FIXME: remove this debug code
   log.debug('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
+  log.debug('candle', candle);
   log.debug('px', px);
+  log.debug('tp_px', tp_px);
   log.debug('soft sl_px', job.sl);
   log.debug('hard sl_px', sl_px);
-  log.debug('candle', candle);
-  log.debug('tp_px', tp_px);
   log.debug('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
 }
 
