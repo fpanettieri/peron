@@ -176,7 +176,10 @@ function run ()
 
 async function process (job)
 {
+  if (!quote){ return; }
+
   if (job.mutex) { return; }
+  job.mutex = true;
 
   switch (job.state){
     case STATES.INTENT: await proccessIntent(job); break;
@@ -190,9 +193,6 @@ async function process (job)
 
 async function proccessIntent (job)
 {
-  if (!quote){ return; }
-  job.mutex = true;
-
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
   const order = await orders.limit(`${job.id}-lm`, job.sym, job.qty, price);
   if (order) {
@@ -206,9 +206,6 @@ async function proccessIntent (job)
 async function proccessOrder (job)
 {
   return;
-
-  if (!quote){ return; }
-  job.mutex = true;
 
   const order = orders.find(`${job.id}-lm`);
   if (!order){
@@ -240,9 +237,7 @@ async function proccessOrder (job)
 
 function proccessPosition (job)
 {
-  if (!quote || !candle){ return; }
-  job.mutex = true;
-
+  if (!candle){ return; }
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}-tp`);
@@ -271,9 +266,6 @@ function proccessPosition (job)
 
 function proccessStop (job)
 {
-  if (!quote){ return; }
-  job.mutex = true;
-
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}-tp`);
