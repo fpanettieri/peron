@@ -157,7 +157,5 @@ module.exports = {
   findIndex: findIndex,
   add: add,
   update: update,
-  remove: remove,
-
-  debug: debug
+  remove: remove
 };
