@@ -151,7 +151,7 @@ function createJob (id, sym, qty, px, state, t)
 function updateJob (id, changes)
 {
   // TODO: stats - reports?
-  
+
   const idx = jobs.findIndex(j => j.id == id);
   jobs[idx] = {...jobs[idx], changes};
   return jobs[idx];
@@ -293,14 +293,8 @@ function amendOrder (id, params)
 
 async function updateTargets (job, sym, qty, px)
 {
-  log.info('\n\n\n\n\n','$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
-  log.debug('px', px);
-
   job.sl = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
-  log.debug('soft sl_px', job.sl);
-
   const sl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.hard));
-  log.debug('hard sl_px', sl_px);
 
   let sl = orders.find(`${job.id}-sl`);
   if (!sl) {
@@ -309,10 +303,7 @@ async function updateTargets (job, sym, qty, px)
     sl = await orders.amend(`${job.id}-sl`, {orderQty: -qty, stopPx: sl_px});
   }
 
-  log.debug('candle', candle);
-
   const tp_px = safePrice(candle ? candle.bb_ma : px * (1 + Math.sign(qty) * cfg.broker.sl.hard));
-  log.debug('tp_px', tp_px);
 
   let tp = orders.find(`${job.id}-tp`);
   if (!tp) {
@@ -321,6 +312,12 @@ async function updateTargets (job, sym, qty, px)
     tp = await orders.amend(`${job.id}-tp`, {orderQty: -qty, price: tp_px});
   }
 
+  log.info('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
+  log.debug('px', px);
+  log.debug('soft sl_px', job.sl);
+  log.debug('hard sl_px', sl_px);
+  log.debug('candle', candle);
+  log.debug('tp_px', tp_px);
   log.warn('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
 }
 
