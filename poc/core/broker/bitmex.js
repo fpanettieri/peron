@@ -307,15 +307,6 @@ async function updateTargets (job, sym, qty, px)
   } else {
     tp = await orders.amend(`${job.id}-tp`, {orderQty: -qty, price: tp_px});
   }
-
-  // FIXME: remove this debug code
-  // log.debug('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
-  // log.debug('candle', candle);
-  // log.debug('px', px);
-  // log.debug('tp_px', tp_px);
-  // log.debug('soft sl_px', job.sl);
-  // log.debug('hard sl_px', sl_px);
-  // log.debug('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ updateTargets');
 }
 
 function burstSpeed (b)
