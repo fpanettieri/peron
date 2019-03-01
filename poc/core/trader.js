@@ -72,9 +72,6 @@ function open (t, c)
 
   let direction = t == 'short' ? -1 : 1;
   bb.emit('TradeContract', cfg.symbol, direction * marginToContracts(margin), c.c);
-
-  // FIXME: remove this
-  log.warn('TradeContract', direction, c);
 }
 
 module.exports = { plug: plug };
