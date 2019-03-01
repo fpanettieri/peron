@@ -214,28 +214,28 @@ async function proccessOrder (job)
   }
 
   if (Date.now() - job.created_at > cfg.broker.order.expiration) {
-    cancelOrder(order.clOrdID, 'Expired');
+    await cancelOrder(order.clOrdID, 'Expired');
     return;
   }
 
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
   if (job.qty > 0) {
     if (price > candle.bb_ma - cfg.broker.min_profit) {
-      cancelOrder(order.clOrdID, 'MA Crossed');
+      await cancelOrder(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
-      amendOrder(order.clOrdID, {price: price});
+      await amendOrder(order.clOrdID, {price: price});
     }
 
   } else {
     if (price < candle.bb_ma + cfg.broker.min_profit) {
-      cancelOrder(order.clOrdID, 'MA Crossed');
+      await cancelOrder(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
-      amendOrder(order.clOrdID, {price: price});
+      await amendOrder(order.clOrdID, {price: price});
     }
   }
 }
 
-function proccessPosition (job)
+async function proccessPosition (job)
 {
   if (!candle){ return; }
   proccessOrder(job);
@@ -251,7 +251,7 @@ function proccessPosition (job)
   log.debug('target price', price);
 
   if (profit_order.price != price){
-    amendOrder(profit_order.clOrdID, {price: price});
+    await amendOrder(profit_order.clOrdID, {price: price});
   }
 
   if (job.qty > 0 && quote.askPrice < job.sl) {
@@ -264,7 +264,7 @@ function proccessPosition (job)
   }
 }
 
-function proccessStop (job)
+async function proccessStop (job)
 {
   proccessOrder(job);
 
@@ -277,7 +277,7 @@ function proccessStop (job)
 
   const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
   if (profit_order.price != price){
-    amendOrder(profit_order.clOrdID, {price: price});
+    await amendOrder(profit_order.clOrdID, {price: price});
   }
 }
 
