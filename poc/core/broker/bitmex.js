@@ -59,6 +59,7 @@ async function onPositionSynced (arr)
   const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.MUTEX, t);
   await updateTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
   updateJob(job.id, {state: STATES.STOP});
+  burstSpeed(true);
 }
 
 function onOrderSynced (arr)
