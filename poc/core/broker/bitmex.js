@@ -59,8 +59,6 @@ async function onPositionSynced (arr)
   const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.MUTEX, t);
   await updateTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
   updateJob(job.id, {state: STATES.STOP});
-
-  log.log(jobs);
 }
 
 function onOrderSynced (arr)
@@ -180,10 +178,10 @@ function run ()
 function process (job)
 {
   switch (job.state){
-    case STATES.INTENT: log.debug(`process intent`); proccessIntent(job); break;
-    case STATES.ORDER: log.debug(`process order`); proccessOrder(job); break;
-    case STATES.POSITION: log.debug(`process position`); proccessPosition(job); break;
-    case STATES.STOP: log.debug(`process stop`); proccessStop(job); break;
+    case STATES.INTENT: proccessIntent(job); break;
+    case STATES.ORDER: proccessOrder(job); break;
+    case STATES.POSITION: proccessPosition(job); break;
+    case STATES.STOP: proccessStop(job); break;
   }
 }
 
@@ -265,8 +263,6 @@ function proccessPosition (job)
 function proccessStop (job)
 {
   if (!quote){ return; }
-  log.debug('proccessStop');
-
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}-tp`);
