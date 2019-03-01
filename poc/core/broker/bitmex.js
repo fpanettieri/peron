@@ -64,7 +64,13 @@ async function onPositionSynced (arr)
 function onOrderSynced (arr)
 {
   for (let i = 0; i < arr.length; i++) {
-    log.debug('Discarding old order', arr[i].orderID);
+    const o = arr[i];
+
+    if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
+      log.log('Ignored non-peronist order');
+      continue;
+    }
+
     orders.discard(arr[i].orderID);
   }
 }
