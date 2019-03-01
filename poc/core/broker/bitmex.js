@@ -133,6 +133,7 @@ async function onOrderUpdated (arr)
       log.debug('###################################');
 
 
+      orders.remove(order);
       let direction = job.qty > 0 ? 1 : -1;
       await updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
 
@@ -259,6 +260,8 @@ async function proccessPosition (job)
 {
   log.debug('proccessPosition');
 
+  log.debug('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+
   if (!candle){ return; }
   proccessOrder(job);
 
@@ -270,14 +273,7 @@ async function proccessPosition (job)
   }
 
   let price = safePrice(candle.bb_ma);
-
-
-  log.debug('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
   log.debug('target price', price);
-  log.debug(profit_order);
-  log.debug('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
-
-  return;
 
   if (profit_order.price != price){
     await amendOrder(profit_order.clOrdID, {price: price});
@@ -291,6 +287,7 @@ async function proccessPosition (job)
     updateJob(job.id, {state: STATES.STOP});
     burstSpeed(true);
   }
+  log.debug('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 }
 
 async function proccessStop (job)
