@@ -88,9 +88,8 @@ async function cancel (id, reason)
 {
   log.debug('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
   log.debug('cancel', id);
-  log.debug('params', params);
+  log.debug('reason', reason);
   log.debug('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-
 
   const params = { clOrdID: id, text: reason };
   options.method = 'DELETE';
