@@ -23,7 +23,7 @@
     },
     "min_profit": 0,
     "order": {
-      "expires": 10000
+      "expires": 900000
     },
     "sl": {
       "soft": 0.005,
