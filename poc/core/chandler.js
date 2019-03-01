@@ -66,11 +66,7 @@ function closeCandle ()
 
   // Fix empty candles
   if (candle.v == 0) { candle.c = candle.h = candle.l = candle.o; }
-
-  if (state == STATES.CANDLE) {
-    bb.emit('CandleClosed', candle);
-    log.debug('CandleClosed', candle);
-  }
+  if (state == STATES.CANDLE) { bb.emit('CandleClosed', candle); }
 
   let close = candle.c;
   resetCandle();
