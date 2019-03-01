@@ -255,8 +255,6 @@ async function proccessOrder (job)
 
 async function proccessPosition (job)
 {
-  log.debug('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
-
   if (!candle){ return; }
   proccessOrder(job);
 
@@ -268,8 +266,6 @@ async function proccessPosition (job)
   }
 
   let price = safePrice(candle.bb_ma);
-  log.debug('target price', price);
-
   if (profit_order.price != price){
     await amendOrder(profit_order.clOrdID, {price: price});
   }
@@ -282,7 +278,6 @@ async function proccessPosition (job)
     updateJob(job.id, {state: STATES.STOP});
     burstSpeed(true);
   }
-  log.debug('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 }
 
 async function proccessStop (job)
