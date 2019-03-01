@@ -115,6 +115,7 @@ async function onOrderUpdated (arr)
 
     // Stop Loss or Take Profit Filled
     if (!LIMIT_ORDER_REGEX.test(order.clOrdID) && order.ordStatus == 'Filled') {
+      orders.remove(order);
       destroyJob(job);
       orders.cancel_all(order.symbol);
       burstSpeed(false);
