@@ -22,8 +22,6 @@ function onCandleAnalyzed (c)
   current = c;
   if (!previous) { return; }
 
-  log.debug('onCandleAnalyzed', c);
-
   if (c.c > c.bb_ma) {
     bb.emit('OpenShort', c);
   }

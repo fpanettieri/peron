@@ -93,6 +93,7 @@ function onOrderUpdated (arr)
 
     const order = orders.find(o.clOrdID);
     if (!order) {
+      log.debug('missing order', o);
       if (o.ordStatus != 'Canceled') { cancelOrder(o.clOrdID, 'Unknown Order'); }
       continue;
     }
