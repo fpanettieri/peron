@@ -129,8 +129,11 @@ async function onOrderUpdated (arr)
       updateJob(job.id, {state: STATES.POSITION});
 
       let direction = job.qty > 0 ? 1 : -1;
+      log.warn('<<<<<<<<<<<<<<<<<< 1');
       await updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
+      log.warn('<<<<<<<<<<<<<<<<<< 2');
       updateJob(job.id, {mutex: false});
+      log.warn('<<<<<<<<<<<<<<<<<< 3');
     }
   }
 }
@@ -302,8 +305,12 @@ async function amendOrder (id, params)
 
 async function updateTargets (job, sym, qty, px)
 {
+  log.error('updateTargets', 1);
+
   const ssl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
   updateJob(job.id, {sl: ssl_px});
+
+  log.error('updateTargets', 2);
 
   const hsl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.hard));
   let sl = orders.find(`${job.id}-sl`);
@@ -313,6 +320,8 @@ async function updateTargets (job, sym, qty, px)
     sl = await orders.amend(`${job.id}-sl`, {orderQty: -qty, stopPx: hsl_px});
   }
 
+  log.error('updateTargets', 3);
+
   const tp_px = safePrice(candle ? candle.bb_ma : px * (1 + Math.sign(qty) * cfg.broker.sl.hard));
   let tp = orders.find(`${job.id}-tp`);
   if (!tp) {
@@ -320,6 +329,8 @@ async function updateTargets (job, sym, qty, px)
   } else {
     tp = await orders.amend(`${job.id}-tp`, {orderQty: -qty, price: tp_px});
   }
+
+  log.error('updateTargets', 4);
 }
 
 function burstSpeed (b)
