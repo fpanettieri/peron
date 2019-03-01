@@ -72,6 +72,8 @@ function open (t, c)
 
   let direction = t == 'short' ? -1 : 1;
   bb.emit('TradeContract', cfg.symbol, direction * marginToContracts(margin), c.c);
+
+  log.log('?????????? TradeContract', direction, c.c);
 }
 
 module.exports = { plug: plug };
