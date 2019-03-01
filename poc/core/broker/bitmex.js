@@ -203,11 +203,7 @@ async function proccessOrder (job)
 
   const order = orders.find(`${job.id}-lm`);
   if (!order){
-    if (job.state == STATES.ORDER){
-      orders.error('%%%%%%%%%%%%%%%%%%%%%%%%%% HERE %%%%%%%%%%%%%%%%%%%%%%%%%%');
-      log.error('order lost?!', job);
-      destroyJob(job);
-    }
+    if (job.state == STATES.ORDER){ destroyJob(job); }
     return;
   }
 
@@ -244,7 +240,7 @@ function proccessPosition (job)
 
   const profit_order = orders.find(`${job.id}-tp`);
   if (!profit_order){
-    log.error('order lost?!', job);
+    log.error('profit order not found!');
     destroyJob(job);
     return;
   }
