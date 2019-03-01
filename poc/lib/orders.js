@@ -22,7 +22,10 @@ async function create (id, sym, qty, params)
 
   const rsp = await bitmex.api(options, _params);
   if (rsp.status.code != 200){ return log.error(rsp); }
-  return rsp.body;
+
+  const order = rsp.body;
+  add(order);
+  return order;
 }
 
 async function market (id, sym, qty)
@@ -113,11 +116,7 @@ function findIndex (id)
 
 function add (o)
 {
-  // FIXME: remove log
-  if(findIndex(o.clOrdID) > -1) {
-    log.error('duplicated order');
-    return;
-  }
+  if(findIndex(o.clOrdID) > -1) { return; }
   orders.push(o);
 }
 
