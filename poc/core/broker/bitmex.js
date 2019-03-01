@@ -41,7 +41,6 @@ async function plug (_bb)
 function onQuoteUpdated (arr)
 {
   quote = arr[arr.length - 1];
-  log.log(quote);
 }
 
 function onCandleAnalyzed (c)
@@ -180,20 +179,19 @@ function run ()
 
 function process (job)
 {
-  log.debug('process');
   switch (job.state){
-    case STATES.INTENT: proccessIntent(job); break;
-    case STATES.ORDER: proccessOrder(job); break;
-    case STATES.POSITION: proccessPosition(job); break;
-    case STATES.STOP: proccessStop(job); break;
+    case STATES.INTENT: log.debug(`process intent`); proccessIntent(job); break;
+    case STATES.ORDER: log.debug(`process order`); proccessOrder(job); break;
+    case STATES.POSITION: log.debug(`process position`); proccessPosition(job); break;
+    case STATES.STOP: log.debug(`process stop`); proccessStop(job); break;
   }
 }
 
 async function proccessIntent (job)
 {
-  log.debug('proccessIntent');
-
+  if (!quote){ return; }
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
+
   const order = await orders.limit(`${job.id}-lm`, job.sym, job.qty, price);
   if (order) {
     updateJob(job.id, {state: STATES.ORDER});
@@ -205,7 +203,7 @@ async function proccessIntent (job)
 
 async function proccessOrder (job)
 {
-  log.debug('proccessOrder');
+  if (!quote){ return; }
 
   const order = orders.find(`${job.id}-lm`);
   if (!order){
@@ -218,9 +216,8 @@ async function proccessOrder (job)
     return;
   }
 
+  let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
   if (job.qty > 0) {
-    let price = quote.bidPrice;
-
     if (price > candle.bb_ma - cfg.broker.min_profit) {
       cancelOrder(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
@@ -228,8 +225,6 @@ async function proccessOrder (job)
     }
 
   } else {
-    let price = quote.askPrice;
-
     if (price < candle.bb_ma + cfg.broker.min_profit) {
       cancelOrder(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
@@ -240,8 +235,7 @@ async function proccessOrder (job)
 
 function proccessPosition (job)
 {
-  log.debug('proccessPosition');
-
+  if (!quote || !candle){ return; }
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}-tp`);
@@ -270,6 +264,7 @@ function proccessPosition (job)
 
 function proccessStop (job)
 {
+  if (!quote){ return; }
   log.debug('proccessStop');
 
   proccessOrder(job);
@@ -282,7 +277,9 @@ function proccessStop (job)
   }
 
   const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
+  log.error('updating price', price);
   updateJob(job.id, {price: price});
+  log.log('updated job', job);
 }
 
 function cancelOrder (id, reason)
