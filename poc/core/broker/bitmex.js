@@ -186,20 +186,25 @@ function process (job)
 
 async function proccessIntent (job)
 {
-  if (!quote){ return; }
-  let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
+  log.debug('proccessIntent');
 
+  if (!quote){ return; }
+  updateJob(job.id, {state: STATES.MUTEX});
+
+  let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
   const order = await orders.limit(`${job.id}-lm`, job.sym, job.qty, price);
   if (order) {
     updateJob(job.id, {state: STATES.ORDER});
     bb.emit('OrderPlaced');
   } else {
+    updateJob(job.id, {state: STATES.INTENT});
     bb.emit('OrderFailed');
   }
 }
 
 async function proccessOrder (job)
 {
+  return;
   if (!quote){ return; }
 
   const order = orders.find(`${job.id}-lm`);
