@@ -162,6 +162,7 @@ function createJob (id, sym, qty, px, state, t)
 
 function updateJob (id, changes)
 {
+  log.debug('>>>>>>>>>>>>>>>>>>>>>>>>>>>> updateJob', id, changes);
   // TODO: stats - reports?
 
   const idx = jobs.findIndex(j => j.id == id);
