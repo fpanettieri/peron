@@ -64,6 +64,9 @@ function closeCandle ()
 {
   setTimeout(closeCandle, getTimeout());
 
+  // Fix for empty candles
+  if (candle.v == 0) { candle.c = candle.h = candle.l = candle.o; }
+
   if (state == STATES.CANDLE) {
     bb.emit('CandleClosed', candle);
   }
