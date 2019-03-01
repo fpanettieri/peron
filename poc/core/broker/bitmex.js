@@ -196,8 +196,6 @@ async function process (job)
 
 async function proccessIntent (job)
 {
-  log.debug('proccessIntent');
-
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
   const order = await orders.limit(`${job.id}-lm`, job.sym, job.qty, price);
   if (order) {
@@ -210,8 +208,6 @@ async function proccessIntent (job)
 
 async function proccessOrder (job)
 {
-  log.debug('proccessOrder');
-
   const order = orders.find(`${job.id}-lm`);
   if (!order){
     if (job.state == STATES.ORDER){ destroyJob(job); }
@@ -243,8 +239,6 @@ async function proccessOrder (job)
 async function proccessPosition (job)
 {
   log.debug('proccessPosition');
-
-  return;
 
   if (!candle){ return; }
   proccessOrder(job);
