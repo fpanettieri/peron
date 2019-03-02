@@ -45,7 +45,6 @@ function onQuoteUpdated (arr)
 
 function onCandleAnalyzed (c)
 {
-  log.warn('>>>>> onCandleAnalyzed', c);
   candle = c;
 }
 
