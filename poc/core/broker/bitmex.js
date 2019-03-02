@@ -3,10 +3,7 @@
 const cfg = require('../../cfg/peron');
 const orders = require('../../lib/orders');
 const logger = require('../../lib/logger');
-const sync = require('../../lib/sync');
-
 const log = new logger('[broker/bitmex]');
-const mutex = new sync.Mutex();
 
 const ORDER_PREFIX_REGEX = /^ag-/;
 const LIMIT_ORDER_REGEX = /-lm$/;
@@ -18,8 +15,9 @@ const STATES = { INTENT: 0, ORDER: 1, POSITION: 2, STOP: 3 };
 let bb = null;
 
 const jobs = [];
-let interval = null;
 
+let pending = [];
+let burst = false;
 let quote = {};
 let candle = null;
 
@@ -61,7 +59,8 @@ async function onPositionSynced (arr)
 
   const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.STOP, t);
   await updateTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
-  burstSpeed(true);
+  burst = true;
+  run();
 }
 
 function onOrderSynced (arr)
@@ -85,64 +84,7 @@ function onOrderOpened (arr)
 
 async function onOrderUpdated (arr)
 {
-  log.warn('>>>>> onOrderUpdated.start');
-  const lock_id = Math.round(Math.random() * 1000);
-  mutex.lock(lock_id);
-
-  for (let i = 0; i < arr.length; i++) {
-    const o = arr[i];
-
-    if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
-      log.log('Ignored non-peronist order');
-      continue;
-    }
-
-    let order = orders.find(o.clOrdID);
-    if (!order) {
-      log.debug('missing order', o);
-      if (o.ordStatus != 'Canceled') { cancelOrder(o.clOrdID, 'Unknown Order'); }
-      continue;
-    }
-    order = orders.update(o);
-
-    if (order.ordStatus == 'Canceled') {
-      orders.remove(order);
-      continue;
-    }
-
-    const jid = order.clOrdID.substr(0, 11);
-    const job = jobs.find(j => j.id == jid);
-    if (!job) {
-      // FIXME: remove this log
-      log.error('unknown job', job, order);
-      orders.cancel(order.clOrdID);
-      continue;
-    }
-
-
-
-    const is_limit = LIMIT_ORDER_REGEX.test(order.clOrdID);
-    if (is_limit && (order.ordStatus == 'PartiallyFilled' || order.ordStatus == 'Filled')) {
-      orders.remove(order);
-      updateJob(job.id, {state: STATES.POSITION});
-      let direction = job.qty > 0 ? 1 : -1;
-      await updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
-
-    } else if (!is_limit && order.ordStatus == 'Filled') {
-      orders.remove(order);
-
-      // FIXME: HERE!!!
-      log.error('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
-      log.error(order);
-      destroyJob(job);
-      log.error('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
-      orders.cancel_all(order.symbol);
-      burstSpeed(false);
-    }
-  }
-
-  mutex.unlock(lock_id);
-  log.warn('>>>>> onOrderUpdated.end');
+  pending = pending.concat(arr);
 }
 
 function onTradeContract (sym, qty, px)
@@ -152,8 +94,8 @@ function onTradeContract (sym, qty, px)
   // FIXME: check if this limit makes sense V
   // (2019-03-1) It doesn't, but i'll keep it for now
   if (jobs.length >= cfg.broker.max_jobs) { log.log('max amount of jobs'); return; }
-  const job = createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
-  process(job);
+  createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
+  run();
 }
 
 function genId ()
@@ -164,18 +106,14 @@ function genId ()
 function createJob (id, sym, qty, px, state, t)
 {
   // TODO: stats - reports?
-
   const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now()};
   jobs.push(job);
-
-  if (!interval) { burstSpeed(false); }
   return job;
 }
 
 function updateJob (id, changes)
 {
   // TODO: stats - reports?
-
   const idx = jobs.findIndex(j => j.id == id);
   jobs[idx] = {...jobs[idx], ...changes};
   return jobs[idx];
@@ -185,24 +123,17 @@ function destroyJob (job)
 {
   // FIXME: the job is being destroyed when it shouldn't why?
   log.debug('Job Destroyed');
-  jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
+  return jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
 }
 
 function run ()
 {
-  if (mutex.isLocked()) { return; }
+  while (pending.length > 0) { processPending (pending.pop()); }
 
-  const lock_id = Math.round(Math.random() * 1000);
-  mutex.lock(lock_id);
-  for (let i = jobs.length - 1; i > -1; i--) {
-    process (jobs[i]);
-  }
-  mutex.unlock(lock_id);
-
-  if (jobs.length == 0) {
-    clearInterval(interval);
-    interval = null;
-  }
+  for (let i = jobs.length - 1; i > -1; i--) { process (jobs[i]); }
+  if (jobs.length == 0) { return; }
+  
+  setTimeout(run, getTimeout());
 }
 
 async function process (job)
@@ -212,6 +143,55 @@ async function process (job)
     case STATES.ORDER: await proccessOrder(job); break;
     case STATES.POSITION: await proccessPosition(job); break;
     case STATES.STOP: await proccessStop(job); break;
+  }
+}
+
+async function processPending (o)
+{
+  if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
+    log.log('Ignored non-peronist order');
+    return;
+  }
+
+  let order = orders.find(o.clOrdID);
+  if (!order) {
+    log.debug('missing order', o);
+    if (o.ordStatus != 'Canceled') { cancelOrder(o.clOrdID, 'Unknown Order'); }
+    return;
+  }
+  order = orders.update(o);
+
+  if (order.ordStatus == 'Canceled') {
+    orders.remove(order);
+    return;
+  }
+
+  const jid = order.clOrdID.substr(0, 11);
+  const job = jobs.find(j => j.id == jid);
+  if (!job) {
+    // FIXME: remove this log
+    log.error('unknown job', job, order);
+    orders.cancel(order.clOrdID);
+    return;
+  }
+
+  const is_limit = LIMIT_ORDER_REGEX.test(order.clOrdID);
+  if (is_limit && (order.ordStatus == 'PartiallyFilled' || order.ordStatus == 'Filled')) {
+    orders.remove(order);
+    updateJob(job.id, {state: STATES.POSITION});
+    let direction = job.qty > 0 ? 1 : -1;
+    await updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
+
+  } else if (!is_limit && order.ordStatus == 'Filled') {
+    orders.remove(order);
+
+    // FIXME: HERE!!!
+    log.error('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+    log.error(order);
+    destroyJob(job);
+    log.error('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+    orders.cancel_all(order.symbol);
+    burst = false;
   }
 }
 
@@ -280,18 +260,17 @@ async function proccessPosition (job)
 
   if (job.qty > 0 && quote.askPrice < job.sl) {
     updateJob(job.id, {state: STATES.STOP});
-    burstSpeed(true);
+    burst = true;
 
   } else if (job.qty < 0 && quote.bidPrice > job.sl) {
     updateJob(job.id, {state: STATES.STOP});
-    burstSpeed(true);
+    burst = true;
   }
 }
 
 async function proccessStop (job)
 {
   if (!quote) { return; }
-
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}-tp`);
@@ -303,6 +282,28 @@ async function proccessStop (job)
 
   const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
   if (profit_order.price != price){ await amendOrder(profit_order.clOrdID, {price: price}); }
+}
+
+async function updateTargets (job, sym, qty, px)
+{
+  const ssl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
+  updateJob(job.id, {sl: ssl_px});
+
+  const hsl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.hard));
+  let sl = orders.find(`${job.id}-sl`);
+  if (!sl) {
+    sl = await orders.stop(`${job.id}-sl`, sym, -qty, hsl_px);
+  } else {
+    sl = await orders.amend(`${job.id}-sl`, {orderQty: -qty, stopPx: hsl_px});
+  }
+
+  const tp_px = safePrice(candle ? candle.bb_ma : px * (1 + Math.sign(qty) * cfg.broker.sl.hard));
+  let tp = orders.find(`${job.id}-tp`);
+  if (!tp) {
+    tp = await orders.profit(`${job.id}-tp`, sym, -qty, tp_px);
+  } else {
+    tp = await orders.amend(`${job.id}-tp`, {orderQty: -qty, price: tp_px});
+  }
 }
 
 async function cancelOrder (id, reason)
@@ -317,41 +318,12 @@ async function amendOrder (id, params)
   bb.emit('OrderAmended');
 }
 
-async function updateTargets (job, sym, qty, px)
+function getTimeout ()
 {
-  log.error('updateTargets', 1);
-
-  const ssl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
-  updateJob(job.id, {sl: ssl_px});
-
-  log.error('updateTargets', 2);
-
-  const hsl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.hard));
-  let sl = orders.find(`${job.id}-sl`);
-  if (!sl) {
-    sl = await orders.stop(`${job.id}-sl`, sym, -qty, hsl_px);
-  } else {
-    sl = await orders.amend(`${job.id}-sl`, {orderQty: -qty, stopPx: hsl_px});
-  }
-
-  log.error('updateTargets', 3);
-
-  const tp_px = safePrice(candle ? candle.bb_ma : px * (1 + Math.sign(qty) * cfg.broker.sl.hard));
-  let tp = orders.find(`${job.id}-tp`);
-  if (!tp) {
-    tp = await orders.profit(`${job.id}-tp`, sym, -qty, tp_px);
-  } else {
-    tp = await orders.amend(`${job.id}-tp`, {orderQty: -qty, price: tp_px});
-  }
-
-  log.error('updateTargets', 4);
-}
-
-function burstSpeed (b)
-{
-  const speed = b ? cfg.broker.speed.burst : cfg.broker.speed.normal;
-  clearInterval(interval);
-  interval = setInterval(run, speed);
+  const step = burst ? cfg.broker.speed.burst : cfg.broker.speed.normal;
+  let timeout = step - (Date.now() % step);
+  log.log(`next step: ${timeout}ms`);
+  return timeout;
 }
 
 function safePrice (px)
