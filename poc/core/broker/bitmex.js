@@ -180,13 +180,15 @@ async function processPending (o)
   }
 
   const is_limit = LIMIT_ORDER_REGEX.test(order.clOrdID);
+
   if (is_limit && (order.ordStatus == 'PartiallyFilled' || order.ordStatus == 'Filled')) {
     orders.remove(order);
     updateJob(job.id, {state: STATES.POSITION});
     let direction = job.qty > 0 ? 1 : -1;
     await updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
+  }
 
-  } else if (!is_limit && order.ordStatus == 'Filled') {
+  if (!is_limit && order.ordStatus == 'Filled') {
     orders.remove(order);
     destroyJob(job);
     await orders.cancel_all(order.symbol);
@@ -321,7 +323,8 @@ function getTimeout ()
 {
   const step = burst ? cfg.broker.speed.burst : cfg.broker.speed.normal;
   let timeout = step - (Date.now() % step);
-  log.log(`next step: ${timeout}ms`);
+  // FIXME: dead code once the sync works
+  // log.log(`next step: ${timeout}ms`);
   return timeout;
 }
 
