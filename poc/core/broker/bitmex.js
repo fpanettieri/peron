@@ -3,8 +3,10 @@
 const cfg = require('../../cfg/peron');
 const orders = require('../../lib/orders');
 const logger = require('../../lib/logger');
-const mutex = require('../../lib/mutex');
+const sync = require('../../lib/sync');
+
 const log = new logger('[broker/bitmex]');
+const mutex = new sync.Mutex();
 
 const ORDER_PREFIX_REGEX = /^ag-/;
 const LIMIT_ORDER_REGEX = /-lm$/;
@@ -117,7 +119,7 @@ async function onOrderUpdated (arr)
     }
 
     log.warn('>>>>>>> onOrderUpdated.lock');
-    updateJob(job.id, {locked: true});
+    mutex.lock();
 
     const is_limit = LIMIT_ORDER_REGEX.test(order.clOrdID);
     if (is_limit && (order.ordStatus == 'PartiallyFilled' || order.ordStatus == 'Filled')) {
@@ -137,7 +139,8 @@ async function onOrderUpdated (arr)
       orders.cancel_all(order.symbol);
       burstSpeed(false);
     }
-    updateJob(job.id, {locked: false});
+
+    mutex.unlock();
     log.warn('>>>>>>> onOrderUpdated.unlock');
   }
 
@@ -164,7 +167,7 @@ function createJob (id, sym, qty, px, state, t)
 {
   // TODO: stats - reports?
 
-  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now(), locked: false};
+  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now()};
   jobs.push(job);
 
   if (!interval) { burstSpeed(false); }
@@ -200,20 +203,15 @@ function run ()
 async function process (job)
 {
   if (!quote){ return; }
-  if (job.locked) { return; }
 
-  // const th = Math.round(Math.random() * 1000);
-  // log.debug(`${th} - process.lock`);
-  // proper mutex
-  updateJob(job.id, {locked: true});
+  mutex.lock();
   switch (job.state){
     case STATES.INTENT: await proccessIntent(job); break;
     case STATES.ORDER: await proccessOrder(job); break;
     case STATES.POSITION: await proccessPosition(job); break;
     case STATES.STOP: await proccessStop(job); break;
   }
-  updateJob(job.id, {locked: false});
-  // log.debug(`${th} - process.unlock`);
+  mutex.unlock();
 }
 
 async function proccessIntent (job)

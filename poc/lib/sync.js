@@ -23,4 +23,7 @@ class Mutex
   }
 }
 
-module.exports = Mutex;
+module.exports = {
+  Mutex: Mutex,
+  wait: wait
+};
