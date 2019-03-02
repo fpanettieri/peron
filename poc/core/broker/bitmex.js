@@ -45,6 +45,7 @@ function onQuoteUpdated (arr)
 
 function onCandleAnalyzed (c)
 {
+  log.warn('>>>>> onCandleAnalyzed', c);
   candle = c;
 }
 
@@ -144,6 +145,8 @@ async function onOrderUpdated (arr)
 
 function onTradeContract (sym, qty, px)
 {
+  log.warn('>>>>> onTradeContract', sym, qty, px);
+
   // FIXME: check if this limit makes sense V
   // (2019-03-1) It doesn't, but i'll keep it for now
   if (jobs.length >= cfg.broker.max_jobs) { log.log('max amount of jobs'); return; }
@@ -271,6 +274,8 @@ async function proccessPosition (job)
   if (profit_order.price != price){
     await amendOrder(profit_order.clOrdID, {price: price});
   }
+
+  // if MA crosses
 
   if (job.qty > 0 && quote.askPrice < job.sl) {
     updateJob(job.id, {state: STATES.STOP});
