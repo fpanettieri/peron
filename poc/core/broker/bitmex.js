@@ -113,30 +113,23 @@ async function onOrderUpdated (arr)
       orders.cancel(order.clOrdID);
       continue;
     }
+
     updateJob(job.id, {locked: true});
 
     const is_limit = LIMIT_ORDER_REGEX.test(order.clOrdID);
+    if (is_limit && (order.ordStatus == 'PartiallyFilled' || order.ordStatus == 'Filled')) {
+      orders.remove(order);
+      updateJob(job.id, {state: STATES.POSITION});
+      let direction = job.qty > 0 ? 1 : -1;
+      await updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
 
-    // Stop Loss or Take Profit Filled
-    if (!is_limit && order.ordStatus == 'Filled') {
+    } else if (!is_limit && order.ordStatus == 'Filled') {
       orders.remove(order);
       destroyJob(job);
       orders.cancel_all(order.symbol);
       burstSpeed(false);
-      continue;
     }
-
-    if (is_limit && (order.ordStatus == 'PartiallyFilled' || order.ordStatus == 'Filled')) {
-      orders.remove(order);
-      updateJob(job.id, {state: STATES.POSITION});
-
-      let direction = job.qty > 0 ? 1 : -1;
-      log.warn('<<<<<<<<<<<<<<<<<< 1');
-      await updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
-      log.warn('<<<<<<<<<<<<<<<<<< 2');
-      updateJob(job.id, {locked: false});
-      log.warn('<<<<<<<<<<<<<<<<<< 3');
-    }
+    updateJob(job.id, {locked: false});
   }
 
   log.warn('>>>>> onOrderUpdated.end');
