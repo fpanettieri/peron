@@ -22,8 +22,8 @@ function plug (_bb)
   bb.on('CandleReceived', onCandleReceived);
 
   bb.on('TradeSynced', onTradeReceived);
-  bb.on('TradeUpdated', onTradeReceived);
   bb.on('TradeOpened', onTradeReceived);
+  bb.on('TradeUpdated', onTradeReceived);
 
   resetCandle();
   setTimeout(closeCandle, getTimeout());
@@ -50,9 +50,6 @@ function onCandleReceived (c)
 
 function onTradeReceived (arr)
 {
-  // FIXME: remove this
-  log.warn('>>>>> onTradeReceived', arr);
-
   for (let i = 0; i < arr.length; i++) {
     const t = arr[i];
 
