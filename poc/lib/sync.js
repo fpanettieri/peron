@@ -26,7 +26,7 @@ class Mutex
 
   unlock (id)  {
     this.locked = false;
-    log.log(`>>>>>> locked ${id}`);
+    log.log(`>>>>>> unlocked ${id}`);
   }
 
   isLocked () { return this.locked; }
