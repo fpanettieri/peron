@@ -126,6 +126,8 @@ async function onOrderUpdated (arr)
 
     } else if (!is_limit && order.ordStatus == 'Filled') {
       orders.remove(order);
+
+      // FIXME: HERE!!!
       destroyJob(job);
       orders.cancel_all(order.symbol);
       burstSpeed(false);
@@ -173,6 +175,7 @@ function updateJob (id, changes)
 
 function destroyJob (job)
 {
+  // FIXME: the job is being destroyed when it shouldn't why?
   log.debug('Job Destroyed');
   jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
 }
