@@ -25,8 +25,8 @@ async function plug (_bb)
   bb = _bb;
 
   bb.on('QuoteSynced', onQuoteUpdated);
-  bb.on('QuoteUpdated', onQuoteUpdated);
   bb.on('QuoteOpened', onQuoteUpdated);
+  bb.on('QuoteUpdated', onQuoteUpdated);
 
   bb.on('CandleAnalyzed', onCandleAnalyzed);
   bb.on('PositionSynced', onPositionSynced);
@@ -46,6 +46,7 @@ function onQuoteUpdated (arr)
 function onCandleAnalyzed (c)
 {
   candle = c;
+  log.warn('>>>>> onCandleAnalyzed', c);
 }
 
 async function onPositionSynced (arr)
