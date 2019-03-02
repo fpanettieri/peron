@@ -114,6 +114,7 @@ async function onOrderUpdated (arr)
       continue;
     }
 
+    log.warn('>>>>>>> onOrderUpdated.lock');
     updateJob(job.id, {locked: true});
 
     const is_limit = LIMIT_ORDER_REGEX.test(order.clOrdID);
@@ -130,6 +131,7 @@ async function onOrderUpdated (arr)
       burstSpeed(false);
     }
     updateJob(job.id, {locked: false});
+    log.warn('>>>>>>> onOrderUpdated.unlock');
   }
 
   log.warn('>>>>> onOrderUpdated.end');
@@ -190,7 +192,8 @@ async function process (job)
   if (!quote){ return; }
   if (job.locked) { return; }
 
-  log.debug(`process.lock`);
+  const th = Math.round(Math.random() * 1000);
+  log.debug(`${th} - process.lock`);
   updateJob(job.id, {locked: true});
 
   switch (job.state){
@@ -201,7 +204,7 @@ async function process (job)
   }
 
   updateJob(job.id, {locked: false});
-  log.debug(`process.unlock`);
+  log.debug(`${th} - process.unlock`);
 }
 
 async function proccessIntent (job)
