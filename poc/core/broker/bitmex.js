@@ -128,7 +128,10 @@ async function onOrderUpdated (arr)
       orders.remove(order);
 
       // FIXME: HERE!!!
+      log.error('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+      log.error(order);
       destroyJob(job);
+      log.error('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
       orders.cancel_all(order.symbol);
       burstSpeed(false);
     }
