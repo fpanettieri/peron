@@ -49,7 +49,6 @@ function onQuoteUpdated (arr)
 function onCandleAnalyzed (c)
 {
   candle = c;
-  log.warn('>>>>> onCandleAnalyzed', c);
 }
 
 async function onPositionSynced (arr)
