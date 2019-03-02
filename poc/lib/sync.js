@@ -14,7 +14,9 @@ function wait (ms)
 
 class Mutex
 {
-  constructor() { this.locked = false; }
+  constructor () {
+    this.locked = true;
+  }
 
   async lock ()  {
     log.log('>>>>>> locked');
@@ -27,9 +29,7 @@ class Mutex
     log.log('>>>>>> unlocked');
   }
 
-  get locked () {
-    return this.locked;
-  }
+  isLocked () { return this.locked; }
 }
 
 module.exports = {

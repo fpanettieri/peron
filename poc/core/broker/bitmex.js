@@ -189,7 +189,13 @@ function destroyJob (job)
 
 function run ()
 {
-  for (let i = jobs.length - 1; i > -1; i--){ process (jobs[i]); }
+  if (mutex.isLocked()) { return; }
+
+  mutex.lock();
+  for (let i = jobs.length - 1; i > -1; i--) {
+    process (jobs[i]);
+  }
+  mutex.unlock();
 
   if (jobs.length == 0) {
     clearInterval(interval);
@@ -199,21 +205,18 @@ function run ()
 
 async function process (job)
 {
-  if (!quote) { return; }
-  if (mutex.locked) { return; }
-
-  mutex.lock();
   switch (job.state){
     case STATES.INTENT: await proccessIntent(job); break;
     case STATES.ORDER: await proccessOrder(job); break;
     case STATES.POSITION: await proccessPosition(job); break;
     case STATES.STOP: await proccessStop(job); break;
   }
-  mutex.unlock();
 }
 
 async function proccessIntent (job)
 {
+  if (!quote) { return; }
+
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
   const order = await orders.limit(`${job.id}-lm`, job.sym, job.qty, price);
   if (order) {
@@ -226,6 +229,8 @@ async function proccessIntent (job)
 
 async function proccessOrder (job)
 {
+  if (!quote) { return; }
+
   const order = orders.find(`${job.id}-lm`);
   if (!order){
     if (job.state == STATES.ORDER){ destroyJob(job); }
@@ -256,7 +261,7 @@ async function proccessOrder (job)
 
 async function proccessPosition (job)
 {
-  if (!candle){ return; }
+  if (!quote || !candle){ return; }
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}-tp`);
@@ -271,8 +276,6 @@ async function proccessPosition (job)
     await amendOrder(profit_order.clOrdID, {price: price});
   }
 
-  // if MA crosses
-
   if (job.qty > 0 && quote.askPrice < job.sl) {
     updateJob(job.id, {state: STATES.STOP});
     burstSpeed(true);
@@ -285,6 +288,8 @@ async function proccessPosition (job)
 
 async function proccessStop (job)
 {
+  if (!quote) { return; }
+  
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}-tp`);
