@@ -3,6 +3,7 @@
 const cfg = require('../../cfg/peron');
 const orders = require('../../lib/orders');
 const logger = require('../../lib/logger');
+const mutex = require('../../lib/mutex');
 const log = new logger('[broker/bitmex]');
 
 const ORDER_PREFIX_REGEX = /^ag-/;
@@ -201,19 +202,18 @@ async function process (job)
   if (!quote){ return; }
   if (job.locked) { return; }
 
-  const th = Math.round(Math.random() * 1000);
-  log.debug(`${th} - process.lock`);
+  // const th = Math.round(Math.random() * 1000);
+  // log.debug(`${th} - process.lock`);
+  // proper mutex
   updateJob(job.id, {locked: true});
-
   switch (job.state){
     case STATES.INTENT: await proccessIntent(job); break;
     case STATES.ORDER: await proccessOrder(job); break;
     case STATES.POSITION: await proccessPosition(job); break;
     case STATES.STOP: await proccessStop(job); break;
   }
-
   updateJob(job.id, {locked: false});
-  log.debug(`${th} - process.unlock`);
+  // log.debug(`${th} - process.unlock`);
 }
 
 async function proccessIntent (job)
