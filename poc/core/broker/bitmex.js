@@ -126,13 +126,17 @@ function destroyJob (job)
   return jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
 }
 
-function run ()
+async function run ()
 {
-  while (pending.length > 0) { processPending (pending.pop()); }
+  while (pending.length > 0) {
+    await processPending (pending.pop());
+  }
 
-  for (let i = jobs.length - 1; i > -1; i--) { process (jobs[i]); }
+  for (let i = jobs.length - 1; i > -1; i--) {
+    await process (jobs[i]);
+  }
+
   if (jobs.length == 0) { return; }
-  
   setTimeout(run, getTimeout());
 }
 
@@ -184,13 +188,8 @@ async function processPending (o)
 
   } else if (!is_limit && order.ordStatus == 'Filled') {
     orders.remove(order);
-
-    // FIXME: HERE!!!
-    log.error('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
-    log.error(order);
     destroyJob(job);
-    log.error('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
-    orders.cancel_all(order.symbol);
+    await orders.cancel_all(order.symbol);
     burst = false;
   }
 }
