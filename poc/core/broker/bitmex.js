@@ -199,7 +199,8 @@ function run ()
 
 async function process (job)
 {
-  if (!quote){ return; }
+  if (!quote) { return; }
+  if (mutex.locked) { return; }
 
   mutex.lock();
   switch (job.state){

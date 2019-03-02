@@ -22,9 +22,13 @@ class Mutex
     this.locked = true;
   }
 
-  async unlock ()  {
+  unlock ()  {
     this.locked = false;
     log.log('>>>>>> unlocked');
+  }
+
+  get locked () {
+    return this.locked;
   }
 }
 
