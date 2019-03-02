@@ -3,7 +3,7 @@
 const logger = require('./logger');
 const log = new logger('[lib/sync]');
 
-const TIMEOUT = 50;
+const TIMEOUT = 1000;//50;
 
 let locked = false;
 
@@ -18,15 +18,15 @@ class Mutex
     this.locked = true;
   }
 
-  async lock ()  {
-    log.log('>>>>>> locked');
-    while (this.locked) { await wait(TIMEOUT); }
+  async lock (id)  {
+    log.log(`>>>>>> locked ${id}`);
+    while (this.locked) { await wait(TIMEOUT); console.log('.'); }
     this.locked = true;
   }
 
-  unlock ()  {
+  unlock (id)  {
     this.locked = false;
-    log.log('>>>>>> unlocked');
+    log.log(`>>>>>> locked ${id}`);
   }
 
   isLocked () { return this.locked; }

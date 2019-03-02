@@ -86,7 +86,8 @@ function onOrderOpened (arr)
 async function onOrderUpdated (arr)
 {
   log.warn('>>>>> onOrderUpdated.start');
-  mutex.lock();
+  const lock_id = Math.round(Math.random() * 1000);
+  mutex.lock(lock_id);
 
   for (let i = 0; i < arr.length; i++) {
     const o = arr[i];
@@ -140,7 +141,7 @@ async function onOrderUpdated (arr)
     }
   }
 
-  mutex.unlock();
+  mutex.unlock(lock_id);
   log.warn('>>>>> onOrderUpdated.end');
 }
 
@@ -191,11 +192,12 @@ function run ()
 {
   if (mutex.isLocked()) { return; }
 
-  mutex.lock();
+  const lock_id = Math.round(Math.random() * 1000);
+  mutex.lock(lock_id);
   for (let i = jobs.length - 1; i > -1; i--) {
     process (jobs[i]);
   }
-  mutex.unlock();
+  mutex.unlock(lock_id);
 
   if (jobs.length == 0) {
     clearInterval(interval);
@@ -289,7 +291,7 @@ async function proccessPosition (job)
 async function proccessStop (job)
 {
   if (!quote) { return; }
-  
+
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}-tp`);
