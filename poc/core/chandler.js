@@ -49,6 +49,9 @@ function onCandleReceived (c)
 
 function onTradeReceived (arr)
 {
+  // FIXME: remove this
+  log.warn('>>>>> onTradeReceived', arr);
+
   for (let i = 0; i < arr.length; i++) {
     const t = arr[i];
 

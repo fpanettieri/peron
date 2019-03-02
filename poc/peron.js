@@ -27,7 +27,7 @@ const broker = require('./core/broker/bitmex');
   analyst.plug(bb);
   brain.plug(bb);
   trader.plug(bb);
-  broker.plug(bb);
+  // broker.plug(bb);
   // auditor.plug(bb);
 
   bb.chain('SocketConnected', 'DownloadHistory');
