@@ -23,6 +23,7 @@ function plug (_bb)
 
   bb.on('TradeSynced', onTradeReceived);
   bb.on('TradeUpdated', onTradeReceived);
+  bb.on('TradeOpened', onTradeReceived);
 
   resetCandle();
   setTimeout(closeCandle, getTimeout());
