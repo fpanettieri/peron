@@ -87,6 +87,7 @@ function onOrderOpened (arr)
 async function onOrderUpdated (arr)
 {
   log.warn('>>>>> onOrderUpdated.start');
+  mutex.lock();
 
   for (let i = 0; i < arr.length; i++) {
     const o = arr[i];
@@ -118,8 +119,7 @@ async function onOrderUpdated (arr)
       continue;
     }
 
-    log.warn('>>>>>>> onOrderUpdated.lock');
-    mutex.lock();
+
 
     const is_limit = LIMIT_ORDER_REGEX.test(order.clOrdID);
     if (is_limit && (order.ordStatus == 'PartiallyFilled' || order.ordStatus == 'Filled')) {
@@ -139,11 +139,9 @@ async function onOrderUpdated (arr)
       orders.cancel_all(order.symbol);
       burstSpeed(false);
     }
-
-    mutex.unlock();
-    log.warn('>>>>>>> onOrderUpdated.unlock');
   }
 
+  mutex.unlock();
   log.warn('>>>>> onOrderUpdated.end');
 }
 
