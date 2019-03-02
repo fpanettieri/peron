@@ -170,7 +170,7 @@ async function processPending (o)
   const job = jobs.find(j => j.id == jid);
   if (!job) {
     // FIXME: remove this log
-    log.error('unknown job', job, order);
+    log.fatal('unknown job', job, order);
     orders.cancel(order.clOrdID);
     return;
   }
@@ -245,7 +245,7 @@ async function proccessPosition (job)
 
   const profit_order = orders.find(`${job.id}-tp`);
   if (!profit_order){
-    log.error('proccessPosition', 'profit order not found!');
+    log.fatal('proccessPosition', 'profit order not found!');
     destroyJob(job);
     return;
   }
@@ -272,7 +272,7 @@ async function proccessStop (job)
 
   const profit_order = orders.find(`${job.id}-tp`);
   if (!profit_order){
-    log.error('proccessStop', 'profit order not found!');
+    log.fatal('proccessStop', 'profit order not found!');
     destroyJob(job);
     return;
   }
