@@ -24,6 +24,7 @@ async function create (id, sym, qty, params)
     timeInForce: 'GoodTillCancel'
   }, ...params};
 
+  options.api = 'order';
   options.method = 'POST';
 
   const rsp = await bitmex.api(options, _params);
@@ -77,6 +78,7 @@ async function amend (id, params)
   log.debug('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
 
   const p = { origClOrdID: id };
+  options.api = 'order';
   options.method = 'PUT';
 
   const rsp = await bitmex.api(options, {...p, ...params});
@@ -92,6 +94,7 @@ async function cancel (id, reason)
   log.debug('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
 
   const params = { clOrdID: id, text: reason };
+  options.api = 'order';
   options.method = 'DELETE';
 
   const rsp = await bitmex.api(options, params);
@@ -113,6 +116,7 @@ async function cancel_all (reason)
 async function discard (id)
 {
   const params = { orderID: id };
+  options.api = 'order';
   options.method = 'DELETE';
 
   const rsp = await bitmex.api(options, params);

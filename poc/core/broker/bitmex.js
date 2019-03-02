@@ -119,7 +119,6 @@ function updateJob (id, changes)
 
 function destroyJob (job)
 {
-  log.warn('>>>>> destroyJob');
   return jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
 }
 
@@ -186,9 +185,6 @@ async function processPending (o)
   }
 
   if (!is_limit && order.ordStatus == 'Filled') {
-    log.warn('>>>>> process.pending - order.ordStatus == Filled');
-    log.log(order);
-
     orders.remove(order);
     destroyJob(job);
     await orders.cancel_all(order.symbol);
@@ -221,10 +217,6 @@ async function proccessOrder (job)
   }
 
   if (Date.now() - job.created_at > cfg.broker.order.expires) {
-    log.warn('>>>>> processOrder - order expired');
-    log.log(order);
-    log.warn('<<<<< processOrder - order expired');
-
     await cancelOrder(order.clOrdID, 'Expired');
     return;
   }
@@ -232,10 +224,6 @@ async function proccessOrder (job)
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
   if (job.qty > 0) {
     if (price > candle.bb_ma - cfg.broker.min_profit) {
-      log.warn('>>>>> processOrder - MA Crossed');
-      log.log(order);
-      log.warn('<<<<< processOrder - MA Crossed');
-
       await cancelOrder(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
       await amendOrder(order.clOrdID, {price: price});
