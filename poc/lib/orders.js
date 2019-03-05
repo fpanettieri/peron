@@ -10,11 +10,8 @@ const options = { api: 'order', testnet: cfg.testnet };
 
 async function create (id, sym, qty, params)
 {
-  log.debug('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-  log.debug('create', id);
-  log.debug('params', params);
-  log.debug('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-
+  // FIXME: remove this
+  log.debug('create', id, params);
 
   const _params = {...{
     clOrdID: id,
@@ -72,10 +69,8 @@ async function stop (id, sym, qty, px)
 
 async function amend (id, params)
 {
-  log.debug('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-  log.debug('amend', id);
-  log.debug('params', params);
-  log.debug('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+  // FIXME: remove this
+  log.debug('amend', id, params);
 
   const p = { origClOrdID: id };
   options.api = 'order';
@@ -88,10 +83,8 @@ async function amend (id, params)
 
 async function cancel (id, reason)
 {
-  log.debug('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-  log.debug('cancel', id);
-  log.debug('reason', reason);
-  log.debug('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+  // FIXME: remove this
+  log.debug('cancel', id, reason);
 
   const params = { clOrdID: id, text: reason };
   options.api = 'order';
@@ -104,6 +97,9 @@ async function cancel (id, reason)
 
 async function cancel_all (reason)
 {
+  // FIXME: remove this
+  log.debug('cancel_all', reason);
+
   const params = { text: reason };
   options.api = 'order/all';
   options.method = 'DELETE';
