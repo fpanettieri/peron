@@ -18,11 +18,22 @@ function sleep (ms)
 
 (async () => {
   try {
+    await orders.limit(`${cl_id}-lm_1`, 'XBTUSD', 1, PRICE);
+    await orders.limit(`${cl_id}-lm_2`, 'XBTUSD', 1, PRICE);
 
-    // create multiple orders
-    // cancel all
+    await orders.amend(`${cl_id}-lm_1`, {price: PRICE - Math.round(Math.random() * 100)});
+    await orders.amend(`${cl_id}-lm_2`, {price: PRICE - Math.round(Math.random() * 100)});
 
-    
+    await orders.cancel_all('XBTUSD');
+
+    await orders.amend(`${cl_id}-lm_1`, {price: PRICE - Math.round(Math.random() * 100)});
+    await orders.amend(`${cl_id}-lm_2`, {price: PRICE - Math.round(Math.random() * 100)});
+
+    await orders.cancel_all('XBTUSD');
+
+    await orders.cancel(`${cl_id}-lm_1`);
+    await orders.cancel(`${cl_id}-lm_2`);
+
   } catch(err) {
     log.error(err);
   }

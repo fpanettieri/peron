@@ -171,7 +171,7 @@ async function processPending (o)
   if (!job) {
     // FIXME: remove this log
     log.fatal('unknown job', job, order);
-    orders.cancel(order.clOrdID);
+    await orders.cancel(order.clOrdID);
     return;
   }
 
