@@ -319,8 +319,6 @@ function getTimeout ()
 {
   const step = burst ? cfg.broker.speed.burst : cfg.broker.speed.normal;
   let timeout = step - (Date.now() % step);
-  // FIXME: dead code once the sync works
-  // log.log(`next step: ${timeout}ms`);
   return timeout;
 }
 
