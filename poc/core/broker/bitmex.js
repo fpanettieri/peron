@@ -105,7 +105,7 @@ function createJob (id, sym, qty, px, state, t)
 {
   log.debug('>>>> creating job', id);
   // TODO: stats - reports?
-  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now()};
+  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now(), locked: false};
   jobs.push(job);
   return job;
 }
@@ -132,6 +132,7 @@ function run ()
   }
 
   for (let i = jobs.length - 1; i > -1; i--) {
+    if(jobs[i].locked) { continue; }
     process (jobs[i]);
   }
 
