@@ -10,6 +10,8 @@ const options = { api: 'order', testnet: cfg.testnet };
 
 async function create (id, sym, qty, params)
 {
+  log.debug('>>>> create order', id);
+
   const _params = {...{
     clOrdID: id,
     symbol: sym,
@@ -71,6 +73,8 @@ async function stop (id, sym, qty, px)
 
 async function amend (id, params)
 {
+  log.debug('>>>> amend order', id);
+
   const order = find(id);
   if (!order || order.ordStatus == 'Canceled') { return; }
 
@@ -91,6 +95,8 @@ async function amend (id, params)
 
 async function cancel (id, reason)
 {
+  log.debug('>>>> cancel order', id);
+
   const order = find(id);
   if (!order || order.ordStatus == 'Canceled') { return; }
 
@@ -111,6 +117,8 @@ async function cancel (id, reason)
 
 async function cancel_all (symbol, reason)
 {
+  log.debug('>>>> cancel all', symbol);
+
   const params = { symbol: symbol, text: reason };
   options.api = 'order/all';
   options.method = 'DELETE';
@@ -127,6 +135,8 @@ async function cancel_all (symbol, reason)
 
 async function discard (id)
 {
+  log.debug('>>>> discard', id);
+
   const params = { orderID: id };
   options.api = 'order';
   options.method = 'DELETE';
