@@ -16,7 +16,7 @@
     "leverage": 1
   },
   "broker": {
-    "max_jobs": 1,
+    "max_jobs": 2,
     "speed": {
       "normal": 1000,
       "burst": 200
@@ -26,8 +26,8 @@
       "expires": 900000
     },
     "sl": {
-      "soft": 0.005,
-      "hard": 0.01
+      "soft": 0.0025,
+      "hard": 0.005
     }
   }
 }
