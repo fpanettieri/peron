@@ -139,7 +139,6 @@ async function run ()
 
 async function process (job)
 {
-  log.debug('processing', job.id);
   switch (job.state){
     case STATES.INTENT: await proccessIntent(job); break;
     case STATES.ORDER: await proccessOrder(job); break;
@@ -151,6 +150,7 @@ async function process (job)
 async function processPending (o)
 {
   log.debug('>>>> pending order', o.clOrdID);
+
   if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
     log.log('Ignored non-peronist order');
     return;
@@ -159,7 +159,9 @@ async function processPending (o)
   let order = orders.find(o.clOrdID);
   if (!order) {
     log.debug('missing order', o);
-    if (o.ordStatus != 'Canceled') { cancelOrder(o.clOrdID, 'Unknown Order'); }
+    if (o.ordStatus != 'Canceled') {
+      await orders.discard(o.orderID, 'Unknown Order');
+    }
     return;
   }
   order = orders.update(o);
@@ -168,6 +170,8 @@ async function processPending (o)
     orders.remove(order);
     return;
   }
+
+  if (order.ordStatus == 'Filled') { orders.remove(order); }
 
   const jid = order.clOrdID.substr(0, 11);
   const job = jobs.find(j => j.id == jid);
@@ -181,17 +185,20 @@ async function processPending (o)
   const is_stop = STOP_ORDER_REGEX.test(order.clOrdID);
 
   if (is_limit && (order.ordStatus == 'PartiallyFilled' || order.ordStatus == 'Filled')) {
-    orders.remove(order);
     updateJob(job.id, {state: STATES.POSITION});
     let direction = job.qty > 0 ? 1 : -1;
     await updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
   }
 
-  if (!is_limit && order.ordStatus == 'Filled') {
+  orders.remove(order);
+
+  if (order.ordStatus == 'Filled') {
     orders.remove(order);
     destroyJob(job);
     burst = false;
   }
+
+  !is_limit &&
 
   if (is_profit) { await orders.cancel(`${job.id}-sl`); }
   if (is_stop) { await orders.cancel(`${job.id}-tp`); }
@@ -249,11 +256,7 @@ async function proccessPosition (job)
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}-tp`);
-  if (!profit_order){
-    log.fatal('proccessPosition', 'profit order not found!');
-    destroyJob(job);
-    return;
-  }
+  if (!profit_order){ log.fatal('proccessPosition -> profit order not found!'); }
 
   let price = safePrice(candle.bb_ma);
   if (profit_order.price != price){
@@ -276,11 +279,7 @@ async function proccessStop (job)
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}-tp`);
-  if (!profit_order){
-    log.fatal('proccessStop', 'profit order not found!');
-    destroyJob(job);
-    return;
-  }
+  if (!profit_order){ log.fatal('proccessStop -> profit order not found!');}
 
   const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
   if (profit_order.price != price){ await amendOrder(profit_order.clOrdID, {price: price}); }
