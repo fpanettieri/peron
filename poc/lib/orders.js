@@ -73,9 +73,8 @@ async function stop (id, sym, qty, px)
 
 async function amend (id, params)
 {
-  log.debug('>>>> amend order', id);
-
   const order = find(id);
+  log.debug(`>>>> amend order ${id}`, order ? order.ordStatus : 'null');
   if (!order || order.ordStatus == 'Canceled') { return; }
 
   const p = { origClOrdID: id };
@@ -95,9 +94,8 @@ async function amend (id, params)
 
 async function cancel (id, reason)
 {
-  log.debug('>>>> cancel order', id);
-
   const order = find(id);
+  log.debug(`>>>> cancel order ${id}`, order ? order.ordStatus : 'null');
   if (!order || order.ordStatus == 'Canceled') { return; }
 
   const params = { clOrdID: id, text: reason };

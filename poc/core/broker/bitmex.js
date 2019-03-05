@@ -139,6 +139,7 @@ async function run ()
 
 async function process (job)
 {
+  log.debug('processing', job.id);
   switch (job.state){
     case STATES.INTENT: await proccessIntent(job); break;
     case STATES.ORDER: await proccessOrder(job); break;
