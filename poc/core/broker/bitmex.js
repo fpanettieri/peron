@@ -206,14 +206,10 @@ function proccessIntent (job)
 {
   if (!quote) { return; }
 
+  updateJob(job.id, {locked: true});
+
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
-  const order = await orders.limit(`${job.id}${LIMIT_SUFFIX}`, job.sym, job.qty, price);
-  if (order) {
-    updateJob(job.id, {state: STATES.ORDER});
-    bb.emit('OrderPlaced');
-  } else {
-    bb.emit('OrderFailed');
-  }
+  orders.limit(`${job.id}${LIMIT_SUFFIX}`, job.sym, job.qty, price);
 }
 
 function proccessOrder (job)
