@@ -74,7 +74,7 @@ async function stop (id, sym, qty, px)
 async function amend (id, params)
 {
   const order = find(id);
-  log.debug(`>>>> amend order ${id}`, order ? order.ordStatus : 'null');
+  log.debug(`>>>> amend order ${id}`, order ? order.ordStatus : 'null', params);
   if (!order || order.ordStatus == 'Canceled') { return; }
 
   const p = { origClOrdID: id };
