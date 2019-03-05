@@ -11,6 +11,7 @@ const options = { api: 'order', testnet: cfg.testnet };
 async function create (id, sym, qty, params)
 {
   // FIXME: remove this
+  log.debug('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
   log.debug('create', id, params);
 
   const _params = {...{
@@ -70,11 +71,11 @@ async function stop (id, sym, qty, px)
 async function amend (id, params)
 {
   // FIXME: remove this
-  log.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
+  log.debug('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
   log.debug('amend', id, params);
 
   const order = find(id);
-  log.log('canceling order', order);
+  log.log('amending order', order);
 
   const p = { origClOrdID: id };
   options.api = 'order';
@@ -88,7 +89,7 @@ async function amend (id, params)
 async function cancel (id, reason)
 {
   // FIXME: remove this
-  log.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
+  log.debug('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
   log.debug('cancel', id, reason);
 
   const order = find(id);
@@ -106,6 +107,7 @@ async function cancel (id, reason)
 async function cancel_all (reason)
 {
   // FIXME: remove this
+  log.debug('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
   log.debug('cancel_all', reason);
 
   const params = { text: reason };
