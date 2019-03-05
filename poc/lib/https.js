@@ -2,16 +2,11 @@
 
 const https = require('https');
 
-const logger = require('./logger');
-const log = new logger('[lib/https]');
-
 async function send (url, data, opts)
 {
-  log.log(`${opts.method} ${url}`);
-
   return new Promise(function(resolve, reject) {
     const req = https.request(url, opts);
-    
+
     req.on('error', reject);
     req.once('response', (res) => {
       res.setEncoding('utf8');

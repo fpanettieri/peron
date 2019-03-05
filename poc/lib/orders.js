@@ -70,7 +70,11 @@ async function stop (id, sym, qty, px)
 async function amend (id, params)
 {
   // FIXME: remove this
+  log.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
   log.debug('amend', id, params);
+
+  const order = find(id);
+  log.log('canceling order', order);
 
   const p = { origClOrdID: id };
   options.api = 'order';
@@ -84,7 +88,11 @@ async function amend (id, params)
 async function cancel (id, reason)
 {
   // FIXME: remove this
+  log.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
   log.debug('cancel', id, reason);
+
+  const order = find(id);
+  log.log('canceling order', order);
 
   const params = { clOrdID: id, text: reason };
   options.api = 'order';
