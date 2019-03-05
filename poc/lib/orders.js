@@ -22,7 +22,12 @@ async function create (id, sym, qty, params)
   options.method = 'POST';
 
   const rsp = await bitmex.api(options, _params);
-  if (rsp.status.code != 200){ return log.fatal(rsp); }
+  if (rsp.status.code != 200){
+    log.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    log.log('creating', id, sym, qty, params);
+    log.log('failed', rsp);
+    return log.fatal(rsp);
+  }
 
   const order = rsp.body;
   add(order);
@@ -74,7 +79,13 @@ async function amend (id, params)
   options.method = 'PUT';
 
   const rsp = await bitmex.api(options, {...p, ...params});
-  if (rsp.status.code != 200){ return log.fatal(rsp); }
+  if (rsp.status.code != 200){
+    log.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    log.log('amending', id, params);
+    log.log('failed', rsp);
+    return log.fatal(rsp);
+  }
+
   return update(rsp.body);
 }
 
@@ -88,7 +99,13 @@ async function cancel (id, reason)
   options.method = 'DELETE';
 
   const rsp = await bitmex.api(options, params);
-  if (rsp.status.code != 200){ return log.fatal(rsp); }
+  if (rsp.status.code != 200){
+    log.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    log.log('canceling', id, params);
+    log.log('failed', rsp);
+    return log.fatal(rsp);
+  }
+
   return update(rsp.body[0]);
 }
 
@@ -99,7 +116,12 @@ async function cancel_all (symbol, reason)
   options.method = 'DELETE';
 
   const rsp = await bitmex.api(options, params);
-  if (rsp.status.code != 200){ return log.fatal(rsp); }
+  if (rsp.status.code != 200){
+    log.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    log.log('canceling', id, params);
+    log.log('failed', rsp);
+    return log.fatal(rsp);
+  }
   for (let i = 0; i < rsp.body.length; i++) { update(rsp.body[i]); }
 }
 
