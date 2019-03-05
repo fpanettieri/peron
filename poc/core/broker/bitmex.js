@@ -172,13 +172,13 @@ async function processPending (o)
   const jid = order.clOrdID.substr(0, 11);
   const job = jobs.find(j => j.id == jid);
   if (!job) {
-    // FIXME: remove this log
-    log.fatal('unknown job', job, order);
     await orders.cancel(order.clOrdID);
     return;
   }
 
   const is_limit = LIMIT_ORDER_REGEX.test(order.clOrdID);
+  const is_profit = PROFIT_ORDER_REGEX.test(order.clOrdID);
+  const is_stop = STOP_ORDER_REGEX.test(order.clOrdID);
 
   if (is_limit && (order.ordStatus == 'PartiallyFilled' || order.ordStatus == 'Filled')) {
     orders.remove(order);
@@ -190,9 +190,11 @@ async function processPending (o)
   if (!is_limit && order.ordStatus == 'Filled') {
     orders.remove(order);
     destroyJob(job);
-    await orders.cancel_all(order.symbol);
     burst = false;
   }
+
+  if (is_profit) { await orders.cancel(`${job.id}-sl`); }
+  if (is_stop) { await orders.cancel(`${job.id}-tp`); }
 }
 
 async function proccessIntent (job)
