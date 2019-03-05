@@ -89,9 +89,7 @@ async function onOrderUpdated (arr)
 
 function onTradeContract (sym, qty, px)
 {
-  // FIXME: check if this limit makes sense V
-  // (2019-03-1) It doesn't, but i'll keep it for now
-  if (jobs.length >= cfg.broker.max_jobs) { log.log('max amount of jobs'); return; }
+  if (jobs.length >= cfg.broker.max_jobs) { return; }
   createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
   run();
 }
