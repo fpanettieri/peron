@@ -112,7 +112,7 @@ async function cancel_all (symbol, reason)
   log.debug('canceled all orders', rsp);
 
   if (rsp.status.code != 200){ return log.fatal(rsp); }
-  return rsp.body;
+  for (let i = 0; i < rsp.body.length; i++) { update(rsp.body[i]); }
 }
 
 async function discard (id)
