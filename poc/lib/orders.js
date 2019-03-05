@@ -75,7 +75,7 @@ async function amend (id, params)
   log.debug('amend', id, params);
 
   const order = find(id);
-  if (order.ordStatus == 'Canceled') { return; }
+  if (order.ordStatus == 'Canceled') { log.log('wut'); return; }
 
   const p = { origClOrdID: id };
   options.api = 'order';
@@ -87,9 +87,7 @@ async function amend (id, params)
   log.debug('amended order', rsp);
 
   if (rsp.status.code != 200){ return log.fatal(rsp); }
-  const amended = rsp.body;
-  update(amended);
-  return amended;
+  return update(rsp.body);
 }
 
 async function cancel (id, reason)
@@ -99,7 +97,7 @@ async function cancel (id, reason)
   log.debug('cancel', id, reason);
 
   const order = find(id);
-  if (order.ordStatus == 'Canceled') { return; }
+  if (order.ordStatus == 'Canceled') { log.log('wut'); return; }
 
   const params = { clOrdID: id, text: reason };
   options.api = 'order';
@@ -111,9 +109,7 @@ async function cancel (id, reason)
   log.debug('canceled order', rsp);
 
   if (rsp.status.code != 200){ return log.fatal(rsp); }
-  const canceled = rsp.body;
-  update(canceled);
-  return canceled;
+  return update(rsp.body[0]);
 }
 
 async function cancel_all (reason)
