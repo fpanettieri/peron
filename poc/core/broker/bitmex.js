@@ -21,7 +21,7 @@ let burst = false;
 let quote = {};
 let candle = null;
 
-async function plug (_bb)
+function plug (_bb)
 {
   bb = _bb;
 
@@ -49,7 +49,7 @@ function onCandleAnalyzed (c)
   candle = c;
 }
 
-async function onPositionSynced (arr)
+function onPositionSynced (arr)
 {
   const pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { return; }
@@ -82,12 +82,12 @@ function onOrderOpened (arr)
   for (let i = 0; i < arr.length; i++) { orders.add(arr[i]); }
 }
 
-async function onOrderUpdated (arr)
+function onOrderUpdated (arr)
 {
   pending = pending.concat(arr);
 }
 
-async function onTradeContract (sym, qty, px)
+function onTradeContract (sym, qty, px)
 {
   log.log('onTradeContract', sym, qty, px, '\n');
 
@@ -105,7 +105,7 @@ function createJob (id, sym, qty, px, state, t)
 {
   log.debug('>>>> creating job', id);
   // TODO: stats - reports?
-  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now(), mutex: false};
+  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now()};
   jobs.push(job);
   return job;
 }
@@ -125,34 +125,32 @@ function destroyJob (job)
   return jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
 }
 
-async function run ()
+function run ()
 {
   while (pending.length > 0) {
-    await processPending (pending.pop());
+    processPending (pending.pop());
   }
 
   for (let i = jobs.length - 1; i > -1; i--) {
-    if (jobs[i].mutex){ continue; }
-    jobs[i].mutex = true;
-    await process (jobs[i]);
-    jobs[i].mutex = false;
+    process (jobs[i]);
   }
 
   if (jobs.length == 0) { return; }
   setTimeout(run, getTimeout());
 }
 
-async function process (job)
+function process (job)
 {
+  if (job.mutex) { return; }
   switch (job.state){
-    case STATES.INTENT: await proccessIntent(job); break;
-    case STATES.ORDER: await proccessOrder(job); break;
-    case STATES.POSITION: await proccessPosition(job); break;
-    case STATES.STOP: await proccessStop(job); break;
+    case STATES.INTENT: proccessIntent(job); break;
+    case STATES.ORDER: proccessOrder(job); break;
+    case STATES.POSITION: proccessPosition(job); break;
+    case STATES.STOP: proccessStop(job); break;
   }
 }
 
-async function processPending (o)
+function processPending (o)
 {
   log.debug('>>>> pending order', o.clOrdID);
 
@@ -203,7 +201,7 @@ async function processPending (o)
   }
 }
 
-async function proccessIntent (job)
+function proccessIntent (job)
 {
   if (!quote) { return; }
 
@@ -217,7 +215,7 @@ async function proccessIntent (job)
   }
 }
 
-async function proccessOrder (job)
+function proccessOrder (job)
 {
   if (!quote) { return; }
 
@@ -249,7 +247,7 @@ async function proccessOrder (job)
   }
 }
 
-async function proccessPosition (job)
+function proccessPosition (job)
 {
   if (!quote || !candle){ return; }
   proccessOrder(job);
@@ -272,7 +270,7 @@ async function proccessPosition (job)
   }
 }
 
-async function proccessStop (job)
+function proccessStop (job)
 {
   if (!quote) { return; }
   proccessOrder(job);
@@ -284,14 +282,14 @@ async function proccessStop (job)
   if (profit_order.price != price){ await amendOrder(profit_order.clOrdID, {price: price}); }
 }
 
-async function updatePosition (job, order)
+function updatePosition (job, order)
 {
   updateJob(job.id, {state: STATES.POSITION});
   let direction = job.qty > 0 ? 1 : -1;
   await updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
 }
 
-async function updateTargets (job, sym, qty, px)
+function updateTargets (job, sym, qty, px)
 {
   const ssl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
   updateJob(job.id, {sl: ssl_px});
@@ -313,13 +311,13 @@ async function updateTargets (job, sym, qty, px)
   }
 }
 
-async function cancelOrder (id, reason)
+function cancelOrder (id, reason)
 {
   await orders.cancel(id, reason);
   bb.emit('OrderCanceled');
 }
 
-async function amendOrder (id, params)
+function amendOrder (id, params)
 {
   await orders.amend(id, params);
   bb.emit('OrderAmended');
