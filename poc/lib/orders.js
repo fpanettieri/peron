@@ -118,7 +118,7 @@ async function cancel_all (symbol, reason)
   const rsp = await bitmex.api(options, params);
   if (rsp.status.code != 200){
     log.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    log.log('canceling', id, params);
+    log.log('canceling', params);
     log.log('failed', rsp);
     return log.fatal(rsp);
   }
