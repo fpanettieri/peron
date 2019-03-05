@@ -10,10 +10,6 @@ const options = { api: 'order', testnet: cfg.testnet };
 
 async function create (id, sym, qty, params)
 {
-  // FIXME: remove this
-  log.debug('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
-  log.debug('create', id, params);
-
   const _params = {...{
     clOrdID: id,
     symbol: sym,
@@ -71,7 +67,7 @@ async function stop (id, sym, qty, px)
 async function amend (id, params)
 {
   const order = find(id);
-  if (order.ordStatus == 'Canceled') { log.log('wut'); return; }
+  if (order.ordStatus == 'Canceled') { return; }
 
   const p = { origClOrdID: id };
   options.api = 'order';
@@ -85,7 +81,7 @@ async function amend (id, params)
 async function cancel (id, reason)
 {
   const order = find(id);
-  if (order.ordStatus == 'Canceled') { log.log('wut'); return; }
+  if (order.ordStatus == 'Canceled') { return; }
 
   const params = { clOrdID: id, text: reason };
   options.api = 'order';
@@ -98,19 +94,11 @@ async function cancel (id, reason)
 
 async function cancel_all (symbol, reason)
 {
-  // FIXME: remove this
-  log.debug('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
-  log.debug('cancel_all', reason);
-
   const params = { symbol: symbol, text: reason };
   options.api = 'order/all';
   options.method = 'DELETE';
 
   const rsp = await bitmex.api(options, params);
-
-  log.debug('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-  log.debug('canceled all orders', rsp);
-
   if (rsp.status.code != 200){ return log.fatal(rsp); }
   for (let i = 0; i < rsp.body.length; i++) { update(rsp.body[i]); }
 }
