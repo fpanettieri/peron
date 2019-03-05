@@ -60,7 +60,7 @@ async function onPositionSynced (arr)
   const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.STOP, t);
   await updateTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
   burst = true;
-  run();
+  await run();
 }
 
 function onOrderSynced (arr)
@@ -87,11 +87,11 @@ async function onOrderUpdated (arr)
   pending = pending.concat(arr);
 }
 
-function onTradeContract (sym, qty, px)
+async function onTradeContract (sym, qty, px)
 {
   if (jobs.length >= cfg.broker.max_jobs) { return; }
   createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
-  run();
+  await run();
 }
 
 function genId ()
