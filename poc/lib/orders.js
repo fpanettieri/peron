@@ -75,7 +75,7 @@ async function amend (id, params)
   log.debug('amend', id, params);
 
   const order = find(id);
-  log.debug('amending order', order);
+  if (order.ordStatus == 'Canceled') { return; }
 
   const p = { origClOrdID: id };
   options.api = 'order';
@@ -85,10 +85,11 @@ async function amend (id, params)
 
   log.debug('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
   log.debug('amended order', rsp);
-  // inplace update order
 
   if (rsp.status.code != 200){ return log.fatal(rsp); }
-  return rsp.body;
+  const amended = rsp.body;
+  update(amended);
+  return amended;
 }
 
 async function cancel (id, reason)
@@ -98,7 +99,7 @@ async function cancel (id, reason)
   log.debug('cancel', id, reason);
 
   const order = find(id);
-  log.log('canceling order', order);
+  if (order.ordStatus == 'Canceled') { return; }
 
   const params = { clOrdID: id, text: reason };
   options.api = 'order';
@@ -107,11 +108,12 @@ async function cancel (id, reason)
   const rsp = await bitmex.api(options, params);
 
   log.debug('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-  log.debug('amended order', rsp);
-  // inplace update order
+  log.debug('canceled order', rsp);
 
   if (rsp.status.code != 200){ return log.fatal(rsp); }
-  return rsp.body;
+  const canceled = rsp.body;
+  update(canceled);
+  return canceled;
 }
 
 async function cancel_all (reason)
@@ -127,7 +129,7 @@ async function cancel_all (reason)
   const rsp = await bitmex.api(options, params);
 
   log.debug('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-  log.debug('canceled orders', rsp);
+  log.debug('canceled all orders', rsp);
 
   if (rsp.status.code != 200){ return log.fatal(rsp); }
   return rsp.body;
