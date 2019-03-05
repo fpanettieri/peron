@@ -8,7 +8,8 @@ const log = new logger('[test/auth]');
 const cl_id = `ag-${Math.random().toString(36).substr(2, 8)}`;
 let rsp = null;
 
-const price = 1000;
+const ITERATIONS = 100;
+const PRICE = 1000;
 
 function sleep (ms)
 {
@@ -17,8 +18,13 @@ function sleep (ms)
 
 (async () => {
   try {
-    await orders.limit(`${cl_id}-lm`, 'XBTUSD', 1, price);
-    await orders.amend(`${cl_id}-lm`, {price: price - 17});
+    await orders.limit(`${cl_id}-lm`, 'XBTUSD', 1, PRICE);
+    await orders.amend(`${cl_id}-lm`, {price: PRICE - 17});
+
+    for(let i = 0; i < ITERATIONS; i++) {
+      await orders.amend(`${cl_id}-lm`, {price: PRICE - Math.round(Math.random() * 100)});
+    }
+
     await orders.cancel(`${cl_id}-lm`);
   } catch(err) {
     log.error(err);
