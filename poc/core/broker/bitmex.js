@@ -141,7 +141,7 @@ async function run ()
   log.warn(`>>>> run o: ${pending.length} j: ${jobs.length}`);
 
   while (pending.length > 0) {
-    await processPending (pending.pop());
+    await processPending (pending.shift());
   }
 
   for (let i = jobs.length - 1; i > -1; i--) {
