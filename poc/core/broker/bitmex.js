@@ -304,6 +304,12 @@ async function updatePosition (job, order)
 
 async function updateTargets (job, sym, qty, px)
 {
+  log.debug('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+  orders.debug();
+  log.debug('======================================================');
+  log.debug(pending);
+  log.debug('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+
   const ssl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
   updateJob(job.id, {sl: ssl_px});
 
