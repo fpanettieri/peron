@@ -79,12 +79,14 @@ function onOrderSynced (arr)
 
 function onOrderOpened (arr)
 {
+  log.warn('new orders!', arr);
   for (let i = 0; i < arr.length; i++) { orders.add(arr[i]); }
   pending = pending.concat(arr);
 }
 
 function onOrderUpdated (arr)
 {
+  log.warn('order updated!', arr);
   pending = pending.concat(arr);
 }
 
