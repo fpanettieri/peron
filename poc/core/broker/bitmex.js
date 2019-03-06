@@ -128,6 +128,8 @@ function destroyJob (job)
 
 async function run ()
 {
+  log.warn(`>>>> run o: ${pending.length} j: ${jobs.length}`);
+
   while (pending.length > 0) {
     await processPending (pending.pop());
   }
