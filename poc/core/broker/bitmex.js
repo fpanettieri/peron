@@ -106,7 +106,7 @@ function createJob (id, sym, qty, px, state, t)
 {
   log.debug('>>>> creating job', id);
   // TODO: stats - reports?
-  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now(), locked: 0};
+  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now(), locked: false};
   jobs.push(job);
   return job;
 }
@@ -158,11 +158,8 @@ function processPending (o)
   }
   order = orders.update(o);
 
-  // Aux
-  const suffix = order.clOrdID.substr(order.clOrdID.length - 3);
-  const jid = order.clOrdID.substr(0, 11);
-
   // check job order
+  const jid = order.clOrdID.substr(0, 11);
   const job = jobs.find(j => j.id == jid);
   if (!job) {
     log.error('Discarding order, job not found');
@@ -171,19 +168,19 @@ function processPending (o)
   }
 
   switch (job.state){
-    case STATES.INTENT: pendingIntent(order, job); break;
-    case STATES.ORDER: pendingOrder(order, job); break;
-    case STATES.POSITION: pendingPosition(order, job); break;
-    case STATES.STOP: pendingStop(order, job); break;
+    case STATES.INTENT: pendingIntent(job, order); break;
+    case STATES.ORDER: pendingOrder(job, order); break;
+    case STATES.POSITION: pendingPosition(job, order); break;
+    case STATES.STOP: pendingPosition(job, order); break;
     default: log.error('invalid job state:', job.state);
   }
 }
 
-function pendingIntent (order, job)
+function pendingIntent (job, order)
 {
   switch (order.ordStatus) {
     case 'New': {
-      updateJob(job.id, {state: STATES.ORDER, locked: 0});
+      updateJob(job.id, {state: STATES.ORDER, locked: false});
     } break;
 
     case 'Canceled': {
@@ -191,49 +188,49 @@ function pendingIntent (order, job)
       destroyJob(job);
     } break;
 
-    default: log.error(`unhandled job: ${job.state} - ${order.ordStatus}`);
+    default: log.error(`unhandled status: ${job.state} - ${order.ordStatus}`);
   }
 }
 
-function pendingOrder (order, job)
+function pendingOrder (job, order)
 {
+  switch (order.ordStatus) {
+    case 'Filled': {
+      orders.remove(order);
+    } /* falls through */
 
-}
-
-function pendingPosition (order, job)
-{
-
-}
-
-function pendingStop (order, job)
-{
-
-  if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') {
-    orders.remove(order);
-  }
-
-  if (suffix == LIMIT_SUFFIX && order.ordStatus == 'PartiallyFilled') {
-    updatePosition(job, order);
-  }
-
-  if (order.ordStatus != 'Filled') { return; }
-
-  switch (suffix) {
-    case LIMIT_SUFFIX: {
+    case 'PartiallyFilled': {
       updatePosition(job, order);
-      // updateJob(job.id, {locked: false});
+      updateJob(job.id, {state: STATES.POSITION, locked: false});
     } break;
 
-    case PROFIT_SUFFIX: {
-      orders.cancel(`${job.id}${STOP_SUFFIX}`);
+    case 'Canceled': {
+      orders.remove(order);
       destroyJob(job);
     } break;
 
-    case STOP_SUFFIX: {
+    default: log.error(`unhandled status: ${job.state} - ${order.ordStatus}`);
+  }
+}
 
-      orders.cancel(`${job.id}${PROFIT_SUFFIX}`);
+function pendingPosition (job, order)
+{
+  const suffix = order.clOrdID.substr(order.clOrdID.length - 3);
+
+  switch (order.ordStatus) {
+    case 'Filled': {
+      orders.remove(order);
+      if (suffix == PROFIT_SUFFIX) { orders.cancel(`${job.id}${STOP_SUFFIX}`); }
+      if (suffix == STOP_SUFFIX) { orders.cancel(`${job.id}${PROFIT_SUFFIX}`); }
       destroyJob(job);
     } break;
+
+    case 'PartiallyFilled': {
+      updatePosition(job, order);
+      updateJob(job.id, {locked: false});
+    } break;
+
+    default: log.error(`unhandled status: ${job.state} - ${order.ordStatus}`);
   }
 }
 
@@ -253,7 +250,7 @@ function proccessIntent (job)
 {
   if (!quote) { return; }
 
-  updateJob(job.id, {locked: 1});
+  updateJob(job.id, {locked: true});
 
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
   orders.limit(`${job.id}${LIMIT_SUFFIX}`, job.sym, job.qty, price);
@@ -328,7 +325,6 @@ function proccessStop (job)
 
 function updatePosition (job, order)
 {
-  updateJob(job.id, {state: STATES.POSITION});
   let direction = job.qty > 0 ? 1 : -1;
   updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
 }
