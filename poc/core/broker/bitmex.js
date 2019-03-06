@@ -80,6 +80,7 @@ function onOrderSynced (arr)
 function onOrderOpened (arr)
 {
   for (let i = 0; i < arr.length; i++) { orders.add(arr[i]); }
+  pending = pending.concat(arr);
 }
 
 async function onOrderUpdated (arr)
