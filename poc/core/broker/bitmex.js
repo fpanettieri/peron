@@ -106,7 +106,7 @@ function createJob (id, sym, qty, px, state, t)
 {
   log.debug('>>>> creating job', id);
   // TODO: stats - reports?
-  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now(), locked: false};
+  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now(), locked: 0};
   jobs.push(job);
   return job;
 }
@@ -145,11 +145,8 @@ function processPending (o)
 {
   log.debug('>>>> pending order', o.clOrdID);
 
-  // log.log('Ignored non-peronist order');
   if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) { return; }
 
-  // check order
-  // if (o.ordStatus != 'Canceled') { orders.discard(o.orderID, 'Unknown Order'); }
   let order = orders.find(o.clOrdID);
   if (!order) {
     log.error('Discarding unknown order');
@@ -158,7 +155,6 @@ function processPending (o)
   }
   order = orders.update(o);
 
-  // check job order
   const jid = order.clOrdID.substr(0, 11);
   const job = jobs.find(j => j.id == jid);
   if (!job) {
@@ -180,7 +176,7 @@ function pendingIntent (job, order)
 {
   switch (order.ordStatus) {
     case 'New': {
-      updateJob(job.id, {state: STATES.ORDER, locked: false});
+      updateJob(job.id, {state: STATES.ORDER, locked: 0});
     } break;
 
     case 'Canceled': {
@@ -195,13 +191,17 @@ function pendingIntent (job, order)
 function pendingOrder (job, order)
 {
   switch (order.ordStatus) {
+    case 'New': {
+      updateJob(job.id, {locked: job.locked - 1});
+    } break;
+
     case 'Filled': {
       orders.remove(order);
     } /* falls through */
 
     case 'PartiallyFilled': {
       updatePosition(job, order);
-      updateJob(job.id, {state: STATES.POSITION, locked: false});
+      updateJob(job.id, {state: STATES.POSITION, locked: 0});
     } break;
 
     case 'Canceled': {
@@ -227,7 +227,7 @@ function pendingPosition (job, order)
 
     case 'PartiallyFilled': {
       updatePosition(job, order);
-      updateJob(job.id, {locked: false});
+      updateJob(job.id, {locked: 0});
     } break;
 
     default: log.error(`unhandled status: ${job.state} - ${order.ordStatus}`);
@@ -250,7 +250,7 @@ function proccessIntent (job)
 {
   if (!quote) { return; }
 
-  updateJob(job.id, {locked: true});
+  updateJob(job.id, {locked: 1});
 
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
   orders.limit(`${job.id}${LIMIT_SUFFIX}`, job.sym, job.qty, price);
@@ -332,7 +332,7 @@ function updatePosition (job, order)
 function updateTargets (job, sym, qty, px)
 {
   const ssl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
-  updateJob(job.id, {sl: ssl_px});
+  updateJob(job.id, {sl: ssl_px, locked: 2});
 
   const hsl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.hard));
   let sl = orders.find(`${job.id}${STOP_SUFFIX}`);
@@ -351,15 +351,17 @@ function updateTargets (job, sym, qty, px)
   }
 }
 
-function cancelOrder (id, reason)
+function cancelOrder (jid, oid, reason)
 {
-  orders.cancel(id, reason);
+  updateJob(jid, {locked: 1});
+  orders.cancel(oid, reason);
   bb.emit('OrderCanceled');
 }
 
-function amendOrder (id, params)
+function amendOrder (jid, oid, params)
 {
-  orders.amend(id, params);
+  updateJob(jid, {locked: 1});
+  orders.amend(oid, params);
   bb.emit('OrderAmended');
 }
 
