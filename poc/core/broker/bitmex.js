@@ -106,7 +106,7 @@ function createJob (id, sym, qty, px, state, t)
 {
   log.debug('>>>> creating job', id);
   // TODO: stats - reports?
-  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now(), mutex: false};
+  const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now()};
   jobs.push(job);
   return job;
 }
@@ -133,10 +133,7 @@ async function run ()
   }
 
   for (let i = jobs.length - 1; i > -1; i--) {
-    if (jobs[i].mutex){ continue; }
-    jobs[i].mutex = true;
     await process (jobs[i]);
-    jobs[i].mutex = false;
   }
 
   if (jobs.length == 0) { return; }
