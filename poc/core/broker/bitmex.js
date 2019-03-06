@@ -134,22 +134,11 @@ function run ()
 
   for (let i = jobs.length - 1; i > -1; i--) {
     if(jobs[i].locked) { continue; }
-    process (jobs[i]);
+    processJob (jobs[i]);
   }
 
   if (jobs.length == 0) { return; }
   setTimeout(run, getTimeout());
-}
-
-function process (job)
-{
-  if (job.locked) { return; }
-  switch (job.state){
-    case STATES.INTENT: proccessIntent(job); break;
-    case STATES.ORDER: proccessOrder(job); break;
-    case STATES.POSITION: proccessPosition(job); break;
-    case STATES.STOP: proccessStop(job); break;
-  }
 }
 
 function processPending (o)
@@ -159,24 +148,65 @@ function processPending (o)
   // log.log('Ignored non-peronist order');
   if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) { return; }
 
+  // check order
+  // if (o.ordStatus != 'Canceled') { orders.discard(o.orderID, 'Unknown Order'); }
   let order = orders.find(o.clOrdID);
   if (!order) {
-    // if (o.ordStatus != 'Canceled') { orders.discard(o.orderID, 'Unknown Order'); }
+    log.error('Discarding unknown order');
     orders.discard(o.orderID, 'Unknown Order');
     return;
   }
   order = orders.update(o);
 
-  const jid = order.clOrdID.substr(0, 11);
+  // Aux
   const suffix = order.clOrdID.substr(order.clOrdID.length - 3);
+  const jid = order.clOrdID.substr(0, 11);
 
+  // check job order
   const job = jobs.find(j => j.id == jid);
   if (!job) {
+    log.error('Discarding order, job not found');
     orders.cancel(order.clOrdID);
     return;
   }
 
-  //switch () {}
+  switch (job.state){
+    case STATES.INTENT: pendingIntent(order, job); break;
+    case STATES.ORDER: pendingOrder(order, job); break;
+    case STATES.POSITION: pendingPosition(order, job); break;
+    case STATES.STOP: pendingStop(order, job); break;
+    default: log.error('invalid job state:', job.state);
+  }
+}
+
+function pendingIntent (order, job)
+{
+  switch (order.ordStatus) {
+    case 'New': {
+      updateJob(job.id, {state: STATES.ORDER, locked: 0});
+    } break;
+
+    case 'Canceled': {
+      orders.remove(order);
+      destroyJob(job);
+    } break;
+
+    default: log.error(`unhandled job: ${job.state} - ${order.ordStatus}`);
+  }
+}
+
+function pendingOrder (order, job)
+{
+
+}
+
+function pendingPosition (order, job)
+{
+
+}
+
+function pendingStop (order, job)
+{
 
   if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') {
     orders.remove(order);
@@ -204,6 +234,18 @@ function processPending (o)
       orders.cancel(`${job.id}${PROFIT_SUFFIX}`);
       destroyJob(job);
     } break;
+  }
+}
+
+function processJob (job)
+{
+  if (job.locked) { return; }
+  switch (job.state){
+    case STATES.INTENT: proccessIntent(job); break;
+    case STATES.ORDER: proccessOrder(job); break;
+    case STATES.POSITION: proccessPosition(job); break;
+    case STATES.STOP: proccessStop(job); break;
+    default: log.error('invalid job state:', job.state);
   }
 }
 
