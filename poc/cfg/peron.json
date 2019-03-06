@@ -3,7 +3,7 @@
   "timeframe": "1m",
   "symbol": "XBTUSD",
   "history": "50",
-  "chandler": { "offset": 0 },
+  "chandler": { "offset": -10000 },
   "analyst": {
     "bb": {
       "periods": 20,
@@ -12,7 +12,7 @@
   },
   "trader": {
     "positions": 5,
-    "size": 0.0002,
+    "size": 0.03,
     "leverage": 1
   },
   "broker": {
@@ -27,7 +27,7 @@
     },
     "sl": {
       "soft": 0.0025,
-      "hard": 0.005
+      "hard": 0.0075
     }
   }
 }
