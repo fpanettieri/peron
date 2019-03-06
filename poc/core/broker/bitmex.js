@@ -297,9 +297,9 @@ async function proccessStop (job)
 
 async function updatePosition (job, order)
 {
-  updateJob(job.id, {state: STATES.POSITION});
   let direction = job.qty > 0 ? 1 : -1;
   await updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
+  updateJob(job.id, {state: STATES.POSITION});
 }
 
 async function updateTargets (job, sym, qty, px)
