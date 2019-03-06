@@ -79,12 +79,20 @@ function onOrderSynced (arr)
 
 function onOrderOpened (arr)
 {
+  log.debug('%% OPENED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+  log.debug(arr);
+  log.debug('%% OPENED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+
   for (let i = 0; i < arr.length; i++) { orders.add(arr[i]); }
   pending = pending.concat(arr);
 }
 
 async function onOrderUpdated (arr)
 {
+  log.debug('%% UPDATED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+  log.debug(arr);
+  log.debug('%% UPDATED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+
   pending = pending.concat(arr);
 }
 
@@ -154,7 +162,10 @@ async function process (job)
 
 async function processPending (o)
 {
-  log.debug('>>>> pending order', o.clOrdID);
+  log.debug('>>>> pending order');
+  log.debug(o);
+  log.debug('>>>> pending order');
+
 
   if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
     log.log('Ignored non-peronist order');
