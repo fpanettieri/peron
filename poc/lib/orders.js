@@ -8,7 +8,7 @@ const log = new Logger('[lib/orders]');
 const orders = [];
 const options = { api: 'order', testnet: cfg.testnet };
 
-function create (id, sym, qty, params)
+async function create (id, sym, qty, params)
 {
   log.debug('>>>> create order', id);
 
@@ -36,7 +36,7 @@ function create (id, sym, qty, params)
   return order;
 }
 
-function market (id, sym, qty)
+async function market (id, sym, qty)
 {
   return await create(id, sym, qty, {
     ordType: 'Market',
@@ -44,7 +44,7 @@ function market (id, sym, qty)
   });
 }
 
-function limit (id, sym, qty, px)
+async function limit (id, sym, qty, px)
 {
   return await create(id, sym, qty, {
     ordType: 'Limit',
@@ -53,7 +53,7 @@ function limit (id, sym, qty, px)
   });
 }
 
-function profit (id, sym, qty, px)
+async function profit (id, sym, qty, px)
 {
   return await create(id, sym, qty, {
     ordType: 'Limit',
@@ -62,7 +62,7 @@ function profit (id, sym, qty, px)
   });
 }
 
-function stop (id, sym, qty, px)
+async function stop (id, sym, qty, px)
 {
   return await create(id, sym, qty, {
     ordType: 'Stop',
@@ -71,7 +71,7 @@ function stop (id, sym, qty, px)
   });
 }
 
-function amend (id, params)
+async function amend (id, params)
 {
   const order = find(id);
   log.debug(`>>>> amend order ${id}`, order ? order.ordStatus : 'null', params);
@@ -92,7 +92,7 @@ function amend (id, params)
   return update(rsp.body);
 }
 
-function cancel (id, reason)
+async function cancel (id, reason)
 {
   const order = find(id);
   log.debug(`>>>> cancel order ${id}`, order ? order.ordStatus : 'null');
@@ -113,7 +113,7 @@ function cancel (id, reason)
   return update(rsp.body[0]);
 }
 
-function cancel_all (symbol, reason)
+async function cancel_all (symbol, reason)
 {
   log.debug('>>>> cancel all', symbol);
 
@@ -131,7 +131,7 @@ function cancel_all (symbol, reason)
   for (let i = 0; i < rsp.body.length; i++) { update(rsp.body[i]); }
 }
 
-function discard (id)
+async function discard (id)
 {
   log.debug('>>>> discard', id);
 
