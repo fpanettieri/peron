@@ -163,7 +163,7 @@ async function process (job)
 
 async function processPending (o)
 {
-  log.debug('>>>> pending order', o.clOrdID);
+  log.debug(`>>>> pending order id: ${o.clOrdID} status: ${o.ordStatus}`);
   // log.debug(o);
   // log.debug('>>>> pending order');
 
