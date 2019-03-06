@@ -90,7 +90,7 @@ function onOrderUpdated (arr)
 
 function onTradeContract (sym, qty, px)
 {
-  log.log('onTradeContract', sym, qty, px, '\n');
+  log.log('>>>> onTradeContract', sym, qty, px, '\n');
 
   if (jobs.length >= cfg.broker.max_jobs) { return; }
   createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
@@ -205,8 +205,6 @@ function processPending (o)
       destroyJob(job);
     } break;
   }
-
-
 }
 
 function proccessIntent (job)
