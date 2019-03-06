@@ -17,7 +17,9 @@ let bb = null;
 const jobs = [];
 
 let pending = [];
+let timeout = null;
 let burst = false;
+
 let quote = {};
 let candle = null;
 
@@ -37,6 +39,8 @@ async function plug (_bb)
   bb.on('OrderUpdated', onOrderUpdated);
 
   bb.on('TradeContract', onTradeContract);
+
+  run();
 }
 
 function onQuoteUpdated (arr)
@@ -60,7 +64,6 @@ async function onPositionSynced (arr)
   const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.STOP, t);
   await updateTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
   burst = true;
-  await run();
 }
 
 function onOrderSynced (arr)
@@ -102,7 +105,6 @@ async function onTradeContract (sym, qty, px)
 
   if (jobs.length >= cfg.broker.max_jobs) { return; }
   createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
-  await run();
 }
 
 function genId ()
@@ -146,7 +148,6 @@ async function run ()
     await process (jobs[i]);
   }
 
-  if (jobs.length == 0) { return; }
   setTimeout(run, getTimeout());
 }
 
