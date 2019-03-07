@@ -178,7 +178,7 @@ async function processPending (o)
   let order = orders.find(o.clOrdID);
   if (!order) {
     if (o.ordStatus != 'Canceled') {
-      log.debug(`>>>> discarding ${order.ordStatus} order ${order.clOrdID}`);
+      log.debug('>>>> discarding', o);
       await orders.discard(o.orderID, 'Unknown Order');
     }
     return;
