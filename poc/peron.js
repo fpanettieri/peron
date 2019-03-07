@@ -1,7 +1,5 @@
 'use strict';
 
-const events = require('events');
-
 const cfg = require('./cfg/peron');
 
 const logger = require('./lib/logger');
