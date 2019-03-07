@@ -166,7 +166,7 @@ async function processPending (o)
   log.log('#############################################################');
   log.debug(`>>>> processing pending order id: ${o.clOrdID}`);
   if (!o.ordStatus) {
-    log.debug(`>>>> changes ${o.clOrdID} ${o}`);
+    log.debug(`>>>> changes ${o.clOrdID}`, o);
   }
   log.log('#############################################################');
 
@@ -177,12 +177,16 @@ async function processPending (o)
 
   let order = orders.find(o.clOrdID);
   if (!order) {
-    if (o.ordStatus != 'Canceled') { await orders.discard(o.orderID, 'Unknown Order'); }
+    if (o.ordStatus != 'Canceled') {
+      log.debug(`>>>> discarding ${order.ordStatus} order ${order.clOrdID}`);
+      await orders.discard(o.orderID, 'Unknown Order');
+    }
     return;
   }
   order = orders.update(o);
 
   if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') {
+    log.debug(`>>>> removing ${order.ordStatus} order ${order.clOrdID}`);
     orders.remove(order);
   }
 
