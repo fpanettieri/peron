@@ -175,17 +175,19 @@ function update (o)
 function remove (o)
 {
   log.warn('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-  log.debug('Debugging remove');
+  log.debug('Debugging remove:', o);
   log.warn('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
   log.debug('pre remove');
   debug();
   log.warn('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
   log.debug('index', findIndex(o));
   log.warn('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+
+  orders.splice(findIndex(o.clOrdID), 1);
+
   log.debug('post remove');
   debug();
   log.warn('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-  orders.splice(findIndex(o), 1);
 }
 
 function debug ()
