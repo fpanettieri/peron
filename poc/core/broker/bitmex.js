@@ -82,27 +82,17 @@ function onOrderSynced (arr)
 
 function onOrderOpened (arr)
 {
-  // log.debug('%% OPENED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
-  // log.debug(arr);
-  // log.debug('%% OPENED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
-
   for (let i = 0; i < arr.length; i++) { orders.add(arr[i]); }
   pending = pending.concat(arr);
 }
 
 async function onOrderUpdated (arr)
 {
-  // log.debug('%% UPDATED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
-  // log.debug(arr);
-  // log.debug('%% UPDATED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
-
   pending = pending.concat(arr);
 }
 
 async function onTradeContract (sym, qty, px)
 {
-  log.log('onTradeContract', sym, qty, px, '\n');
-
   if (jobs.length >= cfg.broker.max_jobs) { return; }
   createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
 }
