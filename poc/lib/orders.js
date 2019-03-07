@@ -174,6 +174,17 @@ function update (o)
 
 function remove (o)
 {
+  log.warn('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+  log.debug('Debugging remove');
+  log.warn('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+  log.debug('pre remove');
+  debug();
+  log.warn('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+  log.debug('index', findIndex(o));
+  log.warn('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+  log.debug('post remove');
+  debug();
+  log.warn('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
   orders.splice(findIndex(o), 1);
 }
 
