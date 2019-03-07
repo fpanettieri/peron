@@ -166,28 +166,13 @@ function add (o)
 function update (o)
 {
   let idx = findIndex(o.clOrdID);
-  log.warn('updating', o.clOrdID, orders[idx].clOrdID);
-
   orders[idx] = {...orders[idx], ...o};
   return orders[idx];
 }
 
 function remove (o)
 {
-  log.warn('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-  log.debug('Debugging remove:', o);
-  log.warn('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-  log.debug('pre remove');
-  debug();
-  log.warn('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-  log.debug('index', findIndex(o));
-  log.warn('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-
   orders.splice(findIndex(o.clOrdID), 1);
-
-  log.debug('post remove');
-  debug();
-  log.warn('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 }
 
 function debug ()

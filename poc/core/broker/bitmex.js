@@ -163,10 +163,6 @@ async function process (job)
 
 async function processPending (o)
 {
-  log.log('#############################################################');
-  log.debug(`>>>> pending order id: ${o.clOrdID}`, o);
-  log.log('#############################################################');
-
   if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
     log.log('Ignored non-peronist order');
     return;
@@ -308,12 +304,6 @@ async function updatePosition (job, order)
 
 async function updateTargets (job, sym, qty, px)
 {
-  log.debug('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
-  orders.debug();
-  log.debug('======================================================');
-  log.debug(pending);
-  log.debug('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
-
   const ssl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
   updateJob(job.id, {sl: ssl_px});
 
