@@ -10,7 +10,7 @@ const LIMIT_SUFFIX = '-lm';
 const PROFIT_SUFFIX = '-tp';
 const STOP_SUFFIX = '-sl';
 
-const STATES = { INTENT: 0, ORDER: 1, POSITION: 2, STOP: 3 };
+const STATES = { INTENT: 0, ORDER: 1, POSITION: 2, STOP: 3, DONE: 4 };
 
 let bb = null;
 
@@ -150,6 +150,7 @@ async function process (job)
     case STATES.ORDER: await proccessOrder(job); break;
     case STATES.POSITION: await proccessPosition(job); break;
     case STATES.STOP: await proccessStop(job); break;
+    case STATES.DONE: await proccessDone(job); break;
   }
 }
 
@@ -158,7 +159,7 @@ async function processPending (o)
   log.log('#############################################################');
   log.debug(`>>>> pending order id: ${o.clOrdID}`, o);
   log.log('#############################################################');
-  
+
   if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
     log.log('Ignored non-peronist order');
     return;
@@ -171,13 +172,9 @@ async function processPending (o)
   }
   order = orders.update(o);
 
-  if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') {
-    orders.remove(order);
-  }
-
   const jid = order.clOrdID.substr(0, 11);
   const suffix = order.clOrdID.substr(order.clOrdID.length - 3);
-
+  
   const job = jobs.find(j => j.id == jid);
   if (!job) {
     await orders.cancel(order.clOrdID);
@@ -194,14 +191,9 @@ async function processPending (o)
       await updatePosition(job, order);
     } break;
 
-    case PROFIT_SUFFIX: {
-      destroyJob(job);
-      await orders.cancel(`${job.id}${STOP_SUFFIX}`);
-    } break;
-
+    case PROFIT_SUFFIX:
     case STOP_SUFFIX: {
-      destroyJob(job);
-      await orders.cancel(`${job.id}${PROFIT_SUFFIX}`);
+      updateJob(job.id, {state: STATES.DONE});
     } break;
   }
 }
@@ -285,6 +277,18 @@ async function proccessStop (job)
 
   const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
   if (profit_order.price != price){ await amendOrder(profit_order.clOrdID, {price: price}); }
+}
+
+async function proccessDone (job)
+{
+  destroyJob(job);
+  await orders.cancel(`${job.id}${LIMIT_SUFFIX}`);
+  await orders.cancel(`${job.id}${PROFIT_SUFFIX}`);
+  await orders.cancel(`${job.id}${STOP_SUFFIX}`);
+
+  log.debug('$$$$$$$$$$$$$$$$$$$$ JOB DONE $$$$$$$$$$$$$$$$$$$$');
+  orders.debug();
+  log.debug('$$$$$$$$$$$$$$$$$$$$ JOB DONE $$$$$$$$$$$$$$$$$$$$');
 }
 
 async function updatePosition (job, order)
