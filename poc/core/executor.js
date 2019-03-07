@@ -174,7 +174,7 @@ async function processPending (o)
 
   const jid = order.clOrdID.substr(0, 11);
   const suffix = order.clOrdID.substr(order.clOrdID.length - 3);
-  
+
   const job = jobs.find(j => j.id == jid);
   if (!job) {
     await orders.cancel(order.clOrdID);
@@ -283,8 +283,13 @@ async function proccessDone (job)
 {
   destroyJob(job);
   await orders.cancel(`${job.id}${LIMIT_SUFFIX}`);
+  await orders.remove(`${job.id}${LIMIT_SUFFIX}`);
+
   await orders.cancel(`${job.id}${PROFIT_SUFFIX}`);
+  await orders.remove(`${job.id}${PROFIT_SUFFIX}`);
+
   await orders.cancel(`${job.id}${STOP_SUFFIX}`);
+  await orders.remove(`${job.id}${STOP_SUFFIX}`);
 
   log.debug('$$$$$$$$$$$$$$$$$$$$ JOB DONE $$$$$$$$$$$$$$$$$$$$');
   orders.debug();

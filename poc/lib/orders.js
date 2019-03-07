@@ -78,7 +78,7 @@ async function amend (id, params)
   // FIXME: debug
   log.debug(`>>>> amend order ${id}`, order ? order.ordStatus : 'null', params);
 
-  if (!order || order.ordStatus == 'Canceled') { return; }
+  if (!order || order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') { return; }
 
   const p = { origClOrdID: id };
   options.api = 'order';
@@ -103,7 +103,7 @@ async function cancel (id, reason)
   // FIXME: debug
   log.debug(`>>>> cancel order ${id}`, order ? order.ordStatus : 'null');
 
-  if (!order || order.ordStatus == 'Canceled') { return; }
+  if (!order || order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') { return; }
 
   const params = { clOrdID: id, text: reason };
   options.api = 'order';
