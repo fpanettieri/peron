@@ -75,10 +75,10 @@ async function stop (id, sym, qty, px)
 async function amend (id, params)
 {
   const order = find(id);
+  if (!order || order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') { return; }
+
   // FIXME: debug
   log.debug(`>>>> amend order ${id}`, order ? order.ordStatus : 'null', params);
-
-  if (!order || order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') { return; }
 
   const p = { origClOrdID: id };
   options.api = 'order';
@@ -100,10 +100,10 @@ async function amend (id, params)
 async function cancel (id, reason)
 {
   const order = find(id);
+  if (!order || order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') { return; }
+
   // FIXME: debug
   log.debug(`>>>> cancel order ${id}`, order ? order.ordStatus : 'null');
-
-  if (!order || order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') { return; }
 
   const params = { clOrdID: id, text: reason };
   options.api = 'order';
