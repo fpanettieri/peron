@@ -1,8 +1,8 @@
 'use strict';
 
-const cfg = require('../../cfg/peron');
-const orders = require('../../lib/orders');
-const logger = require('../../lib/logger');
+const cfg = require('../cfg/peron');
+const orders = require('../lib/orders');
+const logger = require('../lib/logger');
 const log = new logger('[broker/bitmex]');
 
 const ORDER_PREFIX_REGEX = /^ag-/;
