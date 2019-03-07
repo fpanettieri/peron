@@ -104,6 +104,9 @@ function genId ()
 
 function createJob (id, sym, qty, px, state, t)
 {
+  // FIXME: debug
+  log.debug('>>>> creating job', id);
+
   const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now()};
   jobs.push(job);
   return job;
@@ -111,6 +114,9 @@ function createJob (id, sym, qty, px, state, t)
 
 function updateJob (id, changes)
 {
+  // FIXME: debug
+  log.debug('>>>> updating job', id, changes);
+
   const idx = jobs.findIndex(j => j.id == id);
   jobs[idx] = {...jobs[idx], ...changes};
   return jobs[idx];
@@ -118,6 +124,9 @@ function updateJob (id, changes)
 
 function destroyJob (job)
 {
+  // FIXME: debug
+  log.debug('>>>> destroying job', job.id);
+
   return jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
 }
 
