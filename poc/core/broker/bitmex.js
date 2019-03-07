@@ -104,8 +104,6 @@ function genId ()
 
 function createJob (id, sym, qty, px, state, t)
 {
-  log.debug('>>>> creating job', id);
-  // TODO: stats - reports?
   const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now()};
   jobs.push(job);
   return job;
@@ -113,8 +111,6 @@ function createJob (id, sym, qty, px, state, t)
 
 function updateJob (id, changes)
 {
-  log.debug('>>>> updating job', id, changes);
-  // TODO: stats - reports?
   const idx = jobs.findIndex(j => j.id == id);
   jobs[idx] = {...jobs[idx], ...changes};
   return jobs[idx];
@@ -122,14 +118,11 @@ function updateJob (id, changes)
 
 function destroyJob (job)
 {
-  log.debug('>>>> destroying job', job.id);
   return jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
 }
 
 async function run ()
 {
-  // log.warn(`>>>> run o: ${pending.length} j: ${jobs.length}`);
-
   while (pending.length > 0) {
     await processPending (pending.shift());
   }
