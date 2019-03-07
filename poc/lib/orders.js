@@ -166,6 +166,8 @@ function add (o)
 function update (o)
 {
   let idx = findIndex(o.clOrdID);
+  log.warn('updating', o.clOrdID, orders[idx].clOrdID);
+
   orders[idx] = {...orders[idx], ...o};
   return orders[idx];
 }
