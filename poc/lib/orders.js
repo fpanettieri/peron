@@ -86,6 +86,9 @@ async function amend (id, params)
     log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     log.error('amending', id, params);
     log.error('failed', rsp);
+    log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    debug();
     return log.fatal(rsp);
   }
 
