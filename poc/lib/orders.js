@@ -100,6 +100,8 @@ async function amend (id, params)
 async function cancel (id, reason)
 {
   const order = find(id);
+  log.debug(`>>>> canceling order ${id}`, order);
+
   if (!order || order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') { return; }
 
   // FIXME: debug
