@@ -13,7 +13,7 @@ const chandler = require('./core/chandler');
 const analyst = require('./core/analyst');
 const brain = require('./core/brain/greedy');
 const trader = require('./core/trader');
-const broker = require('./core/broker/bitmex');
+const executor = require('./core/executor');
 // const auditor = require('./core/auditor');
 
 (async () => {
@@ -27,7 +27,7 @@ const broker = require('./core/broker/bitmex');
   analyst.plug(bb);
   brain.plug(bb);
   trader.plug(bb);
-  broker.plug(bb);
+  executor.plug(bb);
   // auditor.plug(bb);
 
   bb.chain('SocketConnected', 'DownloadHistory');
