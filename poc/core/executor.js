@@ -282,6 +282,11 @@ async function proccessStop (job)
 async function proccessDone (job)
 {
   destroyJob(job);
+
+  log.debug('$$$$$$$$$$$$$$$$$$$$ JOB CLEAN UP $$$$$$$$$$$$$$$$$$$$');
+  orders.debug();
+  log.debug('$$$$$$$$$$$$$$$$$$$$ JOB CLEAN UP $$$$$$$$$$$$$$$$$$$$');
+
   await orders.cancel(`${job.id}${LIMIT_SUFFIX}`);
   await orders.remove(`${job.id}${LIMIT_SUFFIX}`);
 
