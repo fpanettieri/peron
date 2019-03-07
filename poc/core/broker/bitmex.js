@@ -163,9 +163,12 @@ async function process (job)
 
 async function processPending (o)
 {
-  log.debug(`>>>> pending order id: ${o.clOrdID} status: ${o.ordStatus}`);
-  // log.debug(o);
-  // log.debug('>>>> pending order');
+  log.log('#############################################################');
+  log.debug(`>>>> pending order id: ${o.clOrdID}`);
+  if (!o.ordStatus) {
+    log.debug(`>>>> changes ${o.clOrdID}`);
+  }
+  log.log('#############################################################');
 
   if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
     log.log('Ignored non-peronist order');
