@@ -181,14 +181,21 @@ function update (o)
 
 function remove (cl_id)
 {
+  log.log('\n\n');
   const index = findIndex(cl_id);
+  debug();
+  log.debug(`>>>> remove ${cl_id} - ${index}`);
+
   if(index < 0) { return; }
   orders.splice(index, 1);
+
+  debug();
+  log.log('\n\n');
 }
 
 function debug ()
 {
-  log.log(orders);
+  log.log(orders.map(o => o.clOrdID));
 }
 
 module.exports = {
