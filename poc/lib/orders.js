@@ -181,6 +181,10 @@ function update (o)
 
 function remove (o)
 {
+  log.debug('******************** REMOVING');
+  log.debug(o);
+  log.debug('******************** REMOVING');
+  
   orders.splice(findIndex(o.clOrdID), 1);
 }
 
