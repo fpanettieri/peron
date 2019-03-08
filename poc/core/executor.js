@@ -169,6 +169,9 @@ async function processPending (o)
 
   order = orders.update(o);
   if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') {
+    log.log(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
+    log.log(`Removing ${o.clOrdID} because ${order.ordStatus}`);
+    log.log('');
     orders.remove(order.clOrdID);
   }
 
