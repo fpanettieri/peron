@@ -179,13 +179,11 @@ function update (o)
   return orders[idx];
 }
 
-function remove (o)
+function remove (cl_id)
 {
-  log.debug('******************** REMOVING');
-  log.debug(o);
-  log.debug('******************** REMOVING');
-  
-  orders.splice(findIndex(o.clOrdID), 1);
+  const index = findIndex(cl_id);
+  if(index < 0) { return; }
+  orders.splice(index, 1);
 }
 
 function debug ()

@@ -173,7 +173,7 @@ async function processPending (o)
 
   order = orders.update(o);
   if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') {
-    orders.remove(order);
+    orders.remove(order.clOrdID);
   }
 
   const jid = order.clOrdID.substr(0, 11);
@@ -311,8 +311,6 @@ async function proccessDone (job)
   log.debug('$$$$$$$$$$$$$$$$$$$$ JOB DONE $$$$$$$$$$$$$$$$$$$$');
   orders.debug();
   log.debug('$$$$$$$$$$$$$$$$$$$$ JOB DONE $$$$$$$$$$$$$$$$$$$$');
-
-  process.exit(0);
 }
 
 async function updatePosition (job, order)
