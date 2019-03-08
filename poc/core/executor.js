@@ -290,8 +290,16 @@ async function proccessDone (job)
   await orders.cancel(`${job.id}${LIMIT_SUFFIX}`);
   await orders.remove(`${job.id}${LIMIT_SUFFIX}`);
 
+  log.debug('$$$$$$$$$$$$$$$$$$$$ LIMIT REMOVED $$$$$$$$$$$$$$$$$$$$');
+  orders.debug();
+  log.debug('$$$$$$$$$$$$$$$$$$$$ LIMIT REMOVED $$$$$$$$$$$$$$$$$$$$');
+
   await orders.cancel(`${job.id}${PROFIT_SUFFIX}`);
   await orders.remove(`${job.id}${PROFIT_SUFFIX}`);
+
+  log.debug('$$$$$$$$$$$$$$$$$$$$ PROFIT REMOVED $$$$$$$$$$$$$$$$$$$$');
+  orders.debug();
+  log.debug('$$$$$$$$$$$$$$$$$$$$ PROFIT REMOVED $$$$$$$$$$$$$$$$$$$$');
 
   await orders.cancel(`${job.id}${STOP_SUFFIX}`);
   await orders.remove(`${job.id}${STOP_SUFFIX}`);
