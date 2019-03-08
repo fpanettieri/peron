@@ -170,7 +170,11 @@ async function processPending (o)
     if (o.ordStatus != 'Canceled') { await orders.discard(o.orderID, 'Unknown Order'); }
     return;
   }
+
   order = orders.update(o);
+  if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') {
+    orders.remove(order);
+  }
 
   const jid = order.clOrdID.substr(0, 11);
   const suffix = order.clOrdID.substr(order.clOrdID.length - 3);
