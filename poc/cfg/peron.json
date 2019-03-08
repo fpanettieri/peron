@@ -16,7 +16,7 @@
     "leverage": 1
   },
   "broker": {
-    "max_jobs": 1,
+    "max_jobs": 5,
     "speed": {
       "normal": 1000,
       "burst": 200
