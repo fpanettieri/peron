@@ -156,10 +156,6 @@ async function process (job)
 
 async function processPending (o)
 {
-  log.log('#############################################################');
-  log.debug(`>>>> pending order id: ${o.clOrdID}`, o);
-  log.log('#############################################################');
-
   if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
     log.log('Ignored non-peronist order');
     return;
@@ -287,30 +283,14 @@ async function proccessDone (job)
 {
   destroyJob(job);
 
-  log.debug('$$$$$$$$$$$$$$$$$$$$ JOB CLEAN UP $$$$$$$$$$$$$$$$$$$$');
-  orders.debug();
-  log.debug('$$$$$$$$$$$$$$$$$$$$ JOB CLEAN UP $$$$$$$$$$$$$$$$$$$$');
-
   await orders.cancel(`${job.id}${LIMIT_SUFFIX}`);
   await orders.remove(`${job.id}${LIMIT_SUFFIX}`);
-
-  log.debug('$$$$$$$$$$$$$$$$$$$$ LIMIT REMOVED $$$$$$$$$$$$$$$$$$$$');
-  orders.debug();
-  log.debug('$$$$$$$$$$$$$$$$$$$$ LIMIT REMOVED $$$$$$$$$$$$$$$$$$$$');
 
   await orders.cancel(`${job.id}${PROFIT_SUFFIX}`);
   await orders.remove(`${job.id}${PROFIT_SUFFIX}`);
 
-  log.debug('$$$$$$$$$$$$$$$$$$$$ PROFIT REMOVED $$$$$$$$$$$$$$$$$$$$');
-  orders.debug();
-  log.debug('$$$$$$$$$$$$$$$$$$$$ PROFIT REMOVED $$$$$$$$$$$$$$$$$$$$');
-
   await orders.cancel(`${job.id}${STOP_SUFFIX}`);
   await orders.remove(`${job.id}${STOP_SUFFIX}`);
-
-  log.debug('$$$$$$$$$$$$$$$$$$$$ JOB DONE $$$$$$$$$$$$$$$$$$$$');
-  orders.debug();
-  log.debug('$$$$$$$$$$$$$$$$$$$$ JOB DONE $$$$$$$$$$$$$$$$$$$$');
 }
 
 async function updatePosition (job, order)
