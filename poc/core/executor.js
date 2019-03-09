@@ -254,7 +254,10 @@ async function proccessPosition (job)
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}${PROFIT_SUFFIX}`);
-  if (!profit_order){ log.fatal('proccessPosition -> profit order not found!'); }
+  if (!profit_order){
+    log.fatal(`proccessPosition -> profit order not found! ${job.id}${PROFIT_SUFFIX}`);
+  }
+  // TODO: maybe move to cleanup?
 
   let price = safePrice(candle.bb_ma);
   if (profit_order.price != price){
@@ -277,7 +280,8 @@ async function proccessStop (job)
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}${PROFIT_SUFFIX}`);
-  if (!profit_order){ log.fatal('proccessStop -> profit order not found!');}
+  if (!profit_order){ log.fatal(`proccessStop -> profit order not found! ${job.id}${PROFIT_SUFFIX}`);}
+  // TODO: maybe move to cleanup?
 
   const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
   if (profit_order.price != price){ await amendOrder(profit_order.clOrdID, {price: price}); }
