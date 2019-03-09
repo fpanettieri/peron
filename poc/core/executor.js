@@ -309,6 +309,9 @@ async function updateTargets (job, sym, qty, px)
 
   let tp_px = px * (1 + Math.sign(qty) * cfg.broker.sl.hard);
   if (candle) { tp_px = qty > 1 ? candle.bb_upper : candle.bb_lower; }
+  tp_px = safePrice(tp_px);
+  
+  log.debug(`tp_px: ${tp_px}`);
 
   let tp = orders.find(`${job.id}${PROFIT_SUFFIX}`);
   if (!tp) {

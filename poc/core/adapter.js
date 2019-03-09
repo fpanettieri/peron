@@ -8,7 +8,7 @@ const bitmex = require('../lib/bitmex');
 const logger = require('../lib/logger');
 const log = new logger('[core/adapter]');
 
-const DMS_INTERVAL = 15 * 1000;
+const DMS_INTERVAL = 5 * 1000;
 const DMS_TIMEOUT = 60 * 1000;
 
 let bb = null;
