@@ -29,7 +29,7 @@ async function create (id, sym, qty, params)
     // FIXME: debug
     log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     log.error('creating failed', id, sym, qty, params);
-    return log.fatal(rsp);
+    return log.error(rsp);
   }
 
   const order = rsp.body;
@@ -89,10 +89,10 @@ async function amend (id, params)
   if (rsp.status.code != 200){
     // FIXME: debug
     log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    log.error('amending', id, params);
-    log.error('failed', rsp);
+    log.error('amending failed', id, params);
+    log.error(order);
     log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    return log.fatal(rsp);
+    return log.error(rsp);
   }
 
   return update(rsp.body);
@@ -116,7 +116,7 @@ async function cancel (id, reason)
     log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     log.error('canceling', id, params);
     log.error('failed', rsp);
-    return log.fatal(rsp);
+    return log.error(rsp);
   }
 
   return update(rsp.body[0]);
@@ -137,7 +137,7 @@ async function cancel_all (symbol, reason)
     log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     log.error('canceling', params);
     log.error('failed', rsp);
-    return log.fatal(rsp);
+    return log.error(rsp);
   }
 
   for (let i = 0; i < rsp.body.length; i++) { update(rsp.body[i]); }
@@ -152,7 +152,7 @@ async function discard (id)
   options.method = 'DELETE';
 
   const rsp = await bitmex.api(options, params);
-  if (rsp.status.code != 200){ log.fatal(rsp.error); }
+  if (rsp.status.code != 200){ log.error(rsp.error); }
   return rsp.body;
 }
 

@@ -39,8 +39,6 @@ async function plug (_bb)
   bb.on('OrderUpdated', onOrderUpdated);
 
   bb.on('TradeContract', onTradeContract);
-
-  run();
 }
 
 function onQuoteUpdated (arr)
@@ -56,7 +54,7 @@ function onCandleAnalyzed (c)
 async function onPositionSynced (arr)
 {
   const pos = arr.find(i => i.symbol == cfg.symbol);
-  if (!pos || !pos.isOpen) { return; }
+  if (!pos || !pos.isOpen) { run(); return; }
 
   const t = (new Date(pos.openingTimestamp)).getTime();
   const id = genId();
@@ -64,6 +62,8 @@ async function onPositionSynced (arr)
   const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.STOP, t);
   await updateTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
   burst = true;
+
+  run();
 }
 
 function onOrderSynced (arr)
@@ -170,7 +170,8 @@ async function processPending (o)
   order = orders.update(o);
   if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') {
     log.log(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
-    log.log(`Removing ${o.clOrdID} because ${order.ordStatus}`);
+    log.log(`Removing ${order.clOrdID} because ${order.ordStatus}`);
+    log.log(order);
     log.log('');
     orders.remove(order.clOrdID);
   }
