@@ -92,7 +92,7 @@ async function amend (id, params)
     log.error('amending failed', id, params);
     log.error(order);
     log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    return log.error(rsp);
+    return order;
   }
 
   return update(rsp.body);
@@ -116,7 +116,7 @@ async function cancel (id, reason)
     log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     log.error('canceling', id, params);
     log.error('failed', rsp);
-    return log.error(rsp);
+    return order;
   }
 
   return update(rsp.body[0]);
@@ -137,7 +137,7 @@ async function cancel_all (symbol, reason)
     log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     log.error('canceling', params);
     log.error('failed', rsp);
-    return log.error(rsp);
+    return;
   }
 
   for (let i = 0; i < rsp.body.length; i++) { update(rsp.body[i]); }
@@ -152,7 +152,10 @@ async function discard (id)
   options.method = 'DELETE';
 
   const rsp = await bitmex.api(options, params);
-  if (rsp.status.code != 200){ log.error(rsp.error); }
+  if (rsp.status.code != 200){
+    log.error(rsp.error);
+    return;
+  }
   return rsp.body;
 }
 

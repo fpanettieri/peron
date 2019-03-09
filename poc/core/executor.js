@@ -309,20 +309,20 @@ async function updateTargets (job, sym, qty, px)
   const ssl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
   updateJob(job.id, {sl: ssl_px});
 
-  const hsl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.hard));
-  let sl = orders.find(`${job.id}${STOP_SUFFIX}`);
-  if (!sl) {
-    sl = await orders.stop(`${job.id}${STOP_SUFFIX}`, sym, -qty, hsl_px);
-  } else {
-    sl = await orders.amend(`${job.id}${STOP_SUFFIX}`, {orderQty: -qty, stopPx: hsl_px});
-  }
-
   const tp_px = safePrice(candle ? candle.bb_ma : px * (1 + Math.sign(qty) * cfg.broker.sl.hard));
   let tp = orders.find(`${job.id}${PROFIT_SUFFIX}`);
   if (!tp) {
     tp = await orders.profit(`${job.id}${PROFIT_SUFFIX}`, sym, -qty, tp_px);
   } else {
     tp = await orders.amend(`${job.id}${PROFIT_SUFFIX}`, {orderQty: -qty, price: tp_px});
+  }
+
+  const hsl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.hard));
+  let sl = orders.find(`${job.id}${STOP_SUFFIX}`);
+  if (!sl) {
+    sl = await orders.stop(`${job.id}${STOP_SUFFIX}`, sym, -qty, hsl_px);
+  } else {
+    sl = await orders.amend(`${job.id}${STOP_SUFFIX}`, {orderQty: -qty, stopPx: hsl_px});
   }
 }
 
