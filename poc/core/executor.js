@@ -169,10 +169,6 @@ async function processPending (o)
 
   order = orders.update(o);
   if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') {
-    log.log(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
-    log.log(`Removing ${order.clOrdID} because ${order.ordStatus}`);
-    log.log(order);
-    log.log('');
     orders.remove(order.clOrdID);
   }
 
@@ -254,9 +250,7 @@ async function proccessPosition (job)
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}${PROFIT_SUFFIX}`);
-  if (!profit_order){
-    log.fatal(`proccessPosition -> profit order not found! ${job.id}${PROFIT_SUFFIX}`);
-  }
+  if (!profit_order){ log.fatal(`proccessPosition -> profit order not found! ${job.id}${PROFIT_SUFFIX}`); }
   // TODO: maybe move to cleanup?
 
   let price = safePrice(candle.bb_ma);
