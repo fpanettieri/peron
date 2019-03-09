@@ -169,6 +169,10 @@ async function processPending (o)
 
   order = orders.update(o);
   if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') {
+    log.log(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
+    log.log(`Removing ${order.clOrdID} because ${order.ordStatus}`);
+    log.log(order);
+    log.log('');
     orders.remove(order.clOrdID);
   }
 
@@ -250,7 +254,9 @@ async function proccessPosition (job)
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}${PROFIT_SUFFIX}`);
-  if (!profit_order){ log.fatal(`proccessPosition -> profit order not found! ${job.id}${PROFIT_SUFFIX}`); }
+  if (!profit_order){
+    log.fatal(`proccessPosition -> profit order not found! ${job.id}${PROFIT_SUFFIX}`, job);
+  }
   // TODO: maybe move to cleanup?
 
   let price = safePrice(candle.bb_ma);
@@ -274,7 +280,7 @@ async function proccessStop (job)
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}${PROFIT_SUFFIX}`);
-  if (!profit_order){ log.fatal(`proccessStop -> profit order not found! ${job.id}${PROFIT_SUFFIX}`);}
+  if (!profit_order){ log.fatal(`proccessStop -> profit order not found! ${job.id}${PROFIT_SUFFIX}`, job);}
   // TODO: maybe move to cleanup?
 
   const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
@@ -310,8 +316,6 @@ async function updateTargets (job, sym, qty, px)
   let tp_px = px * (1 + Math.sign(qty) * cfg.broker.sl.hard);
   if (candle) { tp_px = qty > 1 ? candle.bb_upper : candle.bb_lower; }
   tp_px = safePrice(tp_px);
-  
-  log.debug(`tp_px: ${tp_px}`);
 
   let tp = orders.find(`${job.id}${PROFIT_SUFFIX}`);
   if (!tp) {
