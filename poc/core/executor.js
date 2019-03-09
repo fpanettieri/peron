@@ -313,7 +313,9 @@ async function updateTargets (job, sym, qty, px)
   const ssl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
   updateJob(job.id, {sl: ssl_px});
 
-  const tp_px = safePrice(candle ? candle.bb_ma : px * (1 + Math.sign(qty) * cfg.broker.sl.hard));
+  let tp_px = px * (1 + Math.sign(qty) * cfg.broker.sl.hard);
+  if (candle) { tp_px = qty > 1 ? candle.bb_upper : candle.bb_lower; }
+
   let tp = orders.find(`${job.id}${PROFIT_SUFFIX}`);
   if (!tp) {
     tp = await orders.profit(`${job.id}${PROFIT_SUFFIX}`, sym, -qty, tp_px);
