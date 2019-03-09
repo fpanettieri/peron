@@ -254,12 +254,16 @@ async function proccessPosition (job)
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}${PROFIT_SUFFIX}`);
-  if (!profit_order){
-    log.fatal(`proccessPosition -> profit order not found! ${job.id}${PROFIT_SUFFIX}`, job);
-  }
+  if (!profit_order){ log.fatal(`proccessPosition -> profit order not found! ${job.id}${PROFIT_SUFFIX}`, job); }
   // TODO: maybe move to cleanup?
 
   let price = safePrice(candle.bb_ma);
+  if (job.qty > 1 && price < quote.askPrice) {
+    price = quote.askPrice;
+  } else if (job.qty < 1 && price > quote.bidPrice) {
+    price = quote.bidPrice;
+  }
+
   if (profit_order.price != price){
     await amendOrder(profit_order.clOrdID, {price: price});
   }
@@ -313,7 +317,7 @@ async function updateTargets (job, sym, qty, px)
   const ssl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
   updateJob(job.id, {sl: ssl_px});
 
-  let tp_px = px * (1 + Math.sign(qty) * cfg.broker.sl.hard);
+  let tp_px = safePrice(px * (1 + Math.sign(qty) * cfg.broker.sl.hard));
   if (candle) { tp_px = qty > 1 ? candle.bb_upper : candle.bb_lower; }
   tp_px = safePrice(tp_px);
 
