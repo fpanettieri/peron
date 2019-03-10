@@ -39,7 +39,7 @@ async function api (opts, params)
   rsp.body = JSON.parse(rsp.body);
 
   const limit = rsp.headers['x-ratelimit-remaining'];
-  if(limit < 100) { log.warn('Low limit remaining', rsp.headers['x-ratelimit-remaining']); }
+  if(limit < 1000) { log.warn('Low limit remaining', rsp.headers['x-ratelimit-remaining']); }
 
   return rsp;
 }

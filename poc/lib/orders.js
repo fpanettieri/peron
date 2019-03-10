@@ -10,6 +10,9 @@ const options = { api: 'order', testnet: cfg.testnet };
 
 async function create (id, sym, qty, params)
 {
+  // FIXME: debug
+  log.debug('>>>> create order', id);
+
   const _params = {...{
     clOrdID: id,
     symbol: sym,
@@ -22,7 +25,12 @@ async function create (id, sym, qty, params)
   options.method = 'POST';
 
   const rsp = await bitmex.api(options, _params);
-  if (rsp.status.code != 200){ return log.error(rsp); }
+  if (rsp.status.code != 200){
+    // FIXME: debug
+    log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    log.error('creating failed', id, sym, qty, params);
+    return log.error(rsp);
+  }
 
   const order = rsp.body;
   add(order);
@@ -67,6 +75,10 @@ async function stop (id, sym, qty, px)
 async function amend (id, params)
 {
   const order = find(id);
+
+  // FIXME: debug
+  log.debug(`>>>> amend order ${id}`, order ? order.ordStatus : 'null', params);
+
   if (!order || order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') { return; }
 
   const p = { origClOrdID: id };
@@ -74,7 +86,14 @@ async function amend (id, params)
   options.method = 'PUT';
 
   const rsp = await bitmex.api(options, {...p, ...params});
-  if (rsp.status.code != 200){ return log.error(rsp); }
+  if (rsp.status.code != 200){
+    // FIXME: debug
+    log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    log.error('amending failed', id, params);
+    log.error(order);
+    log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    return order;
+  }
 
   return update(rsp.body);
 }
@@ -82,6 +101,9 @@ async function amend (id, params)
 async function cancel (id, reason)
 {
   const order = find(id);
+  // FIXME: debug
+  log.debug(`>>>> cancel order ${id}`, order ? order.ordStatus : 'null');
+
   if (!order || order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') { return; }
 
   const params = { clOrdID: id, text: reason };
@@ -89,31 +111,51 @@ async function cancel (id, reason)
   options.method = 'DELETE';
 
   const rsp = await bitmex.api(options, params);
-  if (rsp.status.code != 200){ return log.error(rsp); }
+  if (rsp.status.code != 200){
+    // FIXME: debug
+    log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    log.error('canceling', id, params);
+    log.error('failed', rsp);
+    return order;
+  }
 
   return update(rsp.body[0]);
 }
 
 async function cancel_all (symbol, reason)
 {
+  // FIXME: debug
+  log.debug('>>>> cancel all', symbol);
+
   const params = { symbol: symbol, text: reason };
   options.api = 'order/all';
   options.method = 'DELETE';
 
   const rsp = await bitmex.api(options, params);
-  if (rsp.status.code != 200){ return; }
+  if (rsp.status.code != 200){
+    // FIXME: debug
+    log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    log.error('canceling', params);
+    log.error('failed', rsp);
+    return;
+  }
 
   for (let i = 0; i < rsp.body.length; i++) { update(rsp.body[i]); }
 }
 
 async function discard (id)
 {
+  log.debug('>>>> discard', id);
+
   const params = { orderID: id };
   options.api = 'order';
   options.method = 'DELETE';
 
   const rsp = await bitmex.api(options, params);
-  if (rsp.status.code != 200){ return log.error(rsp); }
+  if (rsp.status.code != 200){
+    log.error(rsp.error);
+    return;
+  }
   return rsp.body;
 }
 
