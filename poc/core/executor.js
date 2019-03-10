@@ -237,14 +237,20 @@ async function proccessOrder (job)
       if (price > candle.bb_ma - cfg.broker.min_profit) {
         await orders.cancel(order.clOrdID, 'MA Crossed');
         done = true;
+
       } else if (order.price != price){
-        await orders.amend(order.clOrdID, {price: quote.bidPrice});
+        const amended = await orders.amend(order.clOrdID, {price: quote.bidPrice});
+        if (amended) { done = true; }
       }
+
     } else {
       if (price < candle.bb_ma + cfg.broker.min_profit) {
         await orders.cancel(order.clOrdID, 'MA Crossed');
+        done = true;
+
       } else if (order.price != price){
-        await orders.amend(order.clOrdID, {price: quote.askPrice});
+        const amended = await orders.amend(order.clOrdID, {price: quote.askPrice});
+        if (amended) { done = true; }
       }
     }
   } while (!done);
@@ -322,7 +328,8 @@ async function updateTargets (job, sym, qty, px)
   do {
     let tp_px = px * (1 + Math.sign(qty) * cfg.broker.sl.hard);
     if (candle && quote) {
-      tp_px = is_long ? Math.max(candle.bb_ma, quote.asPrice) : Math.min(candle.bb_ma, quote.bidPrice);
+      log.debug('updateTargets with cande & quote');
+      tp_px = is_long ? Math.max(candle.bb_ma, quote.askPrice) : Math.min(candle.bb_ma, quote.bidPrice);
     }
     tp_px = safePrice(tp_px);
 
@@ -346,7 +353,6 @@ async function updateTargets (job, sym, qty, px)
       sl = await orders.amend(`${job.id}${STOP_SUFFIX}`, {orderQty: -qty, stopPx: hsl_px});
     }
   } while (!sl);
-
 }
 
 function getTimeout ()
