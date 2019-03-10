@@ -18,8 +18,8 @@
   "broker": {
     "max_jobs": 3,
     "speed": {
-      "normal": 200,
-      "burst": 50
+      "normal": 1000,
+      "burst": 200
     },
     "min_profit": 0,
     "order": {

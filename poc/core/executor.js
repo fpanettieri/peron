@@ -229,36 +229,27 @@ async function proccessOrder (job)
     return;
   }
 
-  let done = false;
+  let done = true;
   do {
     let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
     if (job.qty > 0) {
       if (price > candle.bb_ma - cfg.broker.min_profit) {
         await orders.cancel(order.clOrdID, 'MA Crossed');
-        done = true;
 
       } else if (order.price != price){
         const amended = await orders.amend(order.clOrdID, {price: quote.bidPrice});
-        if (amended) { done = true; }
-
-      } else {
-        done = true;
+        if (!amended) { done = false; }
       }
 
     } else {
       if (price < candle.bb_ma + cfg.broker.min_profit) {
         await orders.cancel(order.clOrdID, 'MA Crossed');
-        done = true;
 
       } else if (order.price != price){
         const amended = await orders.amend(order.clOrdID, {price: quote.askPrice});
-        if (amended) { done = true; }
-
-      } else {
-        done = true;
+        if (!amended) { done = false; }
       }
     }
-    log.debug('processOrder.while');
   } while (!done);
 }
 
@@ -270,19 +261,16 @@ async function proccessPosition (job)
   const profit_order = orders.find(`${job.id}${PROFIT_SUFFIX}`);
   if (!profit_order){ return log.error('profit_order missing'); }
 
-  let done = false;
+  let done = true;
   do
   {
     const price = safePrice(job.qty > 1 ? Math.max(candle.bb_ma, quote.askPrice) : Math.max(candle.bb_ma, quote.bidPrice));
 
     if (profit_order.price != price){
       const amended = await orders.amend(profit_order.clOrdID, {price: price});
-      if (amended) { done = true; }
-
-    } else {
-      done = true;
+      if (amended) { done = false; }
     }
-    log.debug('proccessPosition.while');
+
   } while (!done);
 
   if (job.qty > 0 && quote.askPrice < job.sl) {
@@ -303,18 +291,15 @@ async function proccessStop (job)
   const profit_order = orders.find(`${job.id}${PROFIT_SUFFIX}`);
   if (!profit_order){ return log.error('profit_order missing'); }
 
-  let done = false;
+  let done = true;
   do {
     const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
 
     if (profit_order.price != price){
       const amended = await orders.amend(profit_order.clOrdID, {price: price});
-      if (amended) { done = true; }
-
-    } else {
-      done = true;
+      if (!amended) { done = false; }
     }
-    log.debug('proccessPosition.while');
+
   } while (!done);
 }
 
