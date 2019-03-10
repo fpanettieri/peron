@@ -65,10 +65,7 @@ function marginToContracts (m)
 function open (t, c)
 {
   let margin = usableMargin();
-  if (margin <= 0) {
-    log.log('Signal ignored. Not enough margin.');
-    return;
-  }
+  if (margin <= 0) { return; }
 
   let direction = t == 'short' ? -1 : 1;
   bb.emit('TradeContract', cfg.symbol, direction * marginToContracts(margin), c.c);
