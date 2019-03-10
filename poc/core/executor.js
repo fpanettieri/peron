@@ -268,7 +268,7 @@ async function proccessPosition (job)
 
     if (profit_order.price != price){
       const amended = await orders.amend(profit_order.clOrdID, {price: price});
-      if (amended) { done = false; }
+      if (!amended) { done = false; }
     }
 
   } while (!done);
