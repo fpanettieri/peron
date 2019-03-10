@@ -229,10 +229,9 @@ async function proccessOrder (job)
     return;
   }
 
-  let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
-
   let done = false;
   do {
+    let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
     if (job.qty > 0) {
       if (price > candle.bb_ma - cfg.broker.min_profit) {
         await orders.cancel(order.clOrdID, 'MA Crossed');
@@ -262,18 +261,22 @@ async function proccessPosition (job)
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}${PROFIT_SUFFIX}`);
-  if (!profit_order){ return; }
+  if (!profit_order){ return log.error('profit_order missing'); }
 
-  let price = safePrice(candle.bb_ma);
-  if (job.qty > 1 && price < quote.askPrice) {
-    price = quote.askPrice;
-  } else if (job.qty < 1 && price > quote.bidPrice) {
-    price = quote.bidPrice;
-  }
+  let done = false;
+  do
+  {
+    const price = safePrice(job.qty > 1 ? Math.max(candle.bb_ma, quote.askPrice) : Math.max(candle.bb_ma, quote.bidPrice));
 
-  if (profit_order.price != price){
-    await orders.amend(profit_order.clOrdID, {price: price});
-  }
+    if (profit_order.price != price){
+      const amended = await orders.amend(profit_order.clOrdID, {price: price});
+      if (amended) { done = true; }
+
+    } else {
+      done = true;
+    }
+
+  } while (!done);
 
   if (job.qty > 0 && quote.askPrice < job.sl) {
     updateJob(job.id, {state: STATES.STOP});
@@ -291,10 +294,21 @@ async function proccessStop (job)
   proccessOrder(job);
 
   const profit_order = orders.find(`${job.id}${PROFIT_SUFFIX}`);
-  if (!profit_order){ return; }
+  if (!profit_order){ return log.error('profit_order missing'); }
 
-  const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
-  if (profit_order.price != price){ await orders.amend(profit_order.clOrdID, {price: price}); }
+  let done = false;
+  do {
+    const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
+
+    if (profit_order.price != price){
+      const amended = await orders.amend(profit_order.clOrdID, {price: price});
+      if (amended) { done = true; }
+
+    } else {
+      done = true;
+    }
+
+  } while (!done);
 }
 
 async function proccessDone (job)
@@ -328,7 +342,7 @@ async function updateTargets (job, sym, qty, px)
   do {
     let tp_px = px * (1 + Math.sign(qty) * cfg.broker.sl.hard);
     if (candle && quote) {
-      log.debug('updateTargets with cande & quote');
+      log.debug('updateTargets with candle & quote');
       tp_px = is_long ? Math.max(candle.bb_ma, quote.askPrice) : Math.min(candle.bb_ma, quote.bidPrice);
     }
     tp_px = safePrice(tp_px);
