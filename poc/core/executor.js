@@ -240,6 +240,9 @@ async function proccessOrder (job)
       } else if (order.price != price){
         const amended = await orders.amend(order.clOrdID, {price: quote.bidPrice});
         if (amended) { done = true; }
+
+      } else {
+        done = true;
       }
 
     } else {
@@ -250,8 +253,12 @@ async function proccessOrder (job)
       } else if (order.price != price){
         const amended = await orders.amend(order.clOrdID, {price: quote.askPrice});
         if (amended) { done = true; }
+
+      } else {
+        done = true;
       }
     }
+    log.debug('processOrder.while');
   } while (!done);
 }
 
@@ -275,7 +282,7 @@ async function proccessPosition (job)
     } else {
       done = true;
     }
-
+    log.debug('proccessPosition.while');
   } while (!done);
 
   if (job.qty > 0 && quote.askPrice < job.sl) {
@@ -307,7 +314,7 @@ async function proccessStop (job)
     } else {
       done = true;
     }
-
+    log.debug('proccessPosition.while');
   } while (!done);
 }
 
