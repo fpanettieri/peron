@@ -146,11 +146,11 @@ async function run ()
 async function process (job)
 {
   switch (job.state){
-    case STATES.INTENT: await proccessIntent(job); break;
-    case STATES.ORDER: await proccessOrder(job); break;
-    case STATES.POSITION: await proccessPosition(job); break;
-    case STATES.STOP: await proccessStop(job); break;
-    case STATES.DONE: await proccessDone(job); break;
+    case STATES.INTENT: await processIntent(job); break;
+    case STATES.ORDER: await processOrder(job); break;
+    case STATES.POSITION: await processPosition(job); break;
+    case STATES.STOP: await processStop(job); break;
+    case STATES.DONE: await processDone(job); break;
   }
 }
 
@@ -202,7 +202,7 @@ async function processPending (o)
   }
 }
 
-async function proccessIntent (job)
+async function processIntent (job)
 {
   if (!quote) { return; }
 
@@ -214,7 +214,7 @@ async function proccessIntent (job)
   updateJob(job.id, {state: STATES.ORDER});
 }
 
-async function proccessOrder (job)
+async function processOrder (job)
 {
   if (!quote) { return; }
 
@@ -253,12 +253,13 @@ async function proccessOrder (job)
       }
     }
   } while (!done);
+  log.debug('processOrder');
 }
 
-async function proccessPosition (job)
+async function processPosition (job)
 {
   if (!quote || !candle){ return; }
-  proccessOrder(job);
+  processOrder(job);
 
   const profit_order = orders.find(`${job.id}${PROFIT_SUFFIX}`);
   if (!profit_order){ return log.error('profit_order missing'); }
@@ -293,10 +294,10 @@ async function proccessPosition (job)
   }
 }
 
-async function proccessStop (job)
+async function processStop (job)
 {
   if (!quote) { return; }
-  proccessOrder(job);
+  processOrder(job);
 
   const profit_order = orders.find(`${job.id}${PROFIT_SUFFIX}`);
   if (!profit_order){ return log.error('profit_order missing'); }
@@ -314,7 +315,7 @@ async function proccessStop (job)
   } while (!done);
 }
 
-async function proccessDone (job)
+async function processDone (job)
 {
   destroyJob(job);
 
@@ -387,7 +388,7 @@ function safePrice (px)
 function asyncFilled (cl_id)
 {
   const order = orders.find(cl_id);
-  return order.ordStatus == 'Filled';
+  return order.ordStatus == 'Filled' || order.ordStatus == 'Canceled';
 }
 
 module.exports = { plug: plug };
