@@ -29,8 +29,7 @@ async function create (id, sym, qty, params)
     // FIXME: debug
     log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     log.error('creating failed', id, sym, qty, params);
-    log.error(rsp);
-    return;
+    return log.error(rsp);
   }
 
   const order = rsp.body;
@@ -93,7 +92,7 @@ async function amend (id, params)
     log.error('amending failed', id, params);
     log.error(order);
     log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    return;
+    return order;
   }
 
   return update(rsp.body);
@@ -117,7 +116,7 @@ async function cancel (id, reason)
     log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     log.error('canceling', id, params);
     log.error('failed', rsp);
-    return;
+    return order;
   }
 
   return update(rsp.body[0]);

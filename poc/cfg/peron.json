@@ -1,5 +1,5 @@
 {
-  "testnet": true,
+  "testnet": false,
   "timeframe": "1m",
   "symbol": "XBTUSD",
   "history": "50",
@@ -11,15 +11,15 @@
     }
   },
   "trader": {
-    "positions": 10,
-    "size": 0.07,
+    "positions": 5,
+    "size": 0.1,
     "leverage": 1
   },
   "broker": {
-    "max_jobs": 10,
+    "max_jobs": 5,
     "speed": {
-      "normal": 1000,
-      "burst": 200
+      "normal": 200,
+      "burst": 50
     },
     "min_profit": 0,
     "order": {
