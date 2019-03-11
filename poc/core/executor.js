@@ -231,6 +231,8 @@ async function proccessOrder (job)
 
   let done = true;
   do {
+    if (asyncFilled(order.clOrdID)) { break; }
+
     let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
     if (job.qty > 0) {
       if (price > candle.bb_ma - cfg.broker.min_profit) {
@@ -264,7 +266,15 @@ async function proccessPosition (job)
   let done = true;
   do
   {
-    const price = safePrice(job.qty > 1 ? Math.max(candle.bb_ma, quote.askPrice) : Math.max(candle.bb_ma, quote.bidPrice));
+    if (asyncFilled(profit_order.clOrdID)) { break; }
+
+    let price = candle.bb_ma;
+    if (job.qty > 1) {
+      price = Math.max(candle.bb_ma, quote.askPrice);
+    } else {
+      price = Math.max(candle.bb_ma, quote.bidPrice);
+    }
+    price = safePrice(price);
 
     if (profit_order.price != price){
       const amended = await orders.amend(profit_order.clOrdID, {price: price});
@@ -293,8 +303,9 @@ async function proccessStop (job)
 
   let done = true;
   do {
-    const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
+    if (asyncFilled(profit_order.clOrdID)) { break; }
 
+    const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
     if (profit_order.price != price){
       const amended = await orders.amend(profit_order.clOrdID, {price: price});
       if (!amended) { done = false; }
@@ -371,6 +382,12 @@ function getTimeout ()
 function safePrice (px)
 {
   return Math.round(px * 2) / 2;
+}
+
+function asyncFilled (cl_id)
+{
+  const order = orders.find(cl_id);
+  return order.ordStatus == 'Filled';
 }
 
 module.exports = { plug: plug };
