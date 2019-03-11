@@ -29,7 +29,8 @@ async function create (id, sym, qty, params)
     // FIXME: debug
     log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     log.error('creating failed', id, sym, qty, params);
-    return log.error(rsp);
+    log.fatal(rsp);
+    return;
   }
 
   const order = rsp.body;
@@ -92,6 +93,7 @@ async function amend (id, params)
     log.error('amending failed', id, params);
     log.error(order);
     log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    log.fatal(rsp);
     return order;
   }
 
@@ -116,6 +118,8 @@ async function cancel (id, reason)
     log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     log.error('canceling', id, params);
     log.error('failed', rsp);
+    log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    log.fatal(rsp);
     return order;
   }
 
@@ -137,6 +141,8 @@ async function cancel_all (symbol, reason)
     log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     log.error('canceling', params);
     log.error('failed', rsp);
+    log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    log.fatal(rsp);
     return;
   }
 
@@ -153,7 +159,7 @@ async function discard (id)
 
   const rsp = await bitmex.api(options, params);
   if (rsp.status.code != 200){
-    log.error(rsp.error);
+    log.fatal(rsp.error);
     return;
   }
   return rsp.body;

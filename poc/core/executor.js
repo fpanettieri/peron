@@ -236,6 +236,9 @@ async function proccessOrder (job)
     if (price > candle.bb_ma - cfg.broker.min_profit) {
       await orders.cancel(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
+
+      // FIXME: remove this
+      log.debug('>>> processOrder >> long amend');
       await orders.amend(order.clOrdID, {price: price});
     }
 
@@ -243,6 +246,9 @@ async function proccessOrder (job)
     if (price < candle.bb_ma + cfg.broker.min_profit) {
       await orders.cancel(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
+
+      // FIXME: remove this
+      log.debug('>>> updateTargets >> short amend');
       await orders.amend(order.clOrdID, {price: price});
     }
   }
@@ -314,6 +320,8 @@ async function updatePosition (job, order)
 
 async function updateTargets (job, sym, qty, px)
 {
+  log.debug('>>> updateTargets');
+
   const ssl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
   updateJob(job.id, {sl: ssl_px});
 
@@ -325,6 +333,8 @@ async function updateTargets (job, sym, qty, px)
   if (!tp) {
     tp = await orders.profit(`${job.id}${PROFIT_SUFFIX}`, sym, -qty, tp_px);
   } else {
+    // FIXME: remove this
+    log.debug('>>> updateTargets >> tp amend');
     tp = await orders.amend(`${job.id}${PROFIT_SUFFIX}`, {orderQty: -qty, price: tp_px});
   }
 
@@ -333,6 +343,8 @@ async function updateTargets (job, sym, qty, px)
   if (!sl) {
     sl = await orders.stop(`${job.id}${STOP_SUFFIX}`, sym, -qty, hsl_px);
   } else {
+    // FIXME: remove this
+    log.debug('>>> updateTargets >> sl amend');
     sl = await orders.amend(`${job.id}${STOP_SUFFIX}`, {orderQty: -qty, stopPx: hsl_px});
   }
 }
