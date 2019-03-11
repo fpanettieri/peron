@@ -231,7 +231,7 @@ async function processOrder (job)
 
   let done = true;
   do {
-    if (asyncFilled(order.clOrdID)) { break; }
+    if (asyncFilled(order.clOrdID)) { log.debug('ASYNC FILLED!!!!!'); break; }
 
     let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
     if (job.qty > 0) {
@@ -253,7 +253,6 @@ async function processOrder (job)
       }
     }
   } while (!done);
-  log.debug('processOrder');
 }
 
 async function processPosition (job)
@@ -267,7 +266,7 @@ async function processPosition (job)
   let done = true;
   do
   {
-    if (asyncFilled(profit_order.clOrdID)) { break; }
+    if (asyncFilled(profit_order.clOrdID)) { log.debug('ASYNC FILLED!!!!!'); break; }
 
     let price = candle.bb_ma;
     if (job.qty > 1) {
@@ -304,7 +303,7 @@ async function processStop (job)
 
   let done = true;
   do {
-    if (asyncFilled(profit_order.clOrdID)) { break; }
+    if (asyncFilled(profit_order.clOrdID)) { log.debug('ASYNC FILLED!!!!!'); break; }
 
     const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
     if (profit_order.price != price){
