@@ -227,23 +227,23 @@ async function proccessOrder (job)
   }
 
   if (Date.now() - job.created_at > cfg.broker.order.expires) {
-    await cancelOrder(order.clOrdID, 'Expired');
+    await orders.cancel(order.clOrdID, 'Expired');
     return;
   }
 
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
   if (job.qty > 0) {
     if (price > candle.bb_ma - cfg.broker.min_profit) {
-      await cancelOrder(order.clOrdID, 'MA Crossed');
+      await orders.cancel(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
-      await amendOrder(order.clOrdID, {price: price});
+      await orders.amend(order.clOrdID, {price: price});
     }
 
   } else {
     if (price < candle.bb_ma + cfg.broker.min_profit) {
-      await cancelOrder(order.clOrdID, 'MA Crossed');
+      await orders.cancel(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
-      await amendOrder(order.clOrdID, {price: price});
+      await orders.amend(order.clOrdID, {price: price});
     }
   }
 }
@@ -265,7 +265,7 @@ async function proccessPosition (job)
   }
 
   if (profit_order.price != price){
-    await amendOrder(profit_order.clOrdID, {price: price});
+    await orders.amend(profit_order.clOrdID, {price: price});
   }
 
   if (job.qty > 0 && quote.askPrice < job.sl) {
@@ -288,7 +288,7 @@ async function proccessStop (job)
   // TODO: maybe move to cleanup?
 
   const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
-  if (profit_order.price != price){ await amendOrder(profit_order.clOrdID, {price: price}); }
+  if (profit_order.price != price){ await orders.amend(profit_order.clOrdID, {price: price}); }
 }
 
 async function proccessDone (job)
@@ -335,18 +335,6 @@ async function updateTargets (job, sym, qty, px)
   } else {
     sl = await orders.amend(`${job.id}${STOP_SUFFIX}`, {orderQty: -qty, stopPx: hsl_px});
   }
-}
-
-async function cancelOrder (id, reason)
-{
-  await orders.cancel(id, reason);
-  bb.emit('OrderCanceled');
-}
-
-async function amendOrder (id, params)
-{
-  await orders.amend(id, params);
-  bb.emit('OrderAmended');
 }
 
 function getTimeout ()
