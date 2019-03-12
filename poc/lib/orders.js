@@ -25,6 +25,7 @@ async function create (id, sym, qty, params)
   options.method = 'POST';
 
   const rsp = await bitmex.api(options, _params);
+
   if (rsp.status.code != 200){
     // FIXME: debug
     log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
@@ -34,7 +35,7 @@ async function create (id, sym, qty, params)
   }
 
   const order = rsp.body;
-  add(order);
+  if (order.ordStatus != 'Canceled') { add(order); }
   return order;
 }
 

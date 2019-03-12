@@ -1,26 +1,46 @@
 'use strict';
 
+const assert = require('assert');
+
 const cfg = require('../cfg/peron');
 const orders = require('../lib/orders');
 const logger = require('../lib/logger');
 const log = new logger('[test/auth]');
 
-const cl_id = `ag-${Math.random().toString(36).substr(2, 8)}-in`;
-let rsp = null;
+let order = null;
+
+function genId ()
+{
+  return `ag-${Math.random().toString(36).substr(2, 8)}-in`;
+}
 
 function sleep (ms)
 {
   return new Promise(resolve=>{ setTimeout(resolve, ms); });
 }
 
+async function slippage ()
+{
+  order = await orders.limit(genId(), 'XBTUSD', 1, 4000);
+  assert(order.ordStatus == 'Canceled');
+
+  order = await orders.limit(genId(), 'XBTUSD', -1, 3000);
+  assert(order.ordStatus == 'Canceled');
+}
+
+async function duplicated ()
+{
+  rsp = await orders.limit(genId(), 'XBTUSD', 1, 4000);
+  log.log(rsp);
+
+  rsp = await orders.limit(genId(), 'XBTUSD', -1, 3000);
+  log.log(rsp);
+}
+
 (async () => {
   try {
-    // Slippage
-    rsp = await orders.limi(cl_id, 'XBTUSD', 1, 4000);
-    log.log(rsp);
+    await slippage();
 
-    rsp = await orders.limi(cl_id, 'XBTUSD', -1, 3000);
-    log.log(rsp);
 
 
   } catch(err) {
