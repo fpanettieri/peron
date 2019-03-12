@@ -141,7 +141,6 @@ async function amend_canceled ()
 async function amend_non_existent ()
 {
   order = await orders.amend(genId(), {orderQty: 2, price: Math.round(Math.random() * 100 + 1000)});
-  log.log(order);
   assert(order.ordStatus == 'NotFound');
 }
 
