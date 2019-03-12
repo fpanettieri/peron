@@ -49,8 +49,8 @@ async function huge ()
 
 (async () => {
   try {
-    await slippage();
-    // await duplicated();
+    // await slippage();
+    await duplicated();
     // await huge();
 
   } catch(err) {
