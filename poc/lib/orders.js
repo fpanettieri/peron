@@ -104,7 +104,6 @@ async function amend (id, params)
     }
 
   } else {
-    // this will never happen
     if (order.error.message == INVALID_STATUS_ERR) {
       order = {clOrdID: id, ordStatus: 'Invalid'};
     } else if (order.error.message == INVALID_STATUS_ERR) {
@@ -126,10 +125,7 @@ async function cancel (id, reason)
   options.method = 'DELETE';
 
   const rsp = await bitmex.api(options, params);
-  if (rsp.body.length > 1) {
-    log.error('Canceled multiple orders, this should never happen.');
-    log.fatal(rsp);
-  }
+  if (rsp.body.length > 1) { log.fatal('Canceled multiple orders, this should never happen.', rsp); }
 
   let order = null;
   if (rsp.status.code == 200){
@@ -148,29 +144,6 @@ async function cancel (id, reason)
   }
 
   return order;
-}
-
-async function cancel_all (symbol, reason)
-{
-  // FIXME: debug
-  log.debug('>>>> cancel all', symbol);
-
-  const params = { symbol: symbol, text: reason };
-  options.api = 'order/all';
-  options.method = 'DELETE';
-
-  const rsp = await bitmex.api(options, params);
-  if (rsp.status.code != 200){
-    // FIXME: debug
-    log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    log.error('canceling', params);
-    log.error('failed', rsp);
-    log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    log.fatal(rsp);
-    return;
-  }
-
-  for (let i = 0; i < rsp.body.length; i++) { update(rsp.body[i]); }
 }
 
 async function discard (id)
@@ -239,7 +212,6 @@ module.exports = {
 
   amend: amend,
   cancel: cancel,
-  cancel_all: cancel_all,
   discard: discard,
 
   find: find,
