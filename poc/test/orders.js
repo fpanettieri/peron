@@ -22,7 +22,10 @@ function sleep (ms)
 async function crud ()
 {
   const id = genId();
-  order = await orders.create(id, 'XBTUSD', 1, 1000);
+  order = await orders.limit(id, 'XBTUSD', 1, 1000);
+  log.debug('111111111111111111', orders.find(id));
+  log.debug('222222222222222222', order);
+
   assert(orders.find(id), order);
   order = await orders.amend(id, Math.round(Math.random() * 100 + 1000));
   await orders.cancel(id);
@@ -77,9 +80,10 @@ async function non_existent ()
 
 (async () => {
   try {
+    await crud();
     // await slippage();
     // await duplicated();
-    await huge();
+    // await huge();
     // await double_cancel();
     // await non_existent();
 
