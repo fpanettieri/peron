@@ -168,18 +168,18 @@ async function amend_filled ()
 
 (async () => {
   try {
-    // await crud();
-    // await slippage();
-    // await duplicated();
-    // await huge();
-    // await double_cancel();
-    // await cancel_non_existent();
-    // await amend();
-    // await double_amend();
-    // await amend_slip();
-    // await amend_canceled();
-    // await amend_non_existent();
-    // await cancel_filled();
+    await crud();
+    await slippage();
+    await duplicated();
+    await huge();
+    await double_cancel();
+    await cancel_non_existent();
+    await amend();
+    await double_amend();
+    await amend_slip();
+    await amend_canceled();
+    await amend_non_existent();
+    await cancel_filled();
     await amend_filled();
 
   } catch(err) {
