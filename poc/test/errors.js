@@ -22,6 +22,7 @@ function sleep (ms)
 async function slippage ()
 {
   order = await orders.limit(genId(), 'XBTUSD', 1, 4000);
+  log.log(order);
   assert(order.ordStatus == 'Canceled');
 
   order = await orders.limit(genId(), 'XBTUSD', -1, 3000);
@@ -39,10 +40,16 @@ async function duplicated ()
   assert(order.ordStatus != 'Canceled');
 }
 
+async function huge ()
+{
+  order = await orders.limit(genId(), 'XBTUSD', 100000000000000000, 4000);
+}
+
 (async () => {
   try {
-    // await slippage();
-    await duplicated();
+    await slippage();
+    // await duplicated();
+    // await huge();
 
   } catch(err) {
     log.error(err);

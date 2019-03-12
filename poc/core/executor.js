@@ -207,13 +207,37 @@ async function proccessIntent (job)
   if (!quote) { return; }
 
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
+
   const order = await orders.limit(`${job.id}${LIMIT_SUFFIX}`, job.sym, job.qty, price);
-  if (order) {
+
+  if (!order) {
+
+  } else if (order.ordStatus == 'New') {
     updateJob(job.id, {state: STATES.ORDER});
-    bb.emit('OrderPlaced');
+
+  } else if (order.ordStatus == 'Slipped') {
+    // retry
+
+  } else if (order.ordStatus == 'Duplicated') {
+    log.error('Duplicated limit order???');
+
+  } else if (order.ordStatus == 'Canceled') {
+    destroyJob(job);
+
   } else {
-    bb.emit('OrderFailed');
+
   }
+
+
+
+  // TODO: refacto this so it uses the order ack?
+  // const order = await orders.limit(`${job.id}${LIMIT_SUFFIX}`, job.sym, job.qty, price);
+  // if (order) {
+  //   updateJob(job.id, {state: STATES.ORDER});
+  //   bb.emit('OrderPlaced');
+  // } else {
+  //   bb.emit('OrderFailed');
+  // }
 }
 
 async function proccessOrder (job)
