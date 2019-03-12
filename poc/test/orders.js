@@ -144,6 +144,28 @@ async function amend_non_existent ()
   assert(order.ordStatus == 'NotFound');
 }
 
+async function cancel_filled ()
+{
+  const id = genId();
+
+  order = await orders.market(id, 'XBTUSD', 1);
+  assert(order.ordStatus == 'Filled');
+
+  order = await orders.cancel(id);
+  assert(order.ordStatus == 'Filled');
+}
+
+async function amend_filled ()
+{
+  const id = genId();
+
+  order = await orders.market(id, 'XBTUSD', 1);
+  assert(order.ordStatus == 'Filled');
+
+  order = await orders.amend(id, {orderQty: 2, price: Math.round(Math.random() * 100 + 1000)});
+  assert(order.ordStatus == 'Invalid');
+}
+
 (async () => {
   try {
     // await crud();
@@ -156,7 +178,9 @@ async function amend_non_existent ()
     // await double_amend();
     // await amend_slip();
     // await amend_canceled();
-    await amend_non_existent();
+    // await amend_non_existent();
+    // await cancel_filled();
+    await amend_filled();
 
   } catch(err) {
     log.error(err);
