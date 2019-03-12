@@ -106,7 +106,7 @@ async function amend (id, params)
   } else {
     if (order.error.message == INVALID_STATUS_ERR) {
       order = {clOrdID: id, ordStatus: 'Invalid'};
-    } else if (order.error.message == INVALID_STATUS_ERR) {
+    } else if (order.error.message == INVALID_CLIORDID_ERR) {
       order = {clOrdID: id, ordStatus: 'NotFound'};
     } else {
       order = {clOrdID: id, ordStatus: 'Error', error: order.error.message};
