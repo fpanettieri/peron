@@ -5,10 +5,11 @@ const orders = require('../lib/orders');
 const logger = require('../lib/logger');
 const log = new logger('[broker/bitmex]');
 
-const ORDER_PREFIX_REGEX = /^ag-/;
-const LIMIT_SUFFIX = '-lm';
-const PROFIT_SUFFIX = '-tp';
-const STOP_SUFFIX = '-sl';
+const ORDER_PREFIX_REGEX = /^..-ag-/;
+const LIMIT_PREFIX = 'lm-';
+const PROFIT_PREFIX = 'tp-';
+const STOP_PREFIX = 'sl-';
+const AG_PREFIX = 'ag-';
 
 const STATES = { INTENT: 0, ORDER: 1, POSITION: 2, STOP: 3, DONE: 4 };
 
@@ -208,8 +209,7 @@ async function proccessIntent (job)
 
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
 
-  const order = await orders.limit(`${job.id}${LIMIT_SUFFIX}`, job.sym, job.qty, price);
-
+  const order = await orders.limit(`${LIMIT_PREFIX}${AG_PREFIX}${job.id}-0`, job.sym, job.qty, price);
   if (!order) { log.fatal('angkor wat'); }
 
   switch (order.ordStatus) {

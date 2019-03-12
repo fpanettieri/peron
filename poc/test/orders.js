@@ -11,7 +11,7 @@ let order = null;
 
 function genId ()
 {
-  return `ag-${Math.random().toString(36).substr(2, 12)}-in`;
+  return `lm-ag-${Math.random().toString(36).substr(2, 12)}-0`;
 }
 
 function sleep (ms)

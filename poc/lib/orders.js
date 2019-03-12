@@ -164,6 +164,7 @@ async function discard (id)
 
 function find (id)
 {
+  // FIXME: change so it matches strings that begins with that, not only perfect matches
   return orders.find(o => o.clOrdID === id);
 }
 
