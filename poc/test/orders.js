@@ -72,7 +72,7 @@ async function double_cancel ()
   assert(order.ordStatus == 'DoubleCanceled');
 }
 
-async function non_existent ()
+async function cancel_non_existent ()
 {
   order = await orders.cancel(genId());
   assert(order.ordStatus == 'NotFound');
@@ -118,7 +118,7 @@ async function amend_slip ()
   assert(order.ordStatus == 'New');
 
   order = await orders.amend(id, {price: 5000});
-  assert(order.ordStatus == 'Amended');
+  assert(order.ordStatus == 'Slipped');
 }
 
 async function amend_canceled ()
@@ -129,21 +129,19 @@ async function amend_canceled ()
   assert(order.ordStatus == 'New');
 
   order = await orders.amend(id, {orderQty: 2, price: Math.round(Math.random() * 100 + 1000)});
-  assert(order.ordStatus == 'Amended');
+  assert(order.ordStatus == 'New');
 
   order = await orders.cancel(id);
-  order = await orders.amend(id, {orderQty: 2, price: Math.round(Math.random() * 100 + 1000)});
-  // log.log(order);
-  // assert(order.ordStatus == 'NotFound');
+  assert(order.ordStatus == 'Canceled');
+
+  order = await orders.amend(id, {orderQty: 3, price: Math.round(Math.random() * 100 + 1000)});
+  assert(order.ordStatus == 'Invalid');
 }
 
 async function amend_non_existent ()
 {
-  const id = genId();
-  order = await orders.limit(id, 'XBTUSD', 1, 1000);
-  order = await orders.amend(id, {orderQty: 2, price: Math.round(Math.random() * 100 + 1000)});
-  // log.log(order);
-  // assert(order.ordStatus == 'NotFound');
+  order = await orders.amend(genId(), {orderQty: 2, price: Math.round(Math.random() * 100 + 1000)});
+  assert(order.ordStatus == 'NotFound');
 }
 
 (async () => {
@@ -153,12 +151,12 @@ async function amend_non_existent ()
     // await duplicated();
     // await huge();
     // await double_cancel();
-    // await non_existent();
+    // await cancel_non_existent();
     // await amend();
     // await double_amend();
-    await amend_slip();
+    // await amend_slip();
     // await amend_canceled();
-    // await amend_non_existent();
+    await amend_non_existent();
 
   } catch(err) {
     log.error(err);

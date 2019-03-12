@@ -9,6 +9,8 @@ const SLIPPAGE_ERR = 'Canceled: Order had execInst of ParticipateDoNotInitiate';
 const DOUBLE_CANCEL_ERR = 'Unable to cancel order due to existing state: Canceled';
 const DUPLICATED_ERR = 'Duplicate clOrdID';
 const NOT_FOUND_ERR = 'Not Found';
+const INVALID_STATUS_ERR = 'Invalid ordStatus';
+const INVALID_CLIORDID_ERR = 'Invalid origClOrdID';
 
 const orders = [];
 const options = { api: 'order', testnet: cfg.testnet };
@@ -94,19 +96,19 @@ async function amend (id, params)
   const rsp = await bitmex.api(options, _params);
   let order = rsp.body;
 
-  log.debug('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-  log.debug(rsp);
-  log.debug('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-
   if (rsp.status.code == 200){
     if (order.ordStatus == 'New') {
       order = update(order);
+    } else if (order.ordStatus == 'Canceled' && order.text.indexOf(SLIPPAGE_ERR) > -1) {
+      order.ordStatus = 'Slipped';
     }
 
   } else {
     // this will never happen
-    if (order.error.message == DUPLICATED_ERR) {
-      order = {clOrdID: id, ordStatus: 'Duplicated'};
+    if (order.error.message == INVALID_STATUS_ERR) {
+      order = {clOrdID: id, ordStatus: 'Invalid'};
+    } else if (order.error.message == INVALID_STATUS_ERR) {
+      order = {clOrdID: id, ordStatus: 'NotFound'};
     } else {
       order = {clOrdID: id, ordStatus: 'Error', error: order.error.message};
     }
@@ -130,7 +132,6 @@ async function cancel (id, reason)
   }
 
   let order = null;
-
   if (rsp.status.code == 200){
     order = update(rsp.body[0]);
 
