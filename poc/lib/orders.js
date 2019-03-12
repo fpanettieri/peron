@@ -42,11 +42,12 @@ async function create (id, sym, qty, params)
       order = {clOrdID: id, ordStatus: 'Duplicated'};
 
     } else {
+      order = {clOrdID: id, ordStatus: 'Error', error: order.error.message};
 
       // FIXME: debug
-      log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-      log.error('creating failed', id, sym, qty, params);
-      log.fatal(rsp);
+      // log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      // log.error('creating failed', id, sym, qty, params);
+      
     }
   }
 
@@ -130,6 +131,10 @@ async function cancel (id, reason)
   options.method = 'DELETE';
 
   const rsp = await bitmex.api(options, params);
+
+  // check at least 1 was canceled
+  log.log(rsp.body[0].error);
+
   if (rsp.status.code != 200){
     // FIXME: debug
     log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');

@@ -61,21 +61,15 @@ async function double_cancel ()
 
 async function non_existent ()
 {
-  const id = genId();
-
-  order = await orders.limit(id, 'XBTUSD', 1, 1000);
-  assert(order.ordStatus == 'New');
-
-  await orders.cancel(id);
-  await orders.cancel(id);
+  await orders.cancel(genId());
 }
 
 (async () => {
   try {
     // await slippage();
     // await duplicated();
-    // await huge();
-    await double_cancel();
+    await huge();
+    // await double_cancel();
     // await non_existent();
 
   } catch(err) {

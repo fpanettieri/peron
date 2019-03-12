@@ -217,13 +217,16 @@ async function proccessIntent (job)
     updateJob(job.id, {state: STATES.ORDER});
 
   } else if (order.ordStatus == 'Slipped') {
-    // retry
+    // TODO: track slip & retry
 
   } else if (order.ordStatus == 'Duplicated') {
     log.error('Duplicated limit order???');
 
   } else if (order.ordStatus == 'Canceled') {
     destroyJob(job);
+
+  } else if (order.ordStatus == 'Error'){
+    log.fatal(order.error);
 
   } else {
     log.fatal('angkor wat wat');
