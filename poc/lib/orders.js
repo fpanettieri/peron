@@ -117,11 +117,13 @@ async function amend (id, params)
 
 async function cancel (id, reason)
 {
-  const order = find(id);
-  // FIXME: debug
-  log.debug(`>>>> cancel order ${id}`, order ? order.ordStatus : 'null');
+  // const order = find(id);
+  // // FIXME: debug
+  // log.debug(`>>>> cancel order ${id}`, order ? order.ordStatus : 'null');
+  //
+  // if (!order || order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') { return; }
 
-  if (!order || order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') { return; }
+  log.debug(`>>>> cancel order ${id}`, id, reason);
 
   const params = { clOrdID: id, text: reason };
   options.api = 'order';
@@ -135,7 +137,7 @@ async function cancel (id, reason)
     log.error('failed', rsp);
     log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     log.fatal(rsp);
-    return order;
+    // return order;
   }
 
   return update(rsp.body[0]);

@@ -33,6 +33,7 @@ async function slippage ()
 async function duplicated ()
 {
   const id = genId();
+
   order = await orders.limit(id, 'XBTUSD', 1, 1000);
   assert(order.ordStatus == 'New');
 
@@ -47,11 +48,35 @@ async function huge ()
   order = await orders.limit(genId(), 'XBTUSD', 100000000000000000, 1000);
 }
 
+async function double_cancel ()
+{
+  const id = genId();
+
+  order = await orders.limit(id, 'XBTUSD', 1, 1000);
+  assert(order.ordStatus == 'New');
+
+  await orders.cancel(id);
+  await orders.cancel(id);
+}
+
+async function non_existent ()
+{
+  const id = genId();
+
+  order = await orders.limit(id, 'XBTUSD', 1, 1000);
+  assert(order.ordStatus == 'New');
+
+  await orders.cancel(id);
+  await orders.cancel(id);
+}
+
 (async () => {
   try {
     // await slippage();
-    await duplicated();
+    // await duplicated();
     // await huge();
+    await double_cancel();
+    // await non_existent();
 
   } catch(err) {
     log.error(err);
