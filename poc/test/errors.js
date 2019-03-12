@@ -23,9 +23,11 @@ async function slippage ()
 {
   order = await orders.limit(genId(), 'XBTUSD', 1, 4000);
   assert(order.ordStatus == 'Slipped');
+  await orders.cancel(order.clOrdID);
 
   order = await orders.limit(genId(), 'XBTUSD', -1, 3000);
   assert(order.ordStatus == 'Slipped');
+  await orders.cancel(order.clOrdID);
 }
 
 async function duplicated ()
@@ -36,6 +38,8 @@ async function duplicated ()
 
   order = await orders.limit(id, 'XBTUSD', 1, 1001);
   assert(order.ordStatus == 'Duplicated');
+
+  await orders.cancel(id);
 }
 
 async function huge ()
@@ -46,8 +50,8 @@ async function huge ()
 (async () => {
   try {
     // await slippage();
-    await duplicated();
-    // await huge();
+    // await duplicated();
+    await huge();
 
   } catch(err) {
     log.error(err);
