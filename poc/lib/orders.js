@@ -42,12 +42,7 @@ async function create (id, sym, qty, params)
       order = {clOrdID: id, ordStatus: 'Duplicated'};
 
     } else {
-      order = {clOrdID: id, ordStatus: 'Error', error: order.error.message};
-
-      // FIXME: debug
-      // log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-      // log.error('creating failed', id, sym, qty, params);
-      
+      order = {clOrdID: id, ordStatus: 'Error', error: order.error.message};      
     }
   }
 

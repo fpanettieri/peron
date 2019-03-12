@@ -5,7 +5,7 @@ const assert = require('assert');
 const cfg = require('../cfg/peron');
 const orders = require('../lib/orders');
 const logger = require('../lib/logger');
-const log = new logger('[test/auth]');
+const log = new logger('[test/orders]');
 
 let order = null;
 
@@ -17,6 +17,15 @@ function genId ()
 function sleep (ms)
 {
   return new Promise(resolve=>{ setTimeout(resolve, ms); });
+}
+
+async function crud ()
+{
+  const id = genId();
+  order = await orders.create(id, 'XBTUSD', 1, 1000);
+  assert(orders.find(id), order);
+  order = await orders.amend(id, Math.round(Math.random() * 100 + 1000));
+  await orders.cancel(id);
 }
 
 async function slippage ()
@@ -46,6 +55,8 @@ async function duplicated ()
 async function huge ()
 {
   order = await orders.limit(genId(), 'XBTUSD', 100000000000000000, 1000);
+  assert(order.ordStatus == 'Error');
+  log.log(order.error);
 }
 
 async function double_cancel ()
