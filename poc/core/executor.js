@@ -210,40 +210,33 @@ async function proccessIntent (job)
 
   const order = await orders.limit(`${job.id}${LIMIT_SUFFIX}`, job.sym, job.qty, price);
 
-  if (!order) {
-    log.fatal('angkor wat');
+  if (!order) { log.fatal('angkor wat'); }
 
-  } else if (order.ordStatus == 'New') {
-    updateJob(job.id, {state: STATES.ORDER});
+  switch (order.ordStatus) {
+    case 'New': {
+      updateJob(job.id, {state: STATES.ORDER});
+    } break;
 
-  } else if (order.ordStatus == 'Slipped') {
-    // TODO: track slip & retry
+    case 'Slipped': {
+      // wait for next frame
+    } break;
 
-  } else if (order.ordStatus == 'Duplicated') {
-    log.error('Duplicated limit order???');
+    case 'Canceled': {
+      destroyJob(job);
+    } break;
 
-  } else if (order.ordStatus == 'Canceled') {
-    destroyJob(job);
-
-  } else if (order.ordStatus == 'Error'){
-    log.fatal(order.error);
-
-  } else {
-    log.fatal('angkor wat wat');
+    case 'Duplicated':
+    case 'Error':
+    default: {
+      log.error(' >>>>>>>>>>>>>>>>> this should never happen!');
+      log.error(' >>>>>>>>>>>>>>>>> Job:', job);
+      log.error(' >>>>>>>>>>>>>>>>> Order:', order);
+      log.error(' >>>>>>>>>>>>>>>>> Orders:');
+      orders.debug();
+      log.error(' >>>>>>>>>>>>>>>>> Pending:', pending);
+      log.fatal('Might be a thread sync issue?');
+    }
   }
-
-  log.error(order.ordStatus, order);
-
-
-
-  // TODO: refacto this so it uses the order ack?
-  // const order = await orders.limit(`${job.id}${LIMIT_SUFFIX}`, job.sym, job.qty, price);
-  // if (order) {
-  //   updateJob(job.id, {state: STATES.ORDER});
-  //   bb.emit('OrderPlaced');
-  // } else {
-  //   bb.emit('OrderFailed');
-  // }
 }
 
 async function proccessOrder (job)
