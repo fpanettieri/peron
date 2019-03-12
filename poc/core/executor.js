@@ -239,6 +239,8 @@ async function proccessIntent (job)
   }
 }
 
+// TODO: continue integrating the orders library here, just 100 more lines of code and we done
+
 async function proccessOrder (job)
 {
   if (!quote) { return; }
