@@ -30,18 +30,19 @@ async function slippage ()
 
 async function duplicated ()
 {
-  rsp = await orders.limit(genId(), 'XBTUSD', 1, 4000);
-  log.log(rsp);
+  const id = genId();
+  order = await orders.limit(id, 'XBTUSD', 1, 1000);
+  assert(order.ordStatus != 'Canceled');
 
-  rsp = await orders.limit(genId(), 'XBTUSD', -1, 3000);
-  log.log(rsp);
+  order = await orders.limit(id, 'XBTUSD', 1, 1001);
+  log.log(order);
+  assert(order.ordStatus != 'Canceled');
 }
 
 (async () => {
   try {
-    await slippage();
-
-
+    // await slippage();
+    await duplicated();
 
   } catch(err) {
     log.error(err);

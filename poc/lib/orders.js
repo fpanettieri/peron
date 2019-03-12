@@ -34,6 +34,8 @@ async function create (id, sym, qty, params)
     return;
   }
 
+  log.debug(rsp);
+
   const order = rsp.body;
   if (order.ordStatus != 'Canceled') { add(order); }
   return order;
