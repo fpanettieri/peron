@@ -293,9 +293,9 @@ async function proccessPosition (job)
   if (order.price != price){
     const amended = await orders.amend(order.clOrdID, {price: price});
     if (amended.ordStatus == 'Slipped') {
-      log.warn('$$$$$$$$$$$$$$$$$$$ position update slipped!');
+      log.warn('$$$$$$$$$$$$$$$$$$$ position update slipped!', order.clOrdID);
       const tp_px = job.qty > 1 ? SAFE_LONG_TARGET : SAFE_SHORT_TARGET;
-      await orders.profit(`${root}${genId()}`, amended.symbol, amended.leavesQty, tp_px);
+      await orders.profit(`${root}-${genId()}`, amended.symbol, amended.leavesQty, tp_px);
     }
   }
 
