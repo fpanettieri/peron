@@ -99,7 +99,7 @@ async function onTradeContract (sym, qty, px)
 
 function genId ()
 {
-  return `ag-${Math.random().toString(36).substr(2, 8)}`;
+  return `${Math.random().toString(36).substr(2, 12)}`;
 }
 
 function createJob (id, sym, qty, px, state, t)
@@ -176,7 +176,7 @@ async function processPending (o)
     orders.remove(order.clOrdID);
   }
 
-  const jid = order.clOrdID.substr(0, 11);
+  const jid = order.clOrdID.substr(0, 15);
   const suffix = order.clOrdID.substr(order.clOrdID.length - 3);
 
   const job = jobs.find(j => j.id == jid);
@@ -261,10 +261,10 @@ async function proccessOrder (job)
     if (price > candle.bb_ma - cfg.broker.min_profit) {
       await orders.cancel(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
-
-      // FIXME: remove this
-      log.debug('>>> processOrder >> long amend');
-      await orders.amend(order.clOrdID, {price: price});
+      const amended = await orders.amend(order.clOrdID, {price: price});
+      if (order.ordStatus == 'Slipped') {
+        fixme: create followup order
+      }
     }
 
   } else {
@@ -274,7 +274,7 @@ async function proccessOrder (job)
 
       // FIXME: remove this
       log.debug('>>> createTargets >> short amend');
-      await orders.amend(order.clOrdID, {price: price});
+      const amended = await orders.amend(order.clOrdID, {price: price});
     }
   }
 }

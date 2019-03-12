@@ -11,12 +11,12 @@ let order = null;
 
 function genId ()
 {
-  return `ag-${Math.random().toString(36).substr(2, 8)}-in`;
+  return `ag-${Math.random().toString(36).substr(2, 12)}-in`;
 }
 
 function sleep (ms)
 {
-  return new Promise(resolve=>{ setTimeout(resolve, ms); });
+  return new Promise(resolve => { setTimeout(resolve, ms); });
 }
 
 async function crud ()
@@ -119,6 +119,8 @@ async function amend_slip ()
 
   order = await orders.amend(id, {price: 5000});
   assert(order.ordStatus == 'Slipped');
+
+  log.log(order);
 }
 
 async function amend_canceled ()
@@ -166,21 +168,35 @@ async function amend_filled ()
   assert(order.ordStatus == 'Invalid');
 }
 
+async function amend_respawn ()
+{
+  const id = genId();
+  order = await orders.limit(id, 'XBTUSD', 1, 1000);
+  assert(order.ordStatus == 'New');
+
+  order = await orders.amend(id, {price: 5000});
+  assert(order.ordStatus == 'Slipped');
+
+  order = await orders.limit(id, 'XBTUSD', 1, 1000);
+  assert(order.ordStatus == 'Duplicated');
+}
+
 (async () => {
   try {
-    await crud();
-    await slippage();
-    await duplicated();
-    await huge();
-    await double_cancel();
-    await cancel_non_existent();
-    await amend();
-    await double_amend();
+    // await crud();
+    // await slippage();
+    // await duplicated();
+    // await huge();
+    // await double_cancel();
+    // await cancel_non_existent();
+    // await amend();
+    // await double_amend();
     await amend_slip();
-    await amend_canceled();
-    await amend_non_existent();
-    await cancel_filled();
-    await amend_filled();
+    // await amend_canceled();
+    // await amend_non_existent();
+    // await cancel_filled();
+    // await amend_filled();
+    // await amend_respawn();
 
   } catch(err) {
     log.error(err);
