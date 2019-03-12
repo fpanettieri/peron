@@ -87,29 +87,32 @@ async function stop (id, sym, qty, px)
 
 async function amend (id, params)
 {
-  const order = find(id);
-
-  // FIXME: debug
-  log.debug(`>>>> amend order ${id}`, order ? order.ordStatus : 'null', params);
-
-  if (!order || order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') { return; }
-
-  const p = { origClOrdID: id };
+  const _params = {...{ origClOrdID: id }, ...params};
   options.api = 'order';
   options.method = 'PUT';
 
-  const rsp = await bitmex.api(options, {...p, ...params});
-  if (rsp.status.code != 200){
-    // FIXME: debug
-    log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    log.error('amending failed', id, params);
-    log.error(order);
-    log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    log.fatal(rsp);
-    return order;
+  const rsp = await bitmex.api(options, _params);
+  let order = rsp.body;
+
+  log.debug('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+  log.debug(rsp);
+  log.debug('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+
+  if (rsp.status.code == 200){
+    if (order.ordStatus == 'New') {
+      order = update(order);
+    }
+
+  } else {
+    // this will never happen
+    if (order.error.message == DUPLICATED_ERR) {
+      order = {clOrdID: id, ordStatus: 'Duplicated'};
+    } else {
+      order = {clOrdID: id, ordStatus: 'Error', error: order.error.message};
+    }
   }
 
-  return update(rsp.body);
+  return order;
 }
 
 async function cancel (id, reason)

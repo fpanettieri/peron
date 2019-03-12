@@ -30,11 +30,11 @@ async function crud ()
 
 async function slippage ()
 {
-  order = await orders.limit(genId(), 'XBTUSD', 1, 4000);
+  order = await orders.limit(genId(), 'XBTUSD', 1, 5000);
   assert(order.ordStatus == 'Slipped');
   await orders.cancel(order.clOrdID);
 
-  order = await orders.limit(genId(), 'XBTUSD', -1, 3000);
+  order = await orders.limit(genId(), 'XBTUSD', -1, 2000);
   assert(order.ordStatus == 'Slipped');
   await orders.cancel(order.clOrdID);
 }
@@ -78,14 +78,87 @@ async function non_existent ()
   assert(order.ordStatus == 'NotFound');
 }
 
+async function amend ()
+{
+  const id = genId();
+  order = await orders.limit(id, 'XBTUSD', 1, 1000);
+  assert(order.ordStatus == 'New');
+
+  order = await orders.amend(id, {orderQty: 2, price: Math.round(Math.random() * 100 + 1000)});
+  assert(order.ordStatus == 'Amended');
+}
+
+async function amend ()
+{
+  const id = genId();
+  order = await orders.limit(id, 'XBTUSD', 1, 1000);
+  assert(order.ordStatus == 'New');
+
+  order = await orders.amend(id, {orderQty: 3, price: Math.round(Math.random() * 100 + 1000)});
+  assert(order.ordStatus == 'New');
+}
+
+async function double_amend ()
+{
+  const id = genId();
+  order = await orders.limit(id, 'XBTUSD', 1, 1000);
+  assert(order.ordStatus == 'New');
+
+  order = await orders.amend(id, {orderQty: 2, price: Math.round(Math.random() * 100 + 1000)});
+  assert(order.ordStatus == 'New');
+
+  order = await orders.amend(id, {orderQty: 3, price: Math.round(Math.random() * 100 + 1000)});
+  assert(order.ordStatus == 'New');
+}
+
+async function amend_slip ()
+{
+  const id = genId();
+  order = await orders.limit(id, 'XBTUSD', 1, 1000);
+  assert(order.ordStatus == 'New');
+
+  order = await orders.amend(id, {price: 5000});
+  assert(order.ordStatus == 'Amended');
+}
+
+async function amend_canceled ()
+{
+  const id = genId();
+
+  order = await orders.limit(id, 'XBTUSD', 1, 1000);
+  assert(order.ordStatus == 'New');
+
+  order = await orders.amend(id, {orderQty: 2, price: Math.round(Math.random() * 100 + 1000)});
+  assert(order.ordStatus == 'Amended');
+
+  order = await orders.cancel(id);
+  order = await orders.amend(id, {orderQty: 2, price: Math.round(Math.random() * 100 + 1000)});
+  // log.log(order);
+  // assert(order.ordStatus == 'NotFound');
+}
+
+async function amend_non_existent ()
+{
+  const id = genId();
+  order = await orders.limit(id, 'XBTUSD', 1, 1000);
+  order = await orders.amend(id, {orderQty: 2, price: Math.round(Math.random() * 100 + 1000)});
+  // log.log(order);
+  // assert(order.ordStatus == 'NotFound');
+}
+
 (async () => {
   try {
     // await crud();
     // await slippage();
     // await duplicated();
-    await huge();
+    // await huge();
     // await double_cancel();
     // await non_existent();
+    // await amend();
+    // await double_amend();
+    await amend_slip();
+    // await amend_canceled();
+    // await amend_non_existent();
 
   } catch(err) {
     log.error(err);
