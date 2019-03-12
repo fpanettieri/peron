@@ -176,7 +176,7 @@ function add (o)
   if(findIndex(o.clOrdID) > -1) { return; }
   log.debug(`>>>> add ${o.clOrdID}`);
   orders.push(o);
-  debug();
+  // debug();
   return o;
 }
 
@@ -190,11 +190,11 @@ function update (o)
 function remove (cl_id)
 {
   const index = findIndex(cl_id);
-  debug();
+  // debug();
   log.debug(`>>>> remove ${cl_id} - ${index}`);
   if(index < 0) { return; }
   orders.splice(index, 1);
-  debug();
+  // debug();
 }
 
 function debug ()
