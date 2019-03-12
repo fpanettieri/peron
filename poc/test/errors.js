@@ -32,17 +32,15 @@ async function duplicated ()
 {
   const id = genId();
   order = await orders.limit(id, 'XBTUSD', 1, 1000);
-  log.log('a', order);
   assert(order.ordStatus == 'New');
 
   order = await orders.limit(id, 'XBTUSD', 1, 1001);
-  log.log('b', order);
   assert(order.ordStatus == 'Duplicated');
 }
 
 async function huge ()
 {
-  order = await orders.limit(genId(), 'XBTUSD', 100000000000000000, 4000);
+  order = await orders.limit(genId(), 'XBTUSD', 100000000000000000, 1000);
 }
 
 (async () => {
