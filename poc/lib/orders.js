@@ -6,7 +6,9 @@ const Logger = require('./logger');
 const log = new Logger('[lib/orders]');
 
 const SLIPPAGE_ERR = 'Canceled: Order had execInst of ParticipateDoNotInitiate';
+const DOUBLE_CANCEL_ERR = 'Unable to cancel order due to existing state: Canceled';
 const DUPLICATED_ERR = 'Duplicate clOrdID';
+const NOT_FOUND_ERR = 'Not Found';
 
 const orders = [];
 const options = { api: 'order', testnet: cfg.testnet };
@@ -112,12 +114,6 @@ async function amend (id, params)
 
 async function cancel (id, reason)
 {
-  // const order = find(id);
-  // // FIXME: debug
-  // log.debug(`>>>> cancel order ${id}`, order ? order.ordStatus : 'null');
-  //
-  // if (!order || order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') { return; }
-
   log.debug(`>>>> cancel order ${id}`, id, reason);
 
   const params = { clOrdID: id, text: reason };
@@ -125,21 +121,29 @@ async function cancel (id, reason)
   options.method = 'DELETE';
 
   const rsp = await bitmex.api(options, params);
-
-  // check at least 1 was canceled
-  log.log('CANCEL', rsp);
-
-  if (rsp.status.code != 200){
-    // FIXME: debug
-    log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    log.error('canceling', id, params);
-    log.error('failed', rsp);
-    log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+  if (rsp.body.length > 1) {
+    log.error('Canceled multiple orders, this should never happen.');
     log.fatal(rsp);
-    // return order;
   }
 
-  return update(rsp.body[0]);
+  let order = null;
+
+  if (rsp.status.code == 200){
+    order = update(rsp.body[0]);
+
+    if (order.ordStatus == 'Canceled' && order.error && order.error.indexOf(DOUBLE_CANCEL_ERR) > -1) {
+      order.ordStatus = 'DoubleCanceled';
+    }
+
+  } else {
+    if (rsp.body.error.message == NOT_FOUND_ERR) {
+      order = {clOrdID: id, ordStatus: 'NotFound'};
+    } else {
+      order = {clOrdID: id, ordStatus: 'Error', error: rsp.body.error.message};
+    }
+  }
+
+  return order;
 }
 
 async function cancel_all (symbol, reason)

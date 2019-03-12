@@ -56,7 +56,6 @@ async function huge ()
 {
   order = await orders.limit(genId(), 'XBTUSD', 100000000000000000, 1000);
   assert(order.ordStatus == 'Error');
-  log.log(order.error);
 }
 
 async function double_cancel ()
@@ -66,21 +65,25 @@ async function double_cancel ()
   order = await orders.limit(id, 'XBTUSD', 1, 1000);
   assert(order.ordStatus == 'New');
 
-  await orders.cancel(id);
-  await orders.cancel(id);
+  order = await orders.cancel(id);
+  assert(order.ordStatus == 'Canceled');
+
+  order = await orders.cancel(id);
+  assert(order.ordStatus == 'DoubleCanceled');
 }
 
 async function non_existent ()
 {
-  await orders.cancel(genId());
+  order = await orders.cancel(genId());
+  assert(order.ordStatus == 'NotFound');
 }
 
 (async () => {
   try {
-    await crud();
+    // await crud();
     // await slippage();
     // await duplicated();
-    // await huge();
+    await huge();
     // await double_cancel();
     // await non_existent();
 
