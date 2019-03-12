@@ -178,7 +178,7 @@ async function processPending (o)
     orders.remove(order.clOrdID);
   }
 
-  const jid = order.clOrdID.substr(0, PREFIX_LEN);
+  const jid = order.clOrdID.substr(6, HASH_LEN);
   const prefix = order.clOrdID.substr(0, 3);
 
   const job = jobs.find(j => j.id == jid);
