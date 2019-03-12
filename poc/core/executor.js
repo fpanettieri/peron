@@ -5,6 +5,9 @@ const orders = require('../lib/orders');
 const logger = require('../lib/logger');
 const log = new logger('[broker/bitmex]');
 
+const HASH_LEN = 10;
+const PREFIX_LEN = 16;
+
 const ORDER_PREFIX_REGEX = /^..-ag-/;
 const LIMIT_PREFIX = 'lm-';
 const PROFIT_PREFIX = 'tp-';
@@ -100,7 +103,7 @@ async function onTradeContract (sym, qty, px)
 
 function genId ()
 {
-  return `${Math.random().toString(36).substr(2, 12)}`;
+  return `${Math.random().toString(36).substr(2, HASH_LEN)}`;
 }
 
 function createJob (id, sym, qty, px, state, t)
@@ -245,7 +248,7 @@ async function proccessOrder (job)
 {
   if (!quote) { return; }
 
-  const order = orders.find(`${job.id}${LIMIT_SUFFIX}`);
+  const order = orders.find(`${LIMIT_SUFFIX}${AG_PREFIX}${job.id}`);
   if (!order){
     if (job.state == STATES.ORDER){ destroyJob(job); }
     return;
