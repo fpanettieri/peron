@@ -89,6 +89,8 @@ async function stop (id, sym, qty, px)
 
 async function amend (id, params)
 {
+  log.debug(`>>>> amend order ${id}`, params);
+
   const _params = {...{ origClOrdID: id }, ...params};
   options.api = 'order';
   options.method = 'PUT';
