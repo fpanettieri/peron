@@ -172,9 +172,9 @@ async function processPending (o)
   order = orders.update(o);
   if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') {
     // log.log(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
-    // log.log(`Removing ${order.clOrdID} because ${order.ordStatus}`);
     // log.log(order);
     // log.log('');
+    log.log(`Removing ${order.clOrdID} because ${order.ordStatus}`);
     orders.remove(order.clOrdID);
   }
 
@@ -216,6 +216,10 @@ async function proccessIntent (job)
   switch (order.ordStatus) {
     case 'New': {
       updateJob(job.id, {state: STATES.ORDER});
+    } break;
+
+    case 'Slipped': {
+      // wait for next frame
     } break;
 
     case 'Canceled': {
