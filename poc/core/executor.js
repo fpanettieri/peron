@@ -218,10 +218,6 @@ async function proccessIntent (job)
       updateJob(job.id, {state: STATES.ORDER});
     } break;
 
-    case 'Slipped': {
-      // wait for next frame
-    } break;
-
     case 'Canceled': {
       destroyJob(job);
     } break;
