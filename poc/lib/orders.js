@@ -6,6 +6,7 @@ const Logger = require('./logger');
 const log = new Logger('[lib/orders]');
 
 const SLIPPAGE_ERR = 'Canceled: Order had execInst of ParticipateDoNotInitiate';
+const DUPLICATED_ERR = 'Duplicate clOrdID';
 
 const orders = [];
 const options = { api: 'order', testnet: cfg.testnet };
@@ -27,20 +28,26 @@ async function create (id, sym, qty, params)
   options.method = 'POST';
 
   const rsp = await bitmex.api(options, _params);
+  let order = rsp.body;
 
   if (rsp.status.code == 200){
-    const order = rsp.body;
     if (order.ordStatus == 'Canceled' && order.text.indexOf(SLIPPAGE_ERR) > -1) {
       order.ordStatus = 'Slipped';
     }
-    return add(order);
+  } else {
+    if (order.error.message == DUPLICATED_ERR) {
+      order = {clOrdID: id, ordStatus: 'Duplicated'};
+    }
   }
+
+
 
   // FIXME: debug
   log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
   log.error('creating failed', id, sym, qty, params);
   log.fatal(rsp);
 
+  return add(order);
 }
 
 async function market (id, sym, qty)

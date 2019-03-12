@@ -211,6 +211,7 @@ async function proccessIntent (job)
   const order = await orders.limit(`${job.id}${LIMIT_SUFFIX}`, job.sym, job.qty, price);
 
   if (!order) {
+    log.fatal('angkor wat');
 
   } else if (order.ordStatus == 'New') {
     updateJob(job.id, {state: STATES.ORDER});

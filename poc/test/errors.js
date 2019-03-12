@@ -22,22 +22,22 @@ function sleep (ms)
 async function slippage ()
 {
   order = await orders.limit(genId(), 'XBTUSD', 1, 4000);
-  log.log(order);
-  assert(order.ordStatus == 'Canceled');
+  assert(order.ordStatus == 'Slipped');
 
   order = await orders.limit(genId(), 'XBTUSD', -1, 3000);
-  assert(order.ordStatus == 'Canceled');
+  assert(order.ordStatus == 'Slipped');
 }
 
 async function duplicated ()
 {
   const id = genId();
   order = await orders.limit(id, 'XBTUSD', 1, 1000);
-  assert(order.ordStatus != 'Canceled');
+  log.log('a', order);
+  assert(order.ordStatus == 'New');
 
   order = await orders.limit(id, 'XBTUSD', 1, 1001);
-  log.log(order);
-  assert(order.ordStatus != 'Canceled');
+  log.log('b', order);
+  assert(order.ordStatus == 'Duplicated');
 }
 
 async function huge ()
@@ -47,8 +47,8 @@ async function huge ()
 
 (async () => {
   try {
-    await slippage();
-    // await duplicated();
+    // await slippage();
+    await duplicated();
     // await huge();
 
   } catch(err) {
