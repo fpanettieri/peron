@@ -273,8 +273,6 @@ async function proccessOrder (job)
   }
 }
 
-// TODO: continue integrating the orders library here, just 100 more lines of code and we done
-
 async function proccessPosition (job)
 {
   if (!quote || !candle){ return; }
