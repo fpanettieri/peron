@@ -226,8 +226,10 @@ async function proccessIntent (job)
     destroyJob(job);
 
   } else {
-
+    log.fatal('angkor wat wat');
   }
+
+  log.error(order.ordStatus, order);
 
 
 

@@ -31,23 +31,26 @@ async function create (id, sym, qty, params)
   let order = rsp.body;
 
   if (rsp.status.code == 200){
-    if (order.ordStatus == 'Canceled' && order.text.indexOf(SLIPPAGE_ERR) > -1) {
+    if (order.ordStatus == 'New') {
+      add(order);
+    } else if (order.ordStatus == 'Canceled' && order.text.indexOf(SLIPPAGE_ERR) > -1) {
       order.ordStatus = 'Slipped';
     }
+
   } else {
     if (order.error.message == DUPLICATED_ERR) {
       order = {clOrdID: id, ordStatus: 'Duplicated'};
+
+    } else {
+
+      // FIXME: debug
+      log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      log.error('creating failed', id, sym, qty, params);
+      log.fatal(rsp);
     }
   }
 
-
-
-  // FIXME: debug
-  log.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-  log.error('creating failed', id, sym, qty, params);
-  log.fatal(rsp);
-
-  return add(order);
+  return order;
 }
 
 async function market (id, sym, qty)
