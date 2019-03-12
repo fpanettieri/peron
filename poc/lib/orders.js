@@ -40,9 +40,8 @@ async function create (id, sym, qty, params)
   } else {
     if (order.error.message == DUPLICATED_ERR) {
       order = {clOrdID: id, ordStatus: 'Duplicated'};
-
     } else {
-      order = {clOrdID: id, ordStatus: 'Error', error: order.error.message};      
+      order = {clOrdID: id, ordStatus: 'Error', error: order.error.message};
     }
   }
 
@@ -70,7 +69,7 @@ async function profit (id, sym, qty, px)
 {
   return await create(id, sym, qty, {
     ordType: 'Limit',
-    execInst: 'ParticipateDoNotInitiate', //'ReduceOnly',
+    execInst: 'ParticipateDoNotInitiate',
     price: px
   });
 }
@@ -128,7 +127,7 @@ async function cancel (id, reason)
   const rsp = await bitmex.api(options, params);
 
   // check at least 1 was canceled
-  log.log(rsp.body[0].error);
+  log.log('CANCEL', rsp);
 
   if (rsp.status.code != 200){
     // FIXME: debug

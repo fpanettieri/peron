@@ -23,11 +23,8 @@ async function crud ()
 {
   const id = genId();
   order = await orders.limit(id, 'XBTUSD', 1, 1000);
-  log.debug('111111111111111111', orders.find(id));
-  log.debug('222222222222222222', order);
-
   assert(orders.find(id), order);
-  order = await orders.amend(id, Math.round(Math.random() * 100 + 1000));
+  order = await orders.amend(id, {orderQty: 2, price: Math.round(Math.random() * 100 + 1000)});
   await orders.cancel(id);
 }
 
