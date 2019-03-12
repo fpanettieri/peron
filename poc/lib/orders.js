@@ -155,22 +155,18 @@ async function discard (id)
   options.method = 'DELETE';
 
   const rsp = await bitmex.api(options, params);
-  if (rsp.status.code != 200){
-    log.fatal(rsp.error);
-    return;
-  }
+  if (rsp.status.code != 200){ log.fatal(rsp.error); }
   return rsp.body;
 }
 
 function find (id)
 {
-  // FIXME: change so it matches strings that begins with that, not only perfect matches
-  return orders.find(o => o.clOrdID === id);
+  return orders.find(o => o.clOrdID.indexOf(id) === 0);
 }
 
 function findIndex (id)
 {
-  return orders.findIndex(o => o.clOrdID === id);
+  return orders.findIndex(o => o.clOrdID.indexOf(id) === 0);
 }
 
 function add (o)

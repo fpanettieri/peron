@@ -11,12 +11,12 @@
     }
   },
   "trader": {
-    "positions": 20,
+    "positions": 1,
     "size": 0.01,
     "leverage": 1
   },
   "broker": {
-    "max_jobs": 20,
+    "max_jobs": 5,
     "speed": {
       "normal": 200,
       "burst": 50

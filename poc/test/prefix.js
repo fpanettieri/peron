@@ -42,5 +42,7 @@ for (let i = 0; i < CHECKS; i++) {
   const order = orders[rnd];
   const short = order.substr(0, 16);
   const found = find(short);
+
   assert (order == found);
+  assert (ORDER_PREFIX_REGEX.test(found));
 }
