@@ -60,7 +60,7 @@ async function onPositionSynced (arr)
   const id = genId();
 
   const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.STOP, t);
-  await updateTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
+  await createTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
   burst = true;
 
   run();
@@ -248,7 +248,7 @@ async function proccessOrder (job)
     } else if (order.price != price){
 
       // FIXME: remove this
-      log.debug('>>> updateTargets >> short amend');
+      log.debug('>>> createTargets >> short amend');
       await orders.amend(order.clOrdID, {price: price});
     }
   }
@@ -314,13 +314,13 @@ async function proccessDone (job)
 async function updatePosition (job, order)
 {
   let direction = job.qty > 0 ? 1 : -1;
-  await updateTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
+  await createTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
   if (job.state == STATES.ORDER) { updateJob(job.id, {state: STATES.POSITION}); }
 }
 
-async function updateTargets (job, sym, qty, px)
+async function createTargets (job, sym, qty, px)
 {
-  log.debug('>>> updateTargets');
+  log.debug('>>> createTargets');
 
   const ssl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
   updateJob(job.id, {sl: ssl_px});
@@ -334,7 +334,7 @@ async function updateTargets (job, sym, qty, px)
     tp = await orders.profit(`${job.id}${PROFIT_SUFFIX}`, sym, -qty, tp_px);
   } else {
     // FIXME: remove this
-    log.debug('>>> updateTargets >> tp amend');
+    log.debug('>>> createTargets >> tp amend');
     tp = await orders.amend(`${job.id}${PROFIT_SUFFIX}`, {orderQty: -qty, price: tp_px});
   }
 
@@ -344,7 +344,7 @@ async function updateTargets (job, sym, qty, px)
     sl = await orders.stop(`${job.id}${STOP_SUFFIX}`, sym, -qty, hsl_px);
   } else {
     // FIXME: remove this
-    log.debug('>>> updateTargets >> sl amend');
+    log.debug('>>> createTargets >> sl amend');
     sl = await orders.amend(`${job.id}${STOP_SUFFIX}`, {orderQty: -qty, stopPx: hsl_px});
   }
 }
