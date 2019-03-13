@@ -34,16 +34,30 @@ const colors = {
   }
 };
 
+const LB_INTERVAL = 10 * 1000;
+
 class Logger
 {
-  constructor(prefix) { this.prefix = prefix; }
-  date ()  { return `[${new Date().toISOString()}]`; }
-  debug () { console.info(colors.fg.cyan + this.date(), this.prefix, ...arguments, colors.base.reset); }
-  log ()   { console.log(this.date(), this.prefix, ...arguments); }
-  info ()  { console.info(colors.fg.green + this.date(), this.prefix, ...arguments, colors.base.reset); }
-  warn ()  { console.warn(colors.fg.yellow + this.date(), this.prefix, ...arguments, colors.base.reset); }
-  error () { console.error(colors.fg.red + this.date(), this.prefix, ...arguments, colors.base.reset); }
-  fatal () { console.error(colors.fg.red + this.date(), this.prefix, ...arguments, colors.base.reset); process.exit(-1); }
+  constructor(prefix) {
+    this.prefix = prefix;
+    this.t = Date.now();
+  }
+
+  lb () {
+    if (Date.now() - this.t > LB_INTERVAL) { console.log('\n'); }
+    this.t = Date.now();
+  }
+
+  date ()  {
+    return `[${new Date().toISOString()}]`;
+  }
+
+  debug () { this.lb(); console.info(colors.fg.cyan + this.date(), this.prefix, ...arguments, colors.base.reset); }
+  log ()   { this.lb(); console.log(this.date(), this.prefix, ...arguments); }
+  info ()  { this.lb(); console.info(colors.fg.green + this.date(), this.prefix, ...arguments, colors.base.reset); }
+  warn ()  { this.lb(); console.warn(colors.fg.yellow + this.date(), this.prefix, ...arguments, colors.base.reset); }
+  error () { this.lb(); console.error(colors.fg.red + this.date(), this.prefix, ...arguments, colors.base.reset); }
+  fatal () { this.lb(); console.error(colors.fg.red + this.date(), this.prefix, ...arguments, colors.base.reset); process.exit(-1); }
 }
 
 module.exports = Logger;
