@@ -402,13 +402,15 @@ async function preventSlippage (order, fn)
   log.warn('$$$$$$$$$$$$$$$$$$$ order slipped!', order.clOrdID, order.symbol, order.leavesQty);
   orders.remove(order.clOrdID);
 
-  const root = order.clOrdID.substr(0, 16);
-  const price = order.leavesQty > 0 ? SAFE_LONG_TARGET : SAFE_SHORT_TARGET;
-  const safeguard = await fn(`${root}-${genId()}`, order.symbol, order.leavesQty, price);
-
   log.warn('$$$$$$$$$$$$$$$$$$$ order');
   log.log(order);
   log.log('\n\n\n');
+
+  const root = order.clOrdID.substr(0, 16);
+  const price = order.leavesQty > 0 ? SAFE_LONG_TARGET : SAFE_SHORT_TARGET;
+
+  // maybe the leavesQty is not the correct solution?
+  const safeguard = await fn(`${root}-${genId()}`, order.symbol, order.orderQty - order.leavesQty, price);
 
   log.warn('$$$$$$$$$$$$$$$$$$$ safeguard');
   log.log(safeguard);
