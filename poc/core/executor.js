@@ -410,7 +410,8 @@ async function preventSlippage (order, fn)
   const price = order.leavesQty > 0 ? SAFE_LONG_TARGET : SAFE_SHORT_TARGET;
 
   // maybe the leavesQty is not the correct solution?
-  const safeguard = await fn(`${root}-${genId()}`, order.symbol, order.orderQty - order.leavesQty, price);
+  let direction = order.side == 'Buy' ? 1 : -1;
+  const safeguard = await fn(`${root}-${genId()}`, order.symbol, direction * (order.orderQty - order.leavesQty), price);
 
   log.warn('$$$$$$$$$$$$$$$$$$$ safeguard');
   log.log(safeguard);
