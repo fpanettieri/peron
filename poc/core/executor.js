@@ -188,6 +188,7 @@ async function processPending (o)
   }
 
   if (prefix == LIMIT_PREFIX && order.ordStatus == 'PartiallyFilled') {
+    log.log(`Partial fill => ${order.clOrdID}`);
     await updatePosition(job, order);
   }
 
@@ -356,7 +357,7 @@ async function updatePosition (job, order)
 
 async function createTargets (job, sym, qty, px)
 {
-  log.debug('>>> createTargets', job, sym, qty, px);
+  log.debug('>>> createTargets', sym, qty, px);
 
   await createTakeProfit(job, sym, qty, px);
   await createStopLoss(job, sym, qty, px);
@@ -364,8 +365,6 @@ async function createTargets (job, sym, qty, px)
 
 async function createTakeProfit (job, sym, qty, px)
 {
-  log.debug('>>> createTakeProfit', job, sym, qty, px);
-
   let tp_px = safePrice(px * (1 + Math.sign(qty) * cfg.broker.sl.hard));
   if (candle) { tp_px = qty > 1 ? candle.bb_upper : candle.bb_lower; }
   tp_px = safePrice(tp_px);
@@ -387,8 +386,6 @@ async function createTakeProfit (job, sym, qty, px)
 
 async function createStopLoss (job, sym, qty, px)
 {
-  log.debug('>>> createStopLoss', job, sym, qty, px);
-
   const hsl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.hard));
   let sl = orders.find(`${STOP_PREFIX}${AG_PREFIX}${job.id}`);
   if (!sl) {
