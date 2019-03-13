@@ -382,12 +382,13 @@ async function createTakeProfit (job, sym, qty, px)
 
 async function createStopLoss (job, sym, qty, px)
 {
-  const hsl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.hard));
-  let sl = orders.find(`${STOP_PREFIX}${AG_PREFIX}${job.id}`);
+  const sl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.hard));
+  const sl_root = `${STOP_PREFIX}${AG_PREFIX}${job.id}`;
+  let sl = orders.find(`${sl_root}`);
   if (!sl) {
-    sl = await orders.stop(`${STOP_PREFIX}${AG_PREFIX}${job.id}-${genId()}`, sym, -qty, hsl_px);
+    sl = await orders.stop(`${sl_root}-${genId()}`, sym, -qty, sl_px);
   } else {
-    sl = await orders.amend(sl.clOrdID, {orderQty: -qty, stopPx: hsl_px});
+    sl = await orders.amend(sl.clOrdID, {orderQty: -qty, stopPx: sl_px});
   }
 
   const ssl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
