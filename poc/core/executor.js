@@ -193,6 +193,8 @@ async function processPending (o)
   }
 
   if (order.ordStatus != 'Filled') { return; }
+  log.log(`Filled => ${order.clOrdID}`);
+
   switch (prefix) {
     case LIMIT_PREFIX: {
       await updatePosition(job, order);
