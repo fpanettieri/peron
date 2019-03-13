@@ -405,7 +405,13 @@ async function preventSlippage (order, fn)
   const price = order.leavesQty > 0 ? SAFE_LONG_TARGET : SAFE_SHORT_TARGET;
   const safeguard = await fn(`${root}-${genId()}`, order.symbol, order.leavesQty, price);
 
+  log.warn('$$$$$$$$$$$$$$$$$$$ order');
+  log.log(order);
+  log.log('\n\n\n');
+
+  log.warn('$$$$$$$$$$$$$$$$$$$ safeguard');
   log.log(safeguard);
+  log.log('\n\n\n');
 }
 
 function genId ()
