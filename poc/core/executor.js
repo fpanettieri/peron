@@ -403,7 +403,9 @@ async function preventSlippage (order, fn)
 
   const root = order.clOrdID.substr(0, 16);
   const price = order.leavesQty > 0 ? SAFE_LONG_TARGET : SAFE_SHORT_TARGET;
-  await fn(`${root}-${genId()}`, order.symbol, order.leavesQty, price);
+  const safeguard = await fn(`${root}-${genId()}`, order.symbol, order.leavesQty, price);
+
+  log.log(safeguard);
 }
 
 function genId ()
