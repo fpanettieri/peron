@@ -5,8 +5,8 @@ const orders = require('../lib/orders');
 const logger = require('../lib/logger');
 const log = new logger('[broker/bitmex]');
 
-const SAFE_LONG_TARGET = 100000;
-const SAFE_SHORT_TARGET = 100;
+const SAFE_LONG_TARGET = 100;
+const SAFE_SHORT_TARGET = 100000;
 
 const HASH_LEN = 10;
 const PREFIX_LEN = 16;

@@ -32,4 +32,6 @@ const executor = require('./core/executor');
   bb.chain('HistoryDownloaded', 'WatchMarket');
 
   bb.emit('ConnectSocket', `wss://${cfg.testnet ? 'testnet' : 'www'}.bitmex.com/realtime`);
+
+  process.on("unhandledRejection", err => { log.fatal(err); });
 })();
