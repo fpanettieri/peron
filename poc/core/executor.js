@@ -170,11 +170,9 @@ async function processPending (o)
   }
 
   order = orders.update(o);
+  log.log(`==========> ${order.clOrdID} => ${order.ordStatus}`);
+  
   if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') {
-    // log.log(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
-    // log.log(order);
-    // log.log('');
-    log.log(`Removing ${order.clOrdID} because ${order.ordStatus}`);
     orders.remove(order.clOrdID);
   }
 
@@ -188,13 +186,10 @@ async function processPending (o)
   }
 
   if (prefix == LIMIT_PREFIX && order.ordStatus == 'PartiallyFilled') {
-    log.log(`Partial fill => ${order.clOrdID}`);
     await updatePosition(job, order);
   }
 
   if (order.ordStatus != 'Filled') { return; }
-  log.log(`Filled => ${order.clOrdID}`);
-
   switch (prefix) {
     case LIMIT_PREFIX: {
       await updatePosition(job, order);
