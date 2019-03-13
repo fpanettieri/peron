@@ -165,12 +165,16 @@ async function processPending (o)
 
   let order = orders.find(o.clOrdID);
   if (!order) {
-    if (o.ordStatus != 'Canceled') { await orders.discard(o.orderID, 'Unknown Order'); }
+    if (o.ordStatus != 'Canceled') { await orders.discard(o.orderID, 'Unknown Order', o, '\n\n\n'); }
     return;
   }
 
   order = orders.update(o);
   log.log(`=============================> id: ${o.clOrdID} | status: ${order.ordStatus} | changes: ${Object.keys(o).length}`);
+
+  if (order.ordStatus == 'PartiallyFilled') {
+    log.log(o);
+  }
   // log.log(o);
   // log.log(`===========================================>`);
 

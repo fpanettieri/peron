@@ -1,0 +1,42 @@
+sn00py:poc fpanettieri$ node peron.js
+[2019-03-13T07:51:36.327Z] [Peron/main] peronizando
+[2019-03-13T07:51:36.329Z] [lib/backbone] initializing
+[2019-03-13T07:51:36.331Z] [lib/backbone] chaining SocketConnected => DownloadHistory
+[2019-03-13T07:51:36.331Z] [lib/backbone] chaining HistoryDownloaded => WatchMarket
+[2019-03-13T07:51:38.117Z] [core/adapter] connection established
+[2019-03-13T07:51:38.117Z] [core/adapter] GET/realtime1583999498
+[2019-03-13T07:51:38.123Z] [core/adapter] limit updated: 39
+[2019-03-13T07:51:40.256Z] [lib/orders] >>>> discard 51199b3f-a945-314d-c401-fa5c623815ee
+[2019-03-13T07:51:40.259Z] [lib/orders] >>>> discard d90b7117-e845-e345-c14b-54678385e0c8
+[2019-03-13T07:51:40.261Z] [lib/orders] >>>> discard 0f93232f-fc0f-741c-240f-2b06a497b0c7
+[2019-03-13T07:51:40.262Z] [lib/orders] >>>> discard 18f50c0b-9967-b8a7-2179-b350c4fc0728
+[2019-03-13T07:51:40.264Z] [lib/orders] >>>> discard 5626d18c-dc93-22b3-4767-61e8ccd8d544
+[2019-03-13T07:51:40.265Z] [lib/orders] >>>> discard e43d0359-03cc-ec84-efa3-0277b8cccd3a
+[2019-03-13T07:51:40.275Z] [core/adapter] subscribed successfully to 'margin'
+[2019-03-13T07:51:40.276Z] [core/adapter] subscribed successfully to 'quote:XBTUSD'
+[2019-03-13T07:51:40.276Z] [core/adapter] subscribed successfully to 'order:XBTUSD'
+[2019-03-13T07:51:40.277Z] [core/adapter] subscribed successfully to 'trade:XBTUSD'
+[2019-03-13T07:51:40.277Z] [core/adapter] subscribed successfully to 'tradeBin1m:XBTUSD'
+[2019-03-13T07:51:40.278Z] [core/adapter] subscribed successfully to 'position:XBTUSD'
+[2019-03-13T07:51:40.387Z] [broker/bitmex] >>>> creating job yp1o3cr6tb
+[2019-03-13T07:51:40.388Z] [broker/bitmex] >>> createTargets XBTUSD -171 3870.2686
+[2019-03-13T07:51:40.389Z] [lib/orders] >>>> create order tp-ag-yp1o3cr6tb-3y09wlxaqr
+[2019-03-13T07:51:41.533Z] [lib/orders] >>>> add tp-ag-yp1o3cr6tb-3y09wlxaqr
+[2019-03-13T07:51:41.534Z] [lib/orders] [ 'tp-ag-yp1o3cr6tb-3y09wlxaqr' ]
+[2019-03-13T07:51:41.537Z] [lib/orders] >>>> create order sl-ag-yp1o3cr6tb-m6aljiehtr
+[2019-03-13T07:51:42.520Z] [lib/orders] >>>> add sl-ag-yp1o3cr6tb-m6aljiehtr
+[2019-03-13T07:51:42.521Z] [lib/orders] [ 'tp-ag-yp1o3cr6tb-3y09wlxaqr', 'sl-ag-yp1o3cr6tb-m6aljiehtr' ]
+[2019-03-13T07:51:42.528Z] [broker/bitmex] >>>> updating job yp1o3cr6tb { sl: 3880 }
+[2019-03-13T07:51:42.529Z] [broker/bitmex] =============================> id: tp-ag-yp1o3cr6tb-3y09wlxaqr | status: New | changes: 33
+[2019-03-13T07:51:42.529Z] [broker/bitmex] =============================> id: tp-ag-yp1o3cr6tb-3y09wlxaqr | status: New | changes: 6
+[2019-03-13T07:51:42.529Z] [broker/bitmex] =============================> id: sl-ag-yp1o3cr6tb-m6aljiehtr | status: New | changes: 33
+[2019-03-13T07:51:42.530Z] [lib/orders] >>>> amend order tp-ag-yp1o3cr6tb-3y09wlxaqr { price: 3875.5 }
+[2019-03-13T07:51:43.602Z] [broker/bitmex] =============================> id: tp-ag-yp1o3cr6tb-3y09wlxaqr | status: New | changes: 8
+[2019-03-13T07:51:44.702Z] [broker/bitmex] =============================> id: tp-ag-yp1o3cr6tb-3y09wlxaqr | status: Filled | changes: 10
+[2019-03-13T07:51:44.702Z] [lib/orders] >>>> remove tp-ag-yp1o3cr6tb-3y09wlxaqr - 0
+[2019-03-13T07:51:44.702Z] [lib/orders] [ 'sl-ag-yp1o3cr6tb-m6aljiehtr' ]
+[2019-03-13T07:51:44.702Z] [broker/bitmex] >>>> updating job yp1o3cr6tb { state: 4 }
+[2019-03-13T07:51:44.703Z] [broker/bitmex] >>>> destroying job yp1o3cr6tb
+[2019-03-13T07:51:44.703Z] [lib/orders] >>>> cancel order sl-ag-yp1o3cr6tb-m6aljiehtr sl-ag-yp1o3cr6tb-m6aljiehtr undefined
+[2019-03-13T07:51:45.594Z] [lib/orders] >>>> remove sl-ag-yp1o3cr6tb - 0
+[2019-03-13T07:51:45.594Z] [lib/orders] []
