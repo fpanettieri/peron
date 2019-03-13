@@ -170,8 +170,10 @@ async function processPending (o)
   }
 
   order = orders.update(o);
-  log.log(`==========> ${order.clOrdID} => ${order.ordStatus}`);
-  
+  log.log(`===========================================> ${order.clOrdID} => ${order.ordStatus}`);
+  // log.log(o);
+  // log.log(`===========================================>`);
+
   if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') {
     orders.remove(order.clOrdID);
   }
@@ -208,7 +210,8 @@ async function proccessIntent (job)
 
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
 
-  const order = await orders.limit(`${LIMIT_PREFIX}${AG_PREFIX}${job.id}-${genId()}`, job.sym, job.qty, price);
+  const root = `${LIMIT_PREFIX}${AG_PREFIX}${job.id}`;
+  const order = await orders.limit(`${root}-${genId()}`, job.sym, job.qty, price);
   if (!order) { log.fatal('angkor wat'); }
 
   switch (order.ordStatus) {
@@ -242,7 +245,8 @@ async function proccessOrder (job)
 {
   if (!quote) { return; }
 
-  const order = orders.find(`${LIMIT_PREFIX}${AG_PREFIX}${job.id}`);
+  const root = `${LIMIT_PREFIX}${AG_PREFIX}${job.id}`;
+  const order = orders.find(root);
   if (!order){
     if (job.state == STATES.ORDER){ destroyJob(job); }
     return;
@@ -254,11 +258,13 @@ async function proccessOrder (job)
   }
 
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
+  let amended = null;
+
   if (job.qty > 0) {
     if (price > candle.bb_ma - cfg.broker.min_profit) {
       await orders.cancel(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
-      await orders.amend(order.clOrdID, {price: price});
+      amended = await orders.amend(order.clOrdID, {price: price});
     }
 
   } else {
@@ -266,9 +272,11 @@ async function proccessOrder (job)
       await orders.cancel(order.clOrdID, 'MA Crossed');
 
     } else if (order.price != price){
-      await orders.amend(order.clOrdID, {price: price});
+      amended = await orders.amend(order.clOrdID, {price: price});
     }
   }
+
+  await preventSlippage(amended, orders.limit);
 }
 
 async function proccessPosition (job)
@@ -282,7 +290,7 @@ async function proccessPosition (job)
   // TODO: maybe move to cleanup?
 
   let price = safePrice(candle.bb_ma);
-  if (job.qty > 1 && price < quote.askPrice) {
+  if (job.qty > 0 && price < quote.askPrice) {
     price = quote.askPrice;
   } else if (job.qty < 1 && price > quote.bidPrice) {
     price = quote.bidPrice;
@@ -290,11 +298,7 @@ async function proccessPosition (job)
 
   if (order.price != price){
     const amended = await orders.amend(order.clOrdID, {price: price});
-    if (amended.ordStatus == 'Slipped') {
-      log.warn('$$$$$$$$$$$$$$$$$$$ position update slipped!', order.clOrdID);
-      const tp_px = job.qty > 1 ? SAFE_LONG_TARGET : SAFE_SHORT_TARGET;
-      await orders.profit(`${root}-${genId()}`, amended.symbol, amended.leavesQty, tp_px);
-    }
+    await preventSlippage(amended, orders.profit);
   }
 
   if (job.qty > 0 && quote.askPrice < job.sl) {
@@ -321,11 +325,7 @@ async function proccessStop (job)
   if (order.price == price){ return; }
 
   const amended = await orders.amend(order.clOrdID, {price: price});
-  if (amended.ordStatus == 'Slipped') {
-    log.warn('$$$$$$$$$$$$$$$$$$$ position update slipped!');
-    const tp_px = job.qty > 1 ? SAFE_LONG_TARGET : SAFE_SHORT_TARGET;
-    await orders.profit(`${root}-${genId()}`, amended.symbol, amended.leavesQty, tp_px);
-  }
+  await preventSlippage(amended, orders.profit);
 }
 
 async function proccessDone (job)
@@ -373,12 +373,7 @@ async function createTakeProfit (job, sym, qty, px)
   } else {
     tp = await orders.amend(tp.clOrdID, {orderQty: -qty, price: tp_px});
   }
-
-  if (tp.ordStatus == 'Slipped') {
-    log.warn('$$$$$$$$$$$$$$$$$$$ target created slipped!');
-    const tp_px = job.qty > 1 ? SAFE_LONG_TARGET : SAFE_SHORT_TARGET;
-    await orders.profit(`${tp_root}-${genId()}`, sym, -qty, tp_px);
-  }
+  await preventSlippage(tp, orders.profit);
 }
 
 async function createStopLoss (job, sym, qty, px)
@@ -393,6 +388,18 @@ async function createStopLoss (job, sym, qty, px)
 
   const ssl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
   updateJob(job.id, {sl: ssl_px});
+}
+
+async function preventSlippage (order, fn)
+{
+  if (!order || order.ordStatus !== 'Slipped') { return; }
+
+  log.warn('$$$$$$$$$$$$$$$$$$$ order slipped!', order.clOrdID, order.symbol, order.leavesQty);
+  orders.remove(order.clOrdID);
+
+  const root = order.clOrdID.substr(0, 16);
+  const price = order.leavesQty > 0 ? SAFE_LONG_TARGET : SAFE_SHORT_TARGET;
+  await fn(`${root}-${genId()}`, order.symbol, order.leavesQty, price);
 }
 
 function genId ()
