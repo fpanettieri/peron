@@ -170,7 +170,7 @@ async function processPending (o)
   }
 
   order = orders.update(o);
-  log.log(`===========================================> ${order.clOrdID} => ${order.ordStatus}`);
+  log.log(`=============================> id: ${order.clOrdID} | status: ${order.ordStatus} | changes: ${Object.keys(order).length}`);
   // log.log(o);
   // log.log(`===========================================>`);
 
