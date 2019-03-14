@@ -178,7 +178,6 @@ function add (o)
   if(findIndex(o.clOrdID) > -1) { return; }
   log.debug(`>>>> add ${o.clOrdID}`);
   orders.push(o);
-  debug();
   return o;
 }
 
@@ -195,7 +194,6 @@ function remove (cl_id)
   log.debug(`>>>> remove ${cl_id} - ${index}`);
   if(index < 0) { return; }
   orders.splice(index, 1);
-  debug();
 }
 
 function debug ()
