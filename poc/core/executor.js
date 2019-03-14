@@ -106,9 +106,6 @@ async function onTradeContract (sym, qty, px)
 
 function createJob (id, sym, qty, px, state, t)
 {
-  // FIXME: debug
-  log.debug('>>>> creating job', id);
-
   const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now()};
   jobs.push(job);
   return job;
@@ -116,9 +113,6 @@ function createJob (id, sym, qty, px, state, t)
 
 function updateJob (id, changes)
 {
-  // FIXME: debug
-  log.debug('>>>> updating job', id, changes);
-
   const idx = jobs.findIndex(j => j.id == id);
   jobs[idx] = {...jobs[idx], ...changes};
   return jobs[idx];
@@ -126,9 +120,6 @@ function updateJob (id, changes)
 
 function destroyJob (job)
 {
-  // FIXME: debug
-  log.debug('>>>> destroying job', job.id);
-
   return jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
 }
 
@@ -170,14 +161,6 @@ async function processPending (o)
   }
 
   order = orders.update(o);
-  log.log(`=============================> id: ${o.clOrdID} | status: ${order.ordStatus} | changes: ${Object.keys(o).length}`);
-
-  if (order.ordStatus == 'PartiallyFilled') {
-    log.log(o);
-  }
-  // log.log(o);
-  // log.log(`===========================================>`);
-
   if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') {
     orders.remove(order.clOrdID);
   }
@@ -216,7 +199,7 @@ async function proccessIntent (job)
 
   const root = `${LIMIT_PREFIX}${AG_PREFIX}${job.id}`;
   const order = await orders.limit(`${root}-${genId()}`, job.sym, job.qty, price);
-  if (!order) { log.fatal('angkor wat'); }
+  if (!order) { log.fatal(`proccessIntent -> limit order not found! ${root}`, job); }
 
   switch (order.ordStatus) {
     case 'New': {
@@ -234,13 +217,8 @@ async function proccessIntent (job)
     case 'Duplicated':
     case 'Error':
     default: {
-      log.error(' >>>>>>>>>>>>>>>>> this should never happen!');
-      log.error(' >>>>>>>>>>>>>>>>> Job:', job);
-      log.error(' >>>>>>>>>>>>>>>>> Order:', order);
-      log.error(' >>>>>>>>>>>>>>>>> Orders:');
       orders.debug();
-      log.error(' >>>>>>>>>>>>>>>>> Pending:', pending);
-      log.fatal('Might be a thread sync issue?');
+      log.fatal(' >>>>>>>>>>>>>>>>> this should never happen!', job, order, pending);
     }
   }
 }
@@ -291,7 +269,6 @@ async function proccessPosition (job)
   const root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
   const order = orders.find(root);
   if (!order){ log.fatal(`proccessPosition -> profit order not found! ${root}`, job); }
-  // TODO: maybe move to cleanup?
 
   let price = safePrice(candle.bb_ma);
   if (job.qty > 0 && price < quote.askPrice) {
@@ -322,8 +299,7 @@ async function proccessStop (job)
 
   const root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
   const order = orders.find(root);
-  if (!order){ log.fatal(`proccessStop -> profit order not found! ${root}`, job);}
-  // TODO: maybe move to cleanup?
+  if (!order){ log.fatal(`proccessStop -> profit order not found! ${root}`, job); }
 
   const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
   if (order.price == price){ return; }
@@ -358,8 +334,6 @@ async function updatePosition (job, order)
 
 async function createTargets (job, sym, qty, px)
 {
-  log.debug('>>> createTargets', sym, qty, px);
-
   await createTakeProfit(job, sym, qty, px);
   await createStopLoss(job, sym, qty, px);
 }
@@ -398,24 +372,13 @@ async function createStopLoss (job, sym, qty, px)
 async function preventSlippage (order, fn)
 {
   if (!order || order.ordStatus !== 'Slipped') { return; }
-
-  log.warn('$$$$$$$$$$$$$$$$$$$ order slipped!', order.clOrdID, order.symbol, order.leavesQty);
   orders.remove(order.clOrdID);
-
-  log.warn('$$$$$$$$$$$$$$$$$$$ order');
-  log.log(order);
-  log.log('\n\n\n');
 
   const root = order.clOrdID.substr(0, 16);
   const price = order.leavesQty > 0 ? SAFE_LONG_TARGET : SAFE_SHORT_TARGET;
 
-  // maybe the leavesQty is not the correct solution?
   let direction = order.side == 'Buy' ? 1 : -1;
   const safeguard = await fn(`${root}-${genId()}`, order.symbol, direction * (order.orderQty - order.leavesQty), price);
-
-  log.warn('$$$$$$$$$$$$$$$$$$$ safeguard');
-  log.log(safeguard);
-  log.log('\n\n\n');
 }
 
 function genId ()

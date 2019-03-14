@@ -17,9 +17,6 @@ const options = { api: 'order', testnet: cfg.testnet };
 
 async function create (id, sym, qty, params)
 {
-  // FIXME: debug
-  log.debug('>>>> create order', id);
-
   const _params = {...{
     clOrdID: id,
     symbol: sym,
@@ -91,8 +88,6 @@ async function stop (id, sym, qty, px)
 
 async function amend (id, params)
 {
-  log.debug(`>>>> amend order ${id}`, params);
-
   const _params = {...{ origClOrdID: id }, ...params};
   options.api = 'order';
   options.method = 'PUT';
@@ -122,8 +117,6 @@ async function amend (id, params)
 
 async function cancel (id, reason)
 {
-  log.debug(`>>>> cancel order ${id}`, id, reason);
-
   const params = { clOrdID: id, text: reason };
   options.api = 'order';
   options.method = 'DELETE';
@@ -152,8 +145,6 @@ async function cancel (id, reason)
 
 async function discard (id)
 {
-  log.debug('>>>> discard', id);
-
   const params = { orderID: id };
   options.api = 'order';
   options.method = 'DELETE';
@@ -176,7 +167,6 @@ function findIndex (id)
 function add (o)
 {
   if(findIndex(o.clOrdID) > -1) { return; }
-  log.debug(`>>>> add ${o.clOrdID}`);
   orders.push(o);
   return o;
 }
@@ -191,7 +181,6 @@ function update (o)
 function remove (cl_id)
 {
   const index = findIndex(cl_id);
-  log.debug(`>>>> remove ${cl_id} - ${index}`);
   if(index < 0) { return; }
   orders.splice(index, 1);
 }
