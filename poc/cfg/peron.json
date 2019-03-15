@@ -2,7 +2,6 @@
   "testnet": true,
   "timeframe": "1m",
   "symbol": "XBTUSD",
-  "history": "50",
 
   "modules": [
     "core/adapter",
@@ -21,8 +20,14 @@
     "emit": "ConnectSocket"
   },
 
+  "archivist": {
+    "history": "20"
+  },
+
   "chandler": { "offset": -10000 },
+
   "analyst": {
+    "history": "20",
     "bb": {
       "periods": 20,
       "mult": 2
