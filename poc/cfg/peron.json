@@ -9,7 +9,8 @@
     "core/chandler",
     "core/analyst",
     "core/brain/greedy",
-    "core/trader"
+    "core/trader",
+    "core/executor"
   ],
 
   "backbone": {
