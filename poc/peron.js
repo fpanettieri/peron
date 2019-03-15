@@ -5,13 +5,13 @@ const cfg = require('./cfg/peron');
 const logger = require('./lib/logger');
 const backbone = require('./lib/backbone');
 
-const adapter = require('./core/adapter');
-const archivist = require('./core/archivist');
-const chandler = require('./core/chandler');
-const analyst = require('./core/analyst');
-const brain = require('./core/brain/greedy');
-const trader = require('./core/trader');
-const executor = require('./core/executor');
+// const adapter = require('./core/adapter');
+// const archivist = require('./core/archivist');
+// const chandler = require('./core/chandler');
+// const analyst = require('./core/analyst');
+// const brain = require('./core/brain/greedy');
+// const trader = require('./core/trader');
+// const executor = require('./core/executor');
 // const auditor = require('./core/auditor');
 
 (async () => {
@@ -19,14 +19,18 @@ const executor = require('./core/executor');
   log.info('peronizando');
 
   const bb = new backbone();
-  adapter.plug(bb);
-  archivist.plug(bb);
-  chandler.plug(bb);
-  analyst.plug(bb);
-  brain.plug(bb);
-  trader.plug(bb);
-  executor.plug(bb);
-  // auditor.plug(bb);
+  for (let i = 0; i < cfg.modules; i++) {
+    const m = require(cfg.modules[i]);
+    m.plug(bb);
+  }
+  // adapter.plug(bb);
+  // archivist.plug(bb);
+  // chandler.plug(bb);
+  // analyst.plug(bb);
+  // brain.plug(bb);
+  // trader.plug(bb);
+  // executor.plug(bb);
+  // // auditor.plug(bb);
 
   bb.chain('SocketConnected', 'DownloadHistory');
   bb.chain('HistoryDownloaded', 'WatchMarket');

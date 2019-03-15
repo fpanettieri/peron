@@ -3,6 +3,15 @@
   "timeframe": "1m",
   "symbol": "XBTUSD",
   "history": "50",
+  "modules": [
+    "core/adapter",
+    "core/archivist",
+    "core/chandler",
+    "core/analyst",
+    "core/brain/greedy",
+    "core/trader",
+    "core/executor"
+  ],
   "chandler": { "offset": -10000 },
   "analyst": {
     "bb": {
