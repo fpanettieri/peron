@@ -55,20 +55,11 @@ function open (d, c)
   const max = cfg.trader.positions * cfg.trader.size;
   const used = 1 - margin.availableMargin / margin.walletBalance;
   const usable = Math.max(max - used, 0);
-  log.debug('usable', usable);
-
   if (usable <= 0) { return; }
 
   let m = Math.max(cfg.trader.size * margin.walletBalance, MIN_MARGIN);
-  log.debug('cfg.trader.size', cfg.trader.size);
-  log.debug('margin.walletBalance', margin.walletBalance);
-  log.debug('default trade', cfg.trader.size * margin.walletBalance);
-  log.debug('MIN_MARGIN', MIN_MARGIN);
-  log.debug('margin', m);
-
   const contracts = Math.ceil(m * STB * quote.askPrice);
-  log.debug('contracts', contracts);
-
+  
   bb.emit('TradeContract', cfg.symbol, d * contracts, c.c);
 }
 
