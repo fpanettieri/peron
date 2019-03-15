@@ -3,15 +3,24 @@
   "timeframe": "1m",
   "symbol": "XBTUSD",
   "history": "50",
+
   "modules": [
     "core/adapter",
     "core/archivist",
     "core/chandler",
     "core/analyst",
     "core/brain/greedy",
-    "core/trader",
-    "core/executor"
+    "core/trader"
   ],
+
+  "backbone": {
+    "chain": [
+      ["SocketConnected", "DownloadHistory"],
+      ["HistoryDownloaded", "WatchMarket"]
+    ],
+    "emit": "ConnectSocket"
+  },
+
   "chandler": { "offset": -10000 },
   "analyst": {
     "bb": {
@@ -19,14 +28,17 @@
       "mult": 2
     }
   },
+
   "brain": {
     "skip": 1
   },
+
   "trader": {
     "positions": 10,
     "size": 0.05,
     "leverage": 1
   },
+
   "broker": {
     "max_jobs": 10,
     "speed": {

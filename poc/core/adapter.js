@@ -25,9 +25,9 @@ function plug (_bb)
   bb.on('SendAdapterMsg', onSendAdapterMsg);
 }
 
-function onConnect(url)
+function onConnect()
 {
-  socket = new ws(url);
+  socket = new ws(`wss://${cfg.testnet ? 'testnet' : 'www'}.bitmex.com/realtime`);
   socket.on('open', onOpen);
   socket.on('message', onMessage);
   socket.on('close', onClose);
