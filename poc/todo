@@ -18,6 +18,7 @@
 
 . war room
   . configure ag instances
+  . show performance
 
 . Bugfixing
   . Chandler managed to emit 2 candles somehow, triggering a 'this should never happen'

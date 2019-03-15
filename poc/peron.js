@@ -11,7 +11,7 @@ const modules = [];
   const bb = new backbone();
 
   for (let i = 0; i < cfg.modules.length; i++) {
-    const m = require(cfg.modules[i]);
+    const m = require(`./${cfg.modules[i]}`);
     m.plug(bb);
     modules.push(m);
   }
