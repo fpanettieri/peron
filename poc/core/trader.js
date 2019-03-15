@@ -53,23 +53,28 @@ function usableMargin ()
 {
   let max = cfg.trader.positions * cfg.trader.size;
   let used = 1 - margin.availableMargin / margin.walletBalance;
-  let free = Math.max(max - used, 0);
-  return Math.min(free, cfg.trader.size) * margin.walletBalance;
-}
-
-function marginToContracts (m)
-{
-  return Math.round(Math.max(m * STB * quote.askPrice, 1));
+  return Math.max(max - used, 0);
 }
 
 function open (d, c)
 {
-  // let base = Math.max(cfg.trader.size * margin.walletBalance, cfg.trader.min_margin);
-  // let usable = usableMargin();
-  // let margin = Math.min(usable, base);
-  // if (margin <= 0) { return; }
+  let usable = usableMargin();
+  log.debug('usable', usable);
 
-  bb.emit('TradeContract', cfg.symbol, d * marginToContracts(margin), c.c);
+  let base = cfg.trader.size * margin.walletBalance;
+  log.debug('base', base);
+
+  let safe = Math.max(base, cfg.trader.min_margin);
+  log.debug('safe', safe);
+
+  let allocated = Math.min(free, cfg.trader.size) * margin.walletBalance;
+  if (m <= 0) { return; }
+
+  const contracts = Math.round(m * STB * quote.askPrice);
+
+  log.debug('contracts', contracts);
+
+  // bb.emit('TradeContract', cfg.symbol, d * contracts, c.c);
 }
 
 module.exports = { plug: plug };

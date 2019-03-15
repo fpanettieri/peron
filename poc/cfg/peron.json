@@ -8,7 +8,8 @@
     "core/archivist",
     "core/chandler",
     "core/analyst",
-    "core/brain/greedy"
+    "core/brain/greedy",
+    "core/trader"
   ],
 
   "backbone": {
@@ -34,7 +35,7 @@
   },
 
   "brain": {
-    "skip": 1
+    "skip": 0
   },
 
   "trader": {
