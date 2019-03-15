@@ -19,11 +19,11 @@ class Backbone extends EventEmitter
     this.on(a, () => this.emit(b));
   }
 
-  emit ()
-  {
-    log.info(arguments[0]);
-    return super.emit.apply(this, arguments);
-  }
+  // emit ()
+  // {
+  //   log.info(arguments[0]);
+  //   return super.emit.apply(this, arguments);
+  // }
 
   silent ()
   {
