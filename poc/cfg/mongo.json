@@ -1,8 +1,0 @@
-{
-  "prefix": "mongodb://",
-  "credentials": "",
-  "host": "localhost" ,
-  "port": 27017,
-  "database": "peron",
-  "options": ""
-}

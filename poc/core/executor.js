@@ -100,7 +100,7 @@ async function onOrderUpdated (arr)
 
 async function onTradeContract (sym, qty, px)
 {
-  if (jobs.length >= cfg.broker.max_jobs) { return; }
+  if (jobs.length >= cfg.executor.max_jobs) { return; }
   createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
 }
 
@@ -234,7 +234,7 @@ async function proccessOrder (job)
     return;
   }
 
-  if (Date.now() - job.created_at > cfg.broker.order.expires) {
+  if (Date.now() - job.created_at > cfg.executor.order.expires) {
     await orders.cancel(order.clOrdID, 'Expired');
     return;
   }
@@ -243,14 +243,14 @@ async function proccessOrder (job)
   let amended = null;
 
   if (job.qty > 0) {
-    if (price > candle.bb_ma - cfg.broker.min_profit) {
+    if (price > candle.bb_ma - cfg.executor.min_profit) {
       await orders.cancel(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
       amended = await orders.amend(order.clOrdID, {price: price});
     }
 
   } else {
-    if (price < candle.bb_ma + cfg.broker.min_profit) {
+    if (price < candle.bb_ma + cfg.executor.min_profit) {
       await orders.cancel(order.clOrdID, 'MA Crossed');
 
     } else if (order.price != price){
@@ -340,7 +340,7 @@ async function createTargets (job, sym, qty, px)
 
 async function createTakeProfit (job, sym, qty, px)
 {
-  let tp_px = safePrice(px * (1 + Math.sign(qty) * cfg.broker.sl.hard));
+  let tp_px = safePrice(px * (1 + Math.sign(qty) * cfg.executor.sl.hard));
   if (candle) { tp_px = qty > 1 ? candle.bb_upper : candle.bb_lower; }
   tp_px = safePrice(tp_px);
 
@@ -356,7 +356,7 @@ async function createTakeProfit (job, sym, qty, px)
 
 async function createStopLoss (job, sym, qty, px)
 {
-  const sl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.hard));
+  const sl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.executor.sl.hard));
   const sl_root = `${STOP_PREFIX}${AG_PREFIX}${job.id}`;
   let sl = orders.find(`${sl_root}`);
   if (!sl) {
@@ -365,7 +365,7 @@ async function createStopLoss (job, sym, qty, px)
     sl = await orders.amend(sl.clOrdID, {orderQty: -qty, stopPx: sl_px});
   }
 
-  const ssl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.broker.sl.soft));
+  const ssl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.executor.sl.soft));
   updateJob(job.id, {sl: ssl_px});
 }
 
@@ -388,7 +388,7 @@ function genId ()
 
 function getTimeout ()
 {
-  const step = burst ? cfg.broker.speed.burst : cfg.broker.speed.normal;
+  const step = burst ? cfg.executor.speed.burst : cfg.executor.speed.normal;
   let timeout = step - (Date.now() % step);
   return timeout;
 }

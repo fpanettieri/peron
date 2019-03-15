@@ -44,7 +44,7 @@
     "leverage": 1
   },
 
-  "broker": {
+  "executor": {
     "max_jobs": 10,
     "speed": {
       "normal": 200,
