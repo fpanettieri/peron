@@ -16,12 +16,6 @@
   . Avg. Time To Exit
   . Most of the important stats can be tracked on broker.job updates
 
-. ag
-  . Hardcoded
-  . Dynamic load and plug modules
-  . Chain events config
-  . RPC - WS module could be used to receive and broadcast events between different instances
-
 . war room
   . configure ag instances
 
@@ -164,6 +158,12 @@
 
   - Cancel all orders on start (by symbol??)
   - Remove dead code
+
+- ag
+  - Hardcoded
+  - Dynamic load and plug modules
+  - Chain events config
+  - RPC - WS module could be used to receive and broadcast events between different instances
 
 ===============
   IGNORE
