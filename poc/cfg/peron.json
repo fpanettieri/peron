@@ -10,6 +10,9 @@
       "mult": 2
     }
   },
+  "brain": {
+    "skip": 1
+  },
   "trader": {
     "positions": 10,
     "size": 0.05,

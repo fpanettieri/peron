@@ -9,7 +9,6 @@ let bb = null;
 let previous = null;
 let current = null;
 
-
 function plug (_bb)
 {
   bb = _bb;
