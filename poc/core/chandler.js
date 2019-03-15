@@ -77,7 +77,7 @@ function closeCandle ()
 function getTimeout ()
 {
   let timeout = CANDLE_STEP - (Date.now() % CANDLE_STEP) + CLOSE_OFFSET;
-  if (timeout < 0) { timeout += CANDLE_STEP; }
+  if (timeout < 1) { timeout += CANDLE_STEP; }
   return timeout;
 }
 
