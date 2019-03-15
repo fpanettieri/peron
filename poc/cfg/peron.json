@@ -8,9 +8,7 @@
     "core/archivist",
     "core/chandler",
     "core/analyst",
-    "core/brain/greedy",
-    "core/trader",
-    "core/executor"
+    "core/brain/greedy"
   ],
 
   "backbone": {
@@ -42,7 +40,8 @@
   "trader": {
     "positions": 10,
     "size": 0.05,
-    "leverage": 1
+    "leverage": 1,
+    "min_margin": 0.0026
   },
 
   "executor": {

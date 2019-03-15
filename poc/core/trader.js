@@ -41,12 +41,12 @@ function onMarginUpdated (arr)
 
 function onOpenLong (c)
 {
-  open('long', c);
+  open(1, c);
 }
 
 function onOpenShort (c)
 {
-  open('short', c);
+  open(-1, c);
 }
 
 function usableMargin ()
@@ -62,13 +62,14 @@ function marginToContracts (m)
   return Math.round(Math.max(m * STB * quote.askPrice, 1));
 }
 
-function open (t, c)
+function open (d, c)
 {
-  let margin = usableMargin();
-  if (margin <= 0) { return; }
+  // let base = Math.max(cfg.trader.size * margin.walletBalance, cfg.trader.min_margin);
+  // let usable = usableMargin();
+  // let margin = Math.min(usable, base);
+  // if (margin <= 0) { return; }
 
-  let direction = t == 'short' ? -1 : 1;
-  bb.emit('TradeContract', cfg.symbol, direction * marginToContracts(margin), c.c);
+  bb.emit('TradeContract', cfg.symbol, d * marginToContracts(margin), c.c);
 }
 
 module.exports = { plug: plug };
