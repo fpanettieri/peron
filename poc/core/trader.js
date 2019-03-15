@@ -6,6 +6,7 @@ const logger = require('../lib/logger');
 const log = new logger('[core/trader]');
 
 const STB = 0.00000001;
+const MIN_MARGIN = 0.0026 / STB;
 
 let bb = null;
 let quote = {};
@@ -49,32 +50,26 @@ function onOpenShort (c)
   open(-1, c);
 }
 
-function usableMargin ()
-{
-  let max = cfg.trader.positions * cfg.trader.size;
-  let used = 1 - margin.availableMargin / margin.walletBalance;
-  return Math.max(max - used, 0);
-}
-
 function open (d, c)
 {
-  let usable = usableMargin();
+  const max = cfg.trader.positions * cfg.trader.size;
+  const used = 1 - margin.availableMargin / margin.walletBalance;
+  const usable = Math.max(max - used, 0);
   log.debug('usable', usable);
 
-  let base = cfg.trader.size * margin.walletBalance;
-  log.debug('base', base);
+  if (usable <= 0) { return; }
 
-  let safe = Math.max(base, cfg.trader.min_margin);
-  log.debug('safe', safe);
+  let m = Math.max(cfg.trader.size * margin.walletBalance, MIN_MARGIN);
+  log.debug('cfg.trader.size', cfg.trader.size);
+  log.debug('margin.walletBalance', margin.walletBalance);
+  log.debug('default trade', cfg.trader.size * margin.walletBalance);
+  log.debug('MIN_MARGIN', MIN_MARGIN);
+  log.debug('margin', m);
 
-  let allocated = Math.min(free, cfg.trader.size) * margin.walletBalance;
-  if (m <= 0) { return; }
-
-  const contracts = Math.round(m * STB * quote.askPrice);
-
+  const contracts = Math.ceil(m * STB * quote.askPrice);
   log.debug('contracts', contracts);
 
-  // bb.emit('TradeContract', cfg.symbol, d * contracts, c.c);
+  bb.emit('TradeContract', cfg.symbol, d * contracts, c.c);
 }
 
 module.exports = { plug: plug };
