@@ -36,12 +36,12 @@
   },
 
   "brain": {
-    "skip": 1
+    "skip": 0
   },
 
   "trader": {
     "positions": 10,
-    "size": 0.1
+    "size": 0.05
   },
 
   "executor": {
