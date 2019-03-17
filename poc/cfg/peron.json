@@ -50,7 +50,7 @@
       "normal": 200,
       "burst": 50
     },
-    "min_profit": 0,
+    "min_profit": 0.5,
     "order": {
       "expires": 900000
     },

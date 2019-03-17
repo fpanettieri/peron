@@ -243,14 +243,14 @@ async function proccessOrder (job)
   let amended = null;
 
   if (job.qty > 0) {
-    if (price > candle.bb_ma - cfg.executor.min_profit) {
+    if (price > candle.bb_ma) {
       await orders.cancel(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
       amended = await orders.amend(order.clOrdID, {price: price});
     }
 
   } else {
-    if (price < candle.bb_ma + cfg.executor.min_profit) {
+    if (price < candle.bb_ma) {
       await orders.cancel(order.clOrdID, 'MA Crossed');
 
     } else if (order.price != price){
@@ -270,7 +270,7 @@ async function proccessPosition (job)
   const order = orders.find(root);
   if (!order){ log.fatal(`proccessPosition -> profit order not found! ${root}`, job); }
 
-  let price = safePrice(candle.bb_ma);
+  let price = safePrice(preventBounce(candle.bb_ma));
   if (job.qty > 0 && price < quote.askPrice) {
     price = quote.askPrice;
   } else if (job.qty < 1 && price > quote.bidPrice) {
@@ -379,6 +379,12 @@ async function preventSlippage (order, fn)
 
   let direction = order.side == 'Buy' ? 1 : -1;
   const safeguard = await fn(`${root}-${genId()}`, order.symbol, direction * (order.orderQty - order.leavesQty), price);
+}
+
+
+function preventBounce (px, is_long)
+{
+  return px + (is_long ? -1 : 1) * cfg.executor.min_profit;
 }
 
 function genId ()
