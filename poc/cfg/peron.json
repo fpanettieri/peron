@@ -10,7 +10,8 @@
     "core/analyst",
     "core/brain/greedy",
     "core/trader",
-    "core/executor"
+    "core/executor",
+    "core/auditor"
   ],
 
   "backbone": {
@@ -40,7 +41,7 @@
   },
 
   "trader": {
-    "positions": 10,
+    "positions": 1,
     "size": 0.05
   },
 
