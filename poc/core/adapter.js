@@ -117,7 +117,7 @@ function broadcast (json)
 
     case 'margin': case 'quote': case 'order': case 'trade': case 'position': {
       const action = `${json.table[0].toUpperCase()}${json.table.substring(1)}${map[json.action]}`;
-      bb.silent(action, json.data);
+      bb.emit(action, json.data);
     } break;
 
     default: {
