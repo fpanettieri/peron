@@ -3,7 +3,7 @@
 const cfg = require('../cfg/peron');
 const bitmex = require('../lib/bitmex');
 const logger = require('../lib/logger');
-const log = new logger('[core/archivist]');
+const log = new logger('core/archivist');
 
 let bb = null;
 

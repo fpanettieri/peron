@@ -3,7 +3,7 @@
 const assert = require('assert');
 
 const logger = require('../lib/logger');
-const log = new logger('[test/prefix]');
+const log = new logger('test/prefix');
 
 const ORDER_COUNT = 10;
 const N_MAX = 1000;

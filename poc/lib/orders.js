@@ -3,7 +3,7 @@
 const cfg = require('../cfg/peron');
 const bitmex = require('../lib/bitmex');
 const Logger = require('./logger');
-const log = new Logger('[lib/orders]');
+const log = new Logger('lib/orders');
 
 const SLIPPAGE_ERR = 'Canceled: Order had execInst of ParticipateDoNotInitiate';
 const DOUBLE_CANCEL_ERR = 'Unable to cancel order due to existing state: Canceled';

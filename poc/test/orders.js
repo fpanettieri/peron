@@ -5,7 +5,7 @@ const assert = require('assert');
 const cfg = require('../cfg/peron');
 const orders = require('../lib/orders');
 const logger = require('../lib/logger');
-const log = new logger('[test/orders]');
+const log = new logger('test/orders');
 
 let order = null;
 

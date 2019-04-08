@@ -3,7 +3,7 @@
 const cfg = require('../../cfg/peron');
 
 const logger = require('../../lib/logger');
-const log = new logger('[core/brain/bb]');
+const log = new logger('core/brain/bb');
 
 let bb = null;
 let previous = null;

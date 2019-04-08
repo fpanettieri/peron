@@ -3,7 +3,7 @@
 const cfg = require('../cfg/peron');
 const orders = require('../lib/orders');
 const logger = require('../lib/logger');
-const log = new logger('[test/auth]');
+const log = new logger('test/auth');
 
 const cl_id = `ag-${Math.random().toString(36).substr(2, 8)}`;
 let rsp = null;

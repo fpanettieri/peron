@@ -3,7 +3,7 @@
 const cfg = require('../cfg/peron');
 const utils = require('../lib/utils');
 const logger = require('../lib/logger');
-const log = new logger('[core/chandler]');
+const log = new logger('core/chandler');
 
 const CLOSE_OFFSET = cfg.chandler.offset;
 const CANDLE_STEP = utils.intervalToMs(cfg.timeframe);

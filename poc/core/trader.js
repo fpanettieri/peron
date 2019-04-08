@@ -3,7 +3,7 @@
 const cfg = require('../cfg/peron');
 
 const logger = require('../lib/logger');
-const log = new logger('[core/trader]');
+const log = new logger('core/trader');
 
 const STB = 0.00000001;
 const MIN_MARGIN = 0.0026 / STB;
@@ -59,7 +59,7 @@ function open (d, c)
 
   let m = Math.max(cfg.trader.size * margin.walletBalance, MIN_MARGIN);
   const contracts = Math.ceil(m * STB * quote.askPrice);
-  
+
   bb.emit('TradeContract', cfg.symbol, d * contracts, c.c);
 }
 

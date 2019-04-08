@@ -1,7 +1,7 @@
 'use strict';
 
 const logger = require('../lib/logger');
-const log = new logger('[core/auditor]');
+const log = new logger('core/auditor');
 
 let bb = null;
 

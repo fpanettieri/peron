@@ -3,7 +3,7 @@
 const fs = require('fs');
 const https = require('../lib/https');
 const Logger = require('../lib/logger');
-const log = new Logger('[tv/watchlist]');
+const log = new Logger('tv/watchlist');
 
 const INFO_URL = 'https://api.binance.com/api/v1/exchangeInfo';
 const BTC_REGEX = /BTC$/;

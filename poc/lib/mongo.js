@@ -3,7 +3,7 @@
 const mongodb = require('mongodb');
 
 const logger = require('./logger');
-const log = new logger('[lib/mongo]');
+const log = new logger('lib/mongo');
 
 const cfg = require('../cfg/mongo.json');
 
