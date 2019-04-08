@@ -8,7 +8,7 @@ const backbone = require('./lib/backbone');
 const modules = [];
 
 (async () => {
-  const log = new logger(`[Peron/main]`);
+  const log = new logger(`peron`);
   log.info('peronizando');
 
   const bb = new backbone();
