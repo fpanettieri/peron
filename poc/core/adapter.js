@@ -53,8 +53,6 @@ function onOpen ()
 function auth ()
 {
   const expires = ~~(Date.now() / 1000 + 365 * 24 * 60 * 60);
-  log.log('GET/realtime' + expires);
-
   const signature = crypto.createHmac('sha256', process.env.BITMEX_SECRET).update('GET/realtime' + expires).digest('hex');
   const auth_params = {
     op: 'authKeyExpires',
