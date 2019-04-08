@@ -16,12 +16,12 @@ class Logger
     fn(`[${date} ${level} ${this.prefix}]`, ...args);
   }
 
-  debug () { this.format(console.log, 'DEBUG', arguments)}
+  debug () { this.format(console.log, 'DBG', arguments)}
   log ()   { this.format(console.log, 'LOG', arguments)}
-  info ()  { this.format(console.info, 'INFO', arguments)}
-  warn ()  { this.format(console.warn, 'WARN', arguments)}
-  error () { this.format(console.error, 'ERROR', arguments)}
-  fatal () { this.format(console.error, 'FATAL', arguments); process.exit(-1); }
+  info ()  { this.format(console.info, 'INF', arguments)}
+  warn ()  { this.format(console.warn, 'WRN', arguments)}
+  error () { this.format(console.error, 'ERR', arguments)}
+  fatal () { this.format(console.error, 'FTL', arguments); process.exit(-1); }
 }
 
 module.exports = Logger;
