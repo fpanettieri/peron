@@ -56,6 +56,7 @@ function onQuoteUpdated (arr)
 function onCandleAnalyzed (c)
 {
   candle = c;
+  log.log(`candle analyzed: ${JSON.stringify(c)}`);
 }
 
 async function onPositionSynced (arr)
@@ -100,6 +101,10 @@ async function onOrderUpdated (arr)
 
 async function onTradeContract (sym, qty, px)
 {
+  log.log(`trade contract: ${sym}, ${qty}, ${px}`);
+  // FIXME: remove this
+  return;
+
   if (jobs.length >= cfg.executor.max_jobs) { return; }
   createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
 }

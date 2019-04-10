@@ -16,7 +16,7 @@ const modules = [];
   for (let i = 0; i < cfg.modules.length; i++) {
     const name = cfg.modules[i];
     const m = require(`./${name}`);
-    log.info(`loading module ${name}`);
+    log.log(`loading module ${name}`);
 
     m.plug(bb);
     modules.push(m);
