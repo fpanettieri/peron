@@ -1,6 +1,8 @@
 'use strict';
 
 const EventEmitter = require('events');
+const logger = require('../lib/logger');
+const log = new logger('lib/backbone');
 
 class Backbone extends EventEmitter
 {
@@ -9,11 +11,11 @@ class Backbone extends EventEmitter
     this.on(a, () => this.emit(b));
   }
 
-  // emit ()
-  // {
-  //   log.info(arguments[0]);
-  //   return super.emit.apply(this, arguments);
-  // }
+  emit ()
+  {
+    log.info(arguments[0]);
+    return super.emit.apply(this, arguments);
+  }
 }
 
 module.exports = Backbone;
