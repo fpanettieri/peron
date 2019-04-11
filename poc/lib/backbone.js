@@ -8,7 +8,6 @@ class Backbone extends EventEmitter
 {
   constructor () {
     super();
-    this.depth = 0;
     this.queue = [];
   }
 
@@ -19,18 +18,21 @@ class Backbone extends EventEmitter
 
   emit ()
   {
-    console.log('arguments:', ...arguments);
+    if (arguments[0] == 'TradeContract') { console.log('##########################################################'); }
+
+    console.log('pushing ', arguments[0]);
+    console.log(`queue size: (${this.queue.length})`);
+
     this.queue.push(arguments);
-    console.log(`queue (${this.queue.length}):`, this.queue);
+    if (this.queue.length > 1) { return; }
 
-    // if (this.queue.length > 1) { return; }
+    let args = null;
+    while (args = this.queue.shift()) {
+      console.log('>'.repeat(this.queue.length), args[0]);
+      super.emit.apply(this, args);
+    }
 
-    this.depth++;
-    console.log('>'.repeat(this.depth), arguments[0]);
-    super.emit.apply(this, arguments);
-    this.depth--;
-
-    // this.queue.shift();
+    console.log(`queue size: (${this.queue.length})`);
   }
 }
 
