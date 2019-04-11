@@ -29,7 +29,8 @@ class Backbone extends EventEmitter
     console.log('>'.repeat(this.depth), arguments[0]);
     super.emit.apply(this, arguments);
     this.depth--;
-    // this.queue.
+
+    this.queue.shift();
   }
 }
 
