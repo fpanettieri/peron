@@ -20,12 +20,9 @@ class Backbone extends EventEmitter
   {
     if (arguments[0] == 'TradeContract') { console.log('##########################################################'); }
 
-    console.log('pushing ', arguments[0]);
-
     this.queue.push(arguments);
-    console.log(`queue size: (${this.queue.length})`);
-
-    if (this.queue.length > 1) { return; }
+    console.log('start ', arguments[0], `queue size: (${this.queue.length})`);  // remove this
+    if (this.queue.length > 1) { console.log('shortcut exit, already running'); return; }
 
     let args = null;
     while (args = this.queue.shift()) {
@@ -33,7 +30,7 @@ class Backbone extends EventEmitter
       super.emit.apply(this, args);
     }
 
-    console.log(`queue size: (${this.queue.length})`);
+    console.log('end ', arguments[0], `queue size: (${this.queue.length})`);  // remove this
   }
 }
 
