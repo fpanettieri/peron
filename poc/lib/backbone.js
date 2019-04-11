@@ -21,14 +21,15 @@ class Backbone extends EventEmitter
     if (arguments[0] == 'TradeContract') { console.log('##########################################################'); }
 
     console.log('pushing ', arguments[0]);
-    console.log(`queue size: (${this.queue.length})`);
 
     this.queue.push(arguments);
+    console.log(`queue size: (${this.queue.length})`);
+
     if (this.queue.length > 1) { return; }
 
     let args = null;
     while (args = this.queue.shift()) {
-      console.log('>'.repeat(this.queue.length), args[0]);
+      console.log('>'.repeat(this.queue.length + 1), args[0]);
       super.emit.apply(this, args);
     }
 
