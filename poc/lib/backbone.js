@@ -19,18 +19,18 @@ class Backbone extends EventEmitter
 
   emit ()
   {
-    this.queue.push(...arguments);
-    if (this.queue.length > 1) { return; }
+    console.log('arguments:', ...arguments);
+    this.queue.push(arguments);
+    console.log(`queue (${this.queue.length}):`, this.queue);
 
-    console.log('queued:', this.queue.length);
-    // console.log('queue:', this.queue);
-    // if
+    // if (this.queue.length > 1) { return; }
+
     this.depth++;
     console.log('>'.repeat(this.depth), arguments[0]);
     super.emit.apply(this, arguments);
     this.depth--;
 
-    this.queue.shift();
+    // this.queue.shift();
   }
 }
 
