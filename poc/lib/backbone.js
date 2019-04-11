@@ -24,13 +24,12 @@ class Backbone extends EventEmitter
     console.log('start ', arguments[0], `queue size: (${this.queue.length})`);  // remove this
     if (this.queue.length > 1) { console.log('shortcut exit, already running'); return; }
 
-    let args = null;
-    while (args = this.queue.shift()) {
-      console.log('>'.repeat(this.queue.length + 1), args[0]);
-      super.emit.apply(this, args);
+    while (this.queue.length > 0) {
+      console.log('>', this.queue[0][0]);
+      super.emit.apply(this, this.queue.shift());
     }
 
-    console.log('end ', arguments[0], `queue size: (${this.queue.length})`);  // remove this
+    console.log('end ', arguments[0], `queue size: (${this.queue.length})`, '\n');  // remove this
   }
 }
 
