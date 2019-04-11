@@ -77,14 +77,17 @@ async function onPositionSynced (arr)
 
 function onOrderSynced (arr)
 {
+  log.log(`orders synced. found ${arr.length}`);
+
   for (let i = 0; i < arr.length; i++) {
     const o = arr[i];
 
     if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
-      log.log('Ignored non-peronist order');
+      log.log('ignored non-peronist order');
       continue;
     }
 
+    log.log(`discarding order ${arr[i].orderID}`);
     orders.discard(arr[i].orderID);
   }
 }
