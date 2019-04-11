@@ -29,8 +29,8 @@ class Backbone extends EventEmitter
       let args = this.queue[0];
       console.log(`[+ START]       ${args[0]} queue size: (${this.queue.length})`);    // remove this
       super.emit.apply(this, args);
-      console.log(`[- END]         ${args[0]} queue size: (${this.queue.length})`);  // remove this
       this.queue.shift();
+      console.log(`[- END]         ${args[0]} queue size: (${this.queue.length})`);  // remove this
     }
     console.log('[. DONE]\n');
   }
