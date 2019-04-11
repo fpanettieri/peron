@@ -63,6 +63,7 @@ async function onPositionSynced (arr)
 {
   const pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { run(); return; }
+  log.log(`position synced: ${pos}`);
 
   const t = (new Date(pos.openingTimestamp)).getTime();
   const id = genId();
