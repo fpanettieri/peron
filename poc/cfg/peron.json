@@ -1,6 +1,6 @@
 {
   "testnet": true,
-  "timeframe": "5m",
+  "timeframe": "1m",
   "symbol": "XBTUSD",
 
   "modules": [
@@ -41,12 +41,12 @@
   },
 
   "trader": {
-    "positions": 3,
+    "positions": 10,
     "size": 0.05
   },
 
   "executor": {
-    "max_jobs": 3,
+    "max_jobs": 10,
     "speed": {
       "normal": 200,
       "burst": 50
