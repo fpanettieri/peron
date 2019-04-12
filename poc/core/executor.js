@@ -63,7 +63,6 @@ async function onPositionSynced (arr)
 {
   const pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { run(); return; }
-  log.log(`position synced: ${pos}`);
 
   const t = (new Date(pos.openingTimestamp)).getTime();
   const id = genId();
@@ -77,8 +76,6 @@ async function onPositionSynced (arr)
 
 function onOrderSynced (arr)
 {
-  log.log(`orders synced. found ${arr.length}`);
-
   for (let i = 0; i < arr.length; i++) {
     const o = arr[i];
 
@@ -87,25 +84,18 @@ function onOrderSynced (arr)
       continue;
     }
 
-    log.log(`discarding order ${arr[i].orderID}`);
     orders.discard(arr[i].orderID);
   }
 }
 
 function onOrderOpened (arr)
 {
-  for (let i = 0; i < arr.length; i++) {
-    log.log(`order opened ${arr[i].orderID}`);  // TODO: extract?
-    orders.add(arr[i]);
-  }
+  for (let i = 0; i < arr.length; i++) { orders.add(arr[i]); }
   pending = pending.concat(arr);
 }
 
 async function onOrderUpdated (arr)
 {
-  for (let i = 0; i < arr.length; i++) {
-    log.log(`order updated ${arr[i].orderID}`);  // TODO: extract?
-  }
   pending = pending.concat(arr);
 }
 
@@ -120,7 +110,6 @@ function createJob (id, sym, qty, px, state, t)
 {
   const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now()};
   jobs.push(job);
-  log.log(`job created: ${JSON.stringify(job)}`); // TODO: extract?
   return job;
 }
 
@@ -128,13 +117,11 @@ function updateJob (id, changes)
 {
   const idx = jobs.findIndex(j => j.id == id);
   jobs[idx] = {...jobs[idx], ...changes};
-  log.log(`job created: ${JSON.stringify(jobs[idx])}`); // TODO: extract?
   return jobs[idx];
 }
 
 function destroyJob (job)
 {
-  log.log(`job destroyed: ${JSON.stringify(job)}`); // TODO: extract?
   return jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
 }
 
