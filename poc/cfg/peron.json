@@ -1,6 +1,6 @@
 {
   "testnet": true,
-  "timeframe": "1m",
+  "timeframe": "5m",
   "symbol": "XBTUSD",
 
   "modules": [

@@ -37,7 +37,7 @@ function onCandleClosed (c)
 
   for (let i = 1; i < ohlcs.length; i++) {
     const delta = ohlcs[i].t - ohlcs[i - 1].t;
-    if (delta > 60 * 1000) { log.fatal(`invalid delta between candles: ${delta}`); }
+    if (delta > CANDLE_STEP) { log.fatal(`invalid delta between candles: ${delta}`); }
   }
 
   analyze(c);
