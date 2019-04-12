@@ -134,6 +134,7 @@ function updateJob (id, changes)
 
 function destroyJob (job)
 {
+  log.log(`job destroyed: ${JSON.stringify(job)}`); // TODO: extract?
   return jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
 }
 
