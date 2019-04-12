@@ -94,21 +94,24 @@ function onOrderSynced (arr)
 
 function onOrderOpened (arr)
 {
-  for (let i = 0; i < arr.length; i++) { orders.add(arr[i]); }
+  for (let i = 0; i < arr.length; i++) {
+    log.log(`order opened ${arr[i].orderID}`);  // TODO: extract?
+    orders.add(arr[i]);
+  }
   pending = pending.concat(arr);
 }
 
 async function onOrderUpdated (arr)
 {
+  for (let i = 0; i < arr.length; i++) {
+    log.log(`order updated ${arr[i].orderID}`);  // TODO: extract?
+  }
   pending = pending.concat(arr);
 }
 
 async function onTradeContract (sym, qty, px)
 {
   log.log(`trade contract: ${sym}, ${qty}, ${px}`);
-  // FIXME: remove this
-  return;
-
   if (jobs.length >= cfg.executor.max_jobs) { return; }
   createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
 }
@@ -117,6 +120,7 @@ function createJob (id, sym, qty, px, state, t)
 {
   const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now()};
   jobs.push(job);
+  log.log(`job created: ${JSON.stringify(job)}`); // TODO: extract?
   return job;
 }
 
@@ -124,6 +128,7 @@ function updateJob (id, changes)
 {
   const idx = jobs.findIndex(j => j.id == id);
   jobs[idx] = {...jobs[idx], ...changes};
+  log.log(`job created: ${JSON.stringify(jobs[idx])}`); // TODO: extract?
   return jobs[idx];
 }
 
