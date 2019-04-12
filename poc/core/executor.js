@@ -101,7 +101,7 @@ async function onOrderUpdated (arr)
 
 async function onTradeContract (sym, qty, px)
 {
-  log.log(`trade contract: ${sym}, ${qty}, ${px}`);
+  log.log(`trade contract: ${qty} ${sym} @ ${px}`);
   if (jobs.length >= cfg.executor.max_jobs) { return; }
   createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
 }
