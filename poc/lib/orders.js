@@ -45,7 +45,10 @@ async function create (id, sym, qty, params)
       order = {clOrdID: id, ordStatus: 'Error', error: order.error.message};
     }
 
-    log.fatal(' >>>>>>>>> CREATE FAILED', order);
+    log.error(' >>>>>>>>> CREATE FAILED', order, rsp);
+    log.error('rsp:', JSON.stringify(rsp));
+    log.error('order:', JSON.stringify(order));
+    log.fatal();
   }
 
   return order;
