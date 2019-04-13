@@ -1,0 +1,39 @@
+2019-04-13T00:04:50.002Z WRN core/analyst] this should never happen, it should be filtered by the chandler
+[2019-04-13T00:16:50.000Z WRN core/analyst] this should never happen, it should be filtered by the chandler
+[2019-04-13T00:33:50.000Z WRN core/analyst] this should never happen, it should be filtered by the chandler
+[2019-04-13T00:59:50.000Z WRN core/analyst] this should never happen, it should be filtered by the chandler
+[2019-04-13T01:04:50.001Z WRN core/analyst] this should never happen, it should be filtered by the chandler
+[2019-04-13T01:15:50.003Z WRN core/analyst] this should never happen, it should be filtered by the chandler
+[2019-04-13T01:23:50.000Z WRN core/analyst] this should never happen, it should be filtered by the chandler
+[2019-04-13T01:27:50.001Z WRN core/analyst] this should never happen, it should be filtered by the chandler
+[2019-04-13T01:46:50.001Z WRN core/analyst] this should never happen, it should be filtered by the chandler
+[2019-04-13T01:53:50.001Z WRN core/analyst] this should never happen, it should be filtered by the chandler
+[2019-04-13T02:06:50.000Z WRN core/analyst] this should never happen, it should be filtered by the chandler
+[2019-04-13T02:09:50.001Z WRN core/analyst] this should never happen, it should be filtered by the chandler
+[2019-04-13T02:19:50.001Z WRN core/analyst] this should never happen, it should be filtered by the chandler
+[2019-04-13T02:21:12.734Z ERR lib/orders]  >>>>>>>>> CREATE FAILED { clOrdID: 'tp-ag-ocipomybpk-4fa946xuic',
+  ordStatus: 'Error',
+  error:
+   'The system is currently overloaded. Please try again later.' } { status: { code: 503, msg: 'Service Unavailable' },
+  headers:
+   { date: 'Sat, 13 Apr 2019 02:21:12 GMT',
+     'content-type': 'application/json; charset=utf-8',
+     'content-length': '102',
+     connection: 'close',
+     'set-cookie':
+      [ 'AWSALB=QB2T7y3LMGN3zlrtKLNWNli1iOoWiGENV6AsWzq74tYPNpSnG5Hjj1Va2uxfOIJju90ifxtAoWHtTr4UUKF3WTmUmGGM+G6wBBubeowdrEuUljXL97LCGs4NMSO8; Expires=Sat, 20 Apr 2019 02:21:12 GMT; Path=/' ],
+     'x-ratelimit-limit': '300',
+     'x-ratelimit-remaining': '271',
+     'x-ratelimit-reset': '1555122073',
+     'x-powered-by': 'Profit',
+     etag: 'W/"66-qhi7rqXXvlVhEy8FfnYZtT4OszQ"',
+     'strict-transport-security': 'max-age=31536000; includeSubDomains' },
+  body:
+   { error:
+      { message:
+         'The system is currently overloaded. Please try again later.',
+        name: 'HTTPError' } } }
+[2019-04-13T02:21:12.737Z ERR lib/orders] rsp: {"status":{"code":503,"msg":"Service Unavailable"},"headers":{"date":"Sat, 13 Apr 2019 02:21:12 GMT","content-type":"application/json; charset=utf-8","content-length":"102","connection":"close","set-cookie":["AWSALB=QB2T7y3LMGN3zlrtKLNWNli1iOoWiGENV6AsWzq74tYPNpSnG5Hjj1Va2uxfOIJju90ifxtAoWHtTr4UUKF3WTmUmGGM+G6wBBubeowdrEuUljXL97LCGs4NMSO8; Expires=Sat, 20 Apr 2019 02:21:12 GMT; Path=/"],"x-ratelimit-limit":"300","x-ratelimit-remaining":"271","x-ratelimit-reset":"1555122073","x-powered-by":"Profit","etag":"W/\"66-qhi7rqXXvlVhEy8FfnYZtT4OszQ\"","strict-transport-security":"max-age=31536000; includeSubDomains"},"body":{"error":{"message":"The system is currently overloaded. Please try again later.","name":"HTTPError"}}}
+[2019-04-13T02:21:12.738Z ERR lib/orders] order: {"clOrdID":"tp-ag-ocipomybpk-4fa946xuic","ordStatus":"Error","error":"The system is currently overloaded. Please try again later."}
+[2019-04-13T02:21:12.738Z FTL lib/orders]
+[2019-04-13T02:21:13.355Z WRN core/adapter] limit updated: 39
