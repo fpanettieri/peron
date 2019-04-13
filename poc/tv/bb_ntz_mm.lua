@@ -37,10 +37,10 @@ ntz_low = basis - nt_dev
 
 // === EXECUTION ===
 strategy.entry("L", strategy.long, when = window() and close < ntz_low)
-strategy.close("L", when = crossover(close, ntz_low))
+strategy.close("L", when = crossover(close, ntz_up))
 
 strategy.entry("S", strategy.short, when = window() and close > ntz_up)
-strategy.close("S", when = crossover(close, ntz_up))
+strategy.close("S", when = crossover(close, ntz_low))
 
 // === PLOT ===
 plot(basis, color=red, title='ma')
