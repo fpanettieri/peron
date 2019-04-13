@@ -117,3 +117,58 @@
 [2019-04-13T10:35:51.272Z ERR lib/orders] order: {"clOrdID":"lm-ag-yon3msl5a8-5u3wt0bze7","ordStatus":"Error","error":"The system is currently overloaded. Please try again later."}
 [2019-04-13T10:35:51.273Z FTL lib/orders]
 [2019-04-13T10:35:51.724Z WRN core/adapter] limit updated: 39
+[2019-04-13T10:35:55.013Z ERR lib/orders]  >>>>>>>>> CREATE FAILED { clOrdID: 'tp-ag-xs2mui94uy-jb0unx3aeg',
+  ordStatus: 'Error',
+  error:
+   'The system is currently overloaded. Please try again later.' } { status: { code: 503, msg: 'Service Unavailable' },
+  headers:
+   { date: 'Sat, 13 Apr 2019 10:35:55 GMT',
+     'content-type': 'application/json; charset=utf-8',
+     'content-length': '102',
+     connection: 'close',
+     'set-cookie':
+      [ 'AWSALB=Sle5nA/xA4DthcS9LzGFrfZYNGeiCyIJHS1JG+8Iw2UjIlrHyCOrRTZfsjZ7vHj1HVv8eg13XFF5DTEHlM+Vr4dROpLQHcQqLuJijY9lTULbSge/lxxG34vxmPlN; Expires=Sat, 20 Apr 2019 10:35:54 GMT; Path=/' ],
+     'x-ratelimit-limit': '300',
+     'x-ratelimit-remaining': '166',
+     'x-ratelimit-reset': '1555151756',
+     'x-powered-by': 'Profit',
+     etag: 'W/"66-qhi7rqXXvlVhEy8FfnYZtT4OszQ"',
+     'strict-transport-security': 'max-age=31536000; includeSubDomains' },
+  body:
+   { error:
+      { message:
+         'The system is currently overloaded. Please try again later.',
+        name: 'HTTPError' } } }
+[2019-04-13T10:35:55.020Z ERR lib/orders] rsp: {"status":{"code":503,"msg":"Service Unavailable"},"headers":{"date":"Sat, 13 Apr 2019 10:35:55 GMT","content-type":"application/json; charset=utf-8","content-length":"102","connection":"close","set-cookie":["AWSALB=Sle5nA/xA4DthcS9LzGFrfZYNGeiCyIJHS1JG+8Iw2UjIlrHyCOrRTZfsjZ7vHj1HVv8eg13XFF5DTEHlM+Vr4dROpLQHcQqLuJijY9lTULbSge/lxxG34vxmPlN; Expires=Sat, 20 Apr 2019 10:35:54 GMT; Path=/"],"x-ratelimit-limit":"300","x-ratelimit-remaining":"166","x-ratelimit-reset":"1555151756","x-powered-by":"Profit","etag":"W/\"66-qhi7rqXXvlVhEy8FfnYZtT4OszQ\"","strict-transport-security":"max-age=31536000; includeSubDomains"},"body":{"error":{"message":"The system is currently overloaded. Please try again later.","name":"HTTPError"}}}
+[2019-04-13T10:35:55.020Z ERR lib/orders] order: {"clOrdID":"tp-ag-xs2mui94uy-jb0unx3aeg","ordStatus":"Error","error":"The system is currently overloaded. Please try again later."}
+[2019-04-13T10:35:55.022Z FTL lib/orders]
+[2019-04-13T10:35:55.761Z WRN core/adapter] limit updated: 38
+[2019-04-13T10:36:02.018Z ERR lib/orders]  >>>>>>>>> CREATE FAILED { clOrdID: 'tp-ag-zq1d83lexl-tvakxmrgrb',
+  ordStatus: 'Error',
+  error:
+   'The system is currently overloaded. Please try again later.' } { status: { code: 503, msg: 'Service Unavailable' },
+  headers:
+   { date: 'Sat, 13 Apr 2019 10:36:02 GMT',
+     'content-type': 'application/json; charset=utf-8',
+     'content-length': '102',
+     connection: 'close',
+     'set-cookie':
+      [ 'AWSALB=+we2zGO6T7W+fk40jktbO28voTKEeWTwz5KhMtF1itoRT0hhSyI6ciATnoY22zKlgxMiTIFKCByt32fyGGQ+rvyRYiED+EJpLR2zYQDiRpkTc4sAvDrmERfsxf9g; Expires=Sat, 20 Apr 2019 10:36:02 GMT; Path=/' ],
+     'x-ratelimit-limit': '300',
+     'x-ratelimit-remaining': '158',
+     'x-ratelimit-reset': '1555151763',
+     'x-powered-by': 'Profit',
+     etag: 'W/"66-qhi7rqXXvlVhEy8FfnYZtT4OszQ"',
+     'strict-transport-security': 'max-age=31536000; includeSubDomains' },
+  body:
+   { error:
+      { message:
+         'The system is currently overloaded. Please try again later.',
+        name: 'HTTPError' } } }
+[2019-04-13T10:36:02.022Z ERR lib/orders] rsp: {"status":{"code":503,"msg":"Service Unavailable"},"headers":{"date":"Sat, 13 Apr 2019 10:36:02 GMT","content-type":"application/json; charset=utf-8","content-length":"102","connection":"close","set-cookie":["AWSALB=+we2zGO6T7W+fk40jktbO28voTKEeWTwz5KhMtF1itoRT0hhSyI6ciATnoY22zKlgxMiTIFKCByt32fyGGQ+rvyRYiED+EJpLR2zYQDiRpkTc4sAvDrmERfsxf9g; Expires=Sat, 20 Apr 2019 10:36:02 GMT; Path=/"],"x-ratelimit-limit":"300","x-ratelimit-remaining":"158","x-ratelimit-reset":"1555151763","x-powered-by":"Profit","etag":"W/\"66-qhi7rqXXvlVhEy8FfnYZtT4OszQ\"","strict-transport-security":"max-age=31536000; includeSubDomains"},"body":{"error":{"message":"The system is currently overloaded. Please try again later.","name":"HTTPError"}}}
+[2019-04-13T10:36:02.022Z ERR lib/orders] order: {"clOrdID":"tp-ag-zq1d83lexl-tvakxmrgrb","ordStatus":"Error","error":"The system is currently overloaded. Please try again later."}
+[2019-04-13T10:36:02.022Z FTL lib/orders]
+[2019-04-13T10:36:02.506Z WRN core/adapter] limit updated: 37
+[2019-04-13T10:46:50.002Z WRN core/analyst] this should never happen, it should be filtered by the chandler
+[2019-04-13T11:10:50.001Z WRN core/analyst] this should never happen, it should be filtered by the chandler
+[2019-04-13T11:12:50.001Z WRN core/analyst] this should never happen, it should be filtered by the chandler
