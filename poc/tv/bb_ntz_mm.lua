@@ -15,6 +15,15 @@ ntz_mul = input(0.7, minval=0.001, maxval=50)
 basis = sma(src, period)
 start = timestamp(year, month, day, 00, 00)
 
+bb_dev = bb_mul * stdev(src, length)
+nt_dev = ntz_mul * stdev(src, length)
+
+upper = basis + bb_dev
+lower = basis - bb_dev
+
+ntz_up = basis + nt_dev
+ntz_low = basis - nt_dev
+
 // === EXECUTION ===
 strategy.entry("L", strategy.long, when = close < basis and time > start)
 strategy.close("L", when = high > basis)
