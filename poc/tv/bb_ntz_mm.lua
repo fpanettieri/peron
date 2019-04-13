@@ -15,8 +15,8 @@ ntz_mul = input(0.7, minval=0.001, maxval=50)
 basis = sma(src, period)
 start = timestamp(year, month, day, 00, 00)
 
-bb_dev = bb_mul * stdev(src, length)
-nt_dev = ntz_mul * stdev(src, length)
+bb_dev = bb_mul * stdev(src, period)
+nt_dev = ntz_mul * stdev(src, period)
 
 upper = basis + bb_dev
 lower = basis - bb_dev
@@ -25,11 +25,11 @@ ntz_up = basis + nt_dev
 ntz_low = basis - nt_dev
 
 // === EXECUTION ===
-strategy.entry("L", strategy.long, when = close < basis and time > start)
-strategy.close("L", when = high > basis)
+strategy.entry("L", strategy.long, when = time > start and close < ntz_low)
+strategy.close("L", when = high > ntz_low)
 
-strategy.entry("S", strategy.short, when = close > basis and time > start)
-strategy.close("S", when = low < basis)
+strategy.entry("S", strategy.short, when = time > start and close > ntz_up)
+strategy.close("S", when = low < ntz_up)
 
 // === PLOT ===
 plot(basis, color=red, title='ma')
