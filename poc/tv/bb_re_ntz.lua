@@ -1,6 +1,6 @@
 //@version=3
-// Bollinger Bands Re Entry With No Trade Zone
-strategy("BB RE NTZ", overlay=true)
+
+strategy("BB NTZ RE", overlay=true)
 
 // === INPUT GENERAL ===
 period      = input(20, minval=1)
@@ -16,8 +16,8 @@ to_month    = input(defval = 4, title = "To Month", minval = 1, maxval = 12)
 to_day      = input(defval = 13, title = "To Day", minval = 1, maxval = 31)
 
 // === INPUT BB ===
-bb_mul  = input(1.8, minval = 0.001, maxval = 50)
-ntz_mul = input(0.25, minval = 0.001, maxval = 50)
+bb_mul  = input(2.0, minval = 0.001, maxval = 50)
+ntz_mul = input(0.7, minval = 0.001, maxval = 50)
 
 // === PARAMS TIME ===
 basis     = sma(src, period)
@@ -38,10 +38,10 @@ ntz_low = basis - nt_dev
 // === EXECUTION ===
 stop_level = strategy.position_avg_price * (1 - 0.005)
 
-strategy.entry("L", strategy.long, when = window() and crossover(close, lower) and close < ntz_low)
+strategy.entry("L", strategy.long, when = window() and close < ntz_low)
 strategy.exit("L", when = crossover(close, upper))
 
-strategy.entry("S", strategy.short, when = window() and crossover(close, lower) and close > ntz_up)
+strategy.entry("S", strategy.short, when = window() and close > ntz_up)
 strategy.exit("S", when = crossover(close, lower))
 
 // === PLOT ===
