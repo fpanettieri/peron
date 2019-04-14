@@ -10,7 +10,7 @@
     "core/analyst",
     "core/brain/bb",
     "core/trader",
-    "core/executor"
+    "core/executor/bb"
   ],
 
   "backbone": {
