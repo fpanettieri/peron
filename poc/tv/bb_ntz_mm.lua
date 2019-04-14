@@ -39,10 +39,10 @@ ntz_low = basis - nt_dev
 stop_level = strategy.position_avg_price * (1 - 0.005)
 
 strategy.entry("L", strategy.long, when = window() and close < ntz_low)
-strategy.exit("L", when = crossover(close, upper), stop = strategy.position_avg_price * (0.995))
+strategy.exit("L", when = crossover(close, upper))
 
 strategy.entry("S", strategy.short, when = window() and close > ntz_up)
-strategy.exit("S", when = crossover(close, lower), stop = strategy.position_avg_price * (1.005))
+strategy.exit("S", when = crossover(close, lower))
 
 // === PLOT ===
 plot(basis, color=red, title='ma')

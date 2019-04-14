@@ -13,10 +13,10 @@ upper = basis + dev
 lower = basis - dev
 
 // === EXECUTION ===
-strategy.entry("L", strategy.long, when = crossover(close, lower) and close < basis, loss = low * 1.05)
+strategy.entry("L", strategy.long, when = crossover(close, lower) and close < basis)
 strategy.close("L", when = high > basis)
 
-strategy.entry("S", strategy.short, when = crossunder(close, upper) and close > basis, loss = low * 0.95)
+strategy.entry("S", strategy.short, when = crossunder(close, upper) and close > basis)
 strategy.close("S", when = low < basis)
 
 // === PLOT ===
