@@ -31,12 +31,8 @@
     "history": "20",
     "bb": {
       "periods": 20,
-      "mult": 2
+      "mult": 1.7
     }
-  },
-
-  "brain": {
-    "skip": 0
   },
 
   "trader": {
