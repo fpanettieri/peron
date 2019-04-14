@@ -3,7 +3,7 @@
 const cfg = require('../cfg/peron');
 const orders = require('../lib/orders');
 const logger = require('../lib/logger');
-const log = new logger('core/executor');
+const log = new logger('executor/mm');
 
 const SAFE_LONG_TARGET = 100;
 const SAFE_SHORT_TARGET = 100000;
