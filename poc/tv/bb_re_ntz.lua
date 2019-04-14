@@ -9,11 +9,11 @@ src         = input(close, title="Source")
 // === INPUT TIME ===
 from_year   = input(defval = 2019, title = "From Year", minval = 2017)
 from_month  = input(defval = 4, title = "From Month", minval = 1, maxval = 12)
-from_day    = input(defval = 13, title = "From Day", minval = 1, maxval = 31)
+from_day    = input(defval = 1, title = "From Day", minval = 1, maxval = 31)
 
 to_year     = input(defval = 2019, title = "To Year", minval = 2017)
 to_month    = input(defval = 4, title = "To Month", minval = 1, maxval = 12)
-to_day      = input(defval = 13, title = "To Day", minval = 1, maxval = 31)
+to_day      = input(defval = 30, title = "To Day", minval = 1, maxval = 31)
 
 // === INPUT BB ===
 bb_mul  = input(2.0, minval = 0.001, maxval = 50)
@@ -37,10 +37,10 @@ ntz_low = basis - nt_dev
 
 // === EXECUTION ===
 strategy.entry("L", strategy.long, when = window() and crossover(src, lower) and src < ntz_low)
-strategy.exit("L", when = crossover(src, ntz_low))
+strategy.close("L", when = crossover(src, upper))
 
 strategy.entry("S", strategy.short, when = window() and crossunder(src, upper) and src > ntz_up)
-strategy.exit("S", when = crossover(src, ntz_up))
+strategy.close("S", when = crossover(src, lower))
 
 // === PLOT ===
 plot(basis, color=red, title='ma')
