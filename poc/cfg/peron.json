@@ -7,7 +7,10 @@
     "core/adapter",
     "core/archivist",
     "core/chandler",
-    "core/analyst"
+    "core/analyst",
+    "core/brain/bb",
+    "core/trader",
+    "core/executor"
   ],
 
   "backbone": {
@@ -33,16 +36,16 @@
   },
 
   "brain": {
-    "skip": 1
+    "skip": 0
   },
 
   "trader": {
-    "positions": 10,
+    "positions": 5,
     "size": 0.05
   },
 
   "executor": {
-    "max_jobs": 10,
+    "max_jobs": 5,
     "speed": {
       "normal": 200,
       "burst": 50
@@ -53,7 +56,7 @@
     },
     "sl": {
       "soft": 0.0025,
-      "hard": 0.0075
+      "hard": 0.01
     }
   }
 }
