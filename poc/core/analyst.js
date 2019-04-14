@@ -30,8 +30,6 @@ function onHistoryDownloaded (history)
 
 function onCandleClosed (c)
 {
-  log.log('Candle Closed:', JSON.stringify(c));
-  
   if (c.t == ohlcs[ohlcs.length - 1].t) {
     log.warn('this should never happen, it should be filtered by the chandler');
     return;
