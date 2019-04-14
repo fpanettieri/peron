@@ -7,6 +7,7 @@ const log = new logger('core/chandler');
 
 const CLOSE_OFFSET = cfg.chandler.offset;
 const CANDLE_STEP = utils.intervalToMs(cfg.timeframe);
+const MIN_STEP = utils.intervalToMs('5s');
 const STATES = { INITIAL: 0, HISTORIC: 1, BRIDGE: 2, CANDLE: 3 };
 
 let bb = null;
@@ -77,7 +78,7 @@ function closeCandle ()
 function getTimeout ()
 {
   let timeout = CANDLE_STEP - (Date.now() % CANDLE_STEP) + CLOSE_OFFSET;
-  if (timeout < 1) { timeout += CANDLE_STEP; }
+  if (timeout < MIN_STEP) { timeout += CANDLE_STEP; }
   return timeout;
 }
 
