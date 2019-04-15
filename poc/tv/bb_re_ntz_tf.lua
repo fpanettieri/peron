@@ -1,11 +1,19 @@
 //@version=3
-// Bollinger Bands Reentry with No Trade Zone
 
 strategy("BB NTZ RE", overlay=true)
 
 // === INPUT GENERAL ===
 period      = input(20, minval=1)
 src         = input(close, title="Source")
+
+// === INPUT TIME ===
+from_year   = input(defval = 2019, title = "From Year", minval = 2017)
+from_month  = input(defval = 4, title = "From Month", minval = 1, maxval = 12)
+from_day    = input(defval = 1, title = "From Day", minval = 1, maxval = 31)
+
+to_year     = input(defval = 2019, title = "To Year", minval = 2017)
+to_month    = input(defval = 4, title = "To Month", minval = 1, maxval = 12)
+to_day      = input(defval = 30, title = "To Day", minval = 1, maxval = 31)
 
 // === INPUT BB ===
 bb_mul  = input(2.0, minval = 0.001, maxval = 50)
