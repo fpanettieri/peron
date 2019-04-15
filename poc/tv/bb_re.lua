@@ -1,25 +1,29 @@
 //@version=3
-strategy("BB RE ENTRY", overlay=true)
+// Bollinger Bands Reentry
 
-// === INPUT ===
-period = input(20, minval=1)
-mult = input(2, minval=0.001, maxval=50)
+strategy("BB RE", overlay=true)
 
-// === PARAMS ===
-basis = sma(close, period)
-dev = mult * stdev(close, period)
-upper = basis + dev
-lower = basis - dev
+// === INPUT GENERAL ===
+period  = input(20, minval=1)
+src     = input(close, title="Source")
+bb_mul  = input(1.7, minval = 0.001, maxval = 50)
+
+// === PARAMS BB ===
+basis  = sma(src, period)
+bb_dev = bb_mul * stdev(src, period)
+upper  = basis + bb_dev
+lower  = basis - bb_dev
 
 // === EXECUTION ===
-strategy.entry("L", strategy.long, when = crossover(close, lower) and close < basis)
-strategy.close("L", when = high > basis)
+strategy.entry("L", strategy.long, when = crossover(src, lower) and src < basis)
+strategy.close("L", when = crossover(src, upper))
 
-strategy.entry("S", strategy.short, when = crossunder(close, upper) and close > basis)
-strategy.close("S", when = low < basis)
+strategy.entry("S", strategy.short, when = crossunder(src, upper) and src > basis)
+strategy.close("S", when = crossunder(src, lower))
 
 // === PLOT ===
-plot(basis, color=white, title='ma')
-p1 = plot(upper, color=white, title='upper')
-p2 = plot(lower, color=white, title='lower')
+plot(basis, color=red, title='ma')
+
+p1 = plot(upper, color=blue)
+p2 = plot(lower, color=blue)
 fill(p1, p2)
