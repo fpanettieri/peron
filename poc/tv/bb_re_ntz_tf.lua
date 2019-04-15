@@ -20,12 +20,12 @@ bb_mul  = input(2.0, minval = 0.001, maxval = 50)
 ntz_mul = input(0.7, minval = 0.001, maxval = 50)
 
 // === PARAMS TIME ===
-basis     = sma(src, period)
 start     = timestamp(from_year, from_month, from_day, 00, 00)
 finish    = timestamp(to_year, to_month, to_day, 23, 59)
 window()  => time >= start and time <= finish ? true : false
 
 // === PARAMS BB ===
+basis  = sma(src, period)
 bb_dev = bb_mul * stdev(src, period)
 nt_dev = ntz_mul * stdev(src, period)
 
