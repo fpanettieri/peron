@@ -12,6 +12,7 @@ bb_mul  = input(1.7, minval = 0.001, maxval = 50)
 ntz_mul = input(0.7, minval = 0.001, maxval = 50)
 
 // === PARAMS BB ===
+basis  = sma(src, period)
 bb_dev = bb_mul * stdev(src, period)
 nt_dev = ntz_mul * stdev(src, period)
 
