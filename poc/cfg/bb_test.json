@@ -1,0 +1,49 @@
+{
+  "testnet": true,
+  "timeframe": "1m",
+  "symbol": "XBTUSD",
+
+  "modules": [
+    "core/adapter",
+    "core/archivist",
+    "core/chandler",
+    "core/analyst",
+    "core/brain/greedy",
+    "core/trader",
+    "core/executor/bb"
+  ],
+
+  "backbone": {
+    "chain": [
+      ["SocketConnected", "DownloadHistory"],
+      ["HistoryDownloaded", "WatchMarket"]
+    ],
+    "emit": "ConnectSocket"
+  },
+
+  "archivist": {
+    "history": "20"
+  },
+
+  "chandler": { "offset": -10000 },
+
+  "analyst": {
+    "history": "20",
+    "bb": {
+      "periods": 20,
+      "mult": 1.7
+    }
+  },
+
+  "trader": {
+    "positions": 5,
+    "size": 0.2
+  },
+
+  "executor": {
+    "max_jobs": 5,
+    "speed": 200,
+    "expires": 900000,
+    "sl": 0.01
+  }
+}
