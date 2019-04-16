@@ -19,6 +19,7 @@ async function plug (_bb)
 
   bb.on('CandleAnalyzed', onCandleAnalyzed);
   bb.on('PositionSynced', onPositionUpdated);
+  
   bb.on('PositionUpdated', onPositionUpdated);
 }
 
