@@ -36,7 +36,7 @@
   },
 
   "brain": {
-    "skip": 1
+    "skip": 0
   },
 
   "trader": {
@@ -45,9 +45,6 @@
   },
 
   "executor": {
-    "max_jobs": 5,
-    "speed": 200,
-    "expires": 900000,
-    "sl": 0.01
+  
   }
 }
