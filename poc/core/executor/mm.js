@@ -1,8 +1,9 @@
 'use strict';
 
-const cfg = require('../cfg/peron');
-const orders = require('../lib/orders');
-const logger = require('../lib/logger');
+const cfg = require('../../cfg/peron');
+const orders = require('../../lib/orders');
+const logger = require('../../lib/logger');
+
 const log = new logger('executor/mm');
 
 const SAFE_LONG_TARGET = 100;
