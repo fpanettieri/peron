@@ -19,19 +19,21 @@ async function plug (_bb)
 
   bb.on('CandleAnalyzed', onCandleAnalyzed);
   bb.on('PositionSynced', onPositionUpdated);
-  
+
   bb.on('PositionUpdated', onPositionUpdated);
 }
 
 function onQuoteUpdated (arr)
 {
   quote = arr[arr.length - 1];
+  log.log('Quote updated');
   // TODO: if there is an open order, and the price doesn't match, amend it
 }
 
 function onCandleAnalyzed (c)
 {
   candle = c;
+  log.log('Candle Analyzed');
   // TODO: do I need to do anything here?
 }
 
