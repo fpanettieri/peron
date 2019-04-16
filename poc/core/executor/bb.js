@@ -40,6 +40,10 @@ async function onTradeContract (sym, qty, px)
       destroyJob(job);
     } break;
 
+    case 'Overloaded': {
+      // wait a second and retry
+    } break;
+
     case 'Duplicated':
     case 'Error':
     default: {

@@ -11,6 +11,7 @@ const DUPLICATED_ERR = 'Duplicate clOrdID';
 const NOT_FOUND_ERR = 'Not Found';
 const INVALID_STATUS_ERR = 'Invalid ordStatus';
 const INVALID_CLIORDID_ERR = 'Invalid origClOrdID';
+const OVERLOAD_ERR = 'The system is currently overloaded. Please try again later.';
 
 const orders = [];
 const options = { api: 'order', testnet: cfg.testnet };
@@ -28,7 +29,9 @@ async function create (id, sym, qty, params)
   options.api = 'order';
   options.method = 'POST';
 
-  const rsp = await bitmex.api(options, _params);
+  // FIXME: restore real call
+  // const rsp = await bitmex.api(options, _params);
+  const rsp = await bitmex.overload(options, _params);
   let order = rsp.body;
 
   if (rsp.status.code == 200){
@@ -39,7 +42,9 @@ async function create (id, sym, qty, params)
     }
 
   } else {
-    if (order.error.message == DUPLICATED_ERR) {
+    if (order.error.message == OVERLOAD_ERR) {
+      order = {clOrdID: id, ordStatus: 'Overloaded'};
+    } else if (order.error.message == DUPLICATED_ERR) {
       order = {clOrdID: id, ordStatus: 'Duplicated'};
     } else {
       order = {clOrdID: id, ordStatus: 'Error', error: order.error.message};

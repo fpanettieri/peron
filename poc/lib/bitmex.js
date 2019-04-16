@@ -62,8 +62,23 @@ function toOhlc (o)
   };
 }
 
+function mockOverload (options, _params)
+{
+  return {
+    status: { code: 503, msg: 'Service Unavailable' },
+    headers: { },
+    body: {
+      error: {
+        message: 'The system is currently overloaded. Please try again later.',
+        name: 'HTTPError'
+      }
+    }
+  };
+}
+
 module.exports = {
   api: api,
   toObj: toObj,
-  toOhlc: toOhlc
+  toOhlc: toOhlc,
+  overload: overload
 };
