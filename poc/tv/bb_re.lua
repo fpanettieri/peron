@@ -17,10 +17,10 @@ lower  = basis - bb_dev
 
 // === EXECUTION ===
 strategy.entry("L", strategy.long, when = crossover(src, lower) and src < basis, stop = strategy.position_avg_price * (1 - sl))
-strategy.close("L", when = crossover(src, upper))
+strategy.close("L", when = crossunder(src, upper))
 
 strategy.entry("S", strategy.short, when = crossunder(src, upper) and src > basis, stop = strategy.position_avg_price * (1 + sl))
-strategy.close("S", when = crossunder(src, lower))
+strategy.close("S", when = crossover(src, lower))
 
 // === PLOT ===
 plot(basis, color=red, title='ma')

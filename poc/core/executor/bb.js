@@ -23,6 +23,9 @@ async function onTradeContract (sym, qty, px)
     // sync create an order in the desired direction
     // check if the order
   //
+
+  const order = await orders.limit(`${root}-${genId()}`, job.sym, job.qty, price);
+  if (!order) { log.fatal(`proccessIntent -> limit order not found! ${root}`, job); }
 }
 
 // Interesting events:
