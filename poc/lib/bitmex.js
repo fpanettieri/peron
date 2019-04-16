@@ -62,17 +62,12 @@ function toOhlc (o)
   };
 }
 
-function mockOverload (options, _params)
+function overload ()
 {
   return {
     status: { code: 503, msg: 'Service Unavailable' },
     headers: { },
-    body: {
-      error: {
-        message: 'The system is currently overloaded. Please try again later.',
-        name: 'HTTPError'
-      }
-    }
+    body: { error: { message: 'The system is currently overloaded. Please try again later.', name: 'HTTPError' } }
   };
 }
 

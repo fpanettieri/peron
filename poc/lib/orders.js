@@ -41,19 +41,15 @@ async function create (id, sym, qty, params)
       order.ordStatus = 'Slipped';
     }
 
+  } else if (rsp.status.code == 503) {
+    order = {clOrdID: id, ordStatus: 'Overloaded'};
+
   } else {
-    if (order.error.message == OVERLOAD_ERR) {
-      order = {clOrdID: id, ordStatus: 'Overloaded'};
-    } else if (order.error.message == DUPLICATED_ERR) {
+    if (order.error.message == DUPLICATED_ERR) {
       order = {clOrdID: id, ordStatus: 'Duplicated'};
     } else {
       order = {clOrdID: id, ordStatus: 'Error', error: order.error.message};
     }
-
-    log.error(' >>>>>>>>> CREATE FAILED', order, rsp);
-    log.error('rsp:', JSON.stringify(rsp));
-    log.error('order:', JSON.stringify(order));
-    log.fatal();
   }
 
   return order;
