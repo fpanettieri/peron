@@ -211,6 +211,10 @@ async function proccessIntent (job)
       // wait for next frame
     } break;
 
+    case 'Overloaded': {
+
+    } break;
+
     case 'Canceled': {
       destroyJob(job);
     } break;
