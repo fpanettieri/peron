@@ -6,6 +6,7 @@ const logger = require('../../lib/logger');
 
 const log = new logger('executor/mm');
 
+const OVERLOAD_STEP = 1000;
 const SAFE_LONG_TARGET = 100;
 const SAFE_SHORT_TARGET = 100000;
 
@@ -24,6 +25,7 @@ let bb = null;
 
 const jobs = [];
 
+let overloaded = 0;
 let pending = [];
 let timeout = null;
 let burst = false;
@@ -195,6 +197,11 @@ async function processPending (o)
 async function proccessIntent (job)
 {
   if (!quote) { return; }
+  if (overloaded) {
+    const step = burst ? cfg.executor.speed.burst : cfg.executor.speed.normal;
+    overloaded = Math.max(0, overloaded - step);
+    return;
+  }
 
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
 
@@ -212,7 +219,7 @@ async function proccessIntent (job)
     } break;
 
     case 'Overloaded': {
-
+      overloaded = OVERLOAD_STEP;
     } break;
 
     case 'Canceled': {
