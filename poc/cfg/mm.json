@@ -8,9 +8,9 @@
     "core/archivist",
     "core/chandler",
     "core/analyst",
-    "core/brain/bb",
+    "core/brain/mm",
     "core/trader",
-    "core/executor/bb"
+    "core/executor/mm"
   ],
 
   "backbone": {

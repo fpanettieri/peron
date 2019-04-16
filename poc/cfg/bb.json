@@ -8,7 +8,7 @@
     "core/archivist",
     "core/chandler",
     "core/analyst",
-    "core/brain/greedy",
+    "core/brain/mm",
     "core/trader",
     "core/executor/bb"
   ],
