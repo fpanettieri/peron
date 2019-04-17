@@ -10,7 +10,8 @@ const AG_PREFIX = 'ag-';
 
 let bb = null;
 
-let quote = {};
+let quote = null;
+let position = null;
 let candle = null;
 let order = null;
 
@@ -21,14 +22,33 @@ async function plug (_bb)
   bb.on('QuoteSynced', onQuoteUpdated);
   bb.on('QuoteOpened', onQuoteUpdated);
   bb.on('QuoteUpdated', onQuoteUpdated);
+  bb.on('PositionSynced', onPositionUpdated);
+  bb.on('PositionUpdated', onPositionUpdated);
+  bb.on('CandleAnalyzed', onCandleAnalyzed);
 
   bb.on('TradeContract', onTradeContract);
 }
 
 function onQuoteUpdated (arr)
 {
+  log.log('Quote Updated');
   quote = arr[arr.length - 1];
   // TODO: update order if New or PartiallyFilled, Cancel if ma is crossed
+}
+
+async function onPositionSynced (arr)
+{
+  log.log('Position Updated');
+  const pos = arr.find(i => i.symbol == cfg.symbol);
+  if (!pos || !pos.isOpen) { return; }
+  position = pos;
+
+  // TODO: create stop position?
+}
+
+function onCandleAnalyzed (c)
+{
+  candle = c;
 }
 
 async function onTradeContract (sym, qty, px)
