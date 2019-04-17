@@ -6,15 +6,29 @@ const logger = require('../../lib/logger');
 
 const log = new logger('executor/bb');
 
+const AG_PREFIX = 'ag-';
+
 let bb = null;
+
 let quote = {};
 let candle = null;
+let order = null;
 
 async function plug (_bb)
 {
   bb = _bb;
 
+  bb.on('QuoteSynced', onQuoteUpdated);
+  bb.on('QuoteOpened', onQuoteUpdated);
+  bb.on('QuoteUpdated', onQuoteUpdated);
+
   bb.on('TradeContract', onTradeContract);
+}
+
+function onQuoteUpdated (arr)
+{
+  quote = arr[arr.length - 1];
+  // TODO: update order if New or PartiallyFilled, Cancel if ma is crossed
 }
 
 async function onTradeContract (sym, qty, px)
@@ -23,9 +37,12 @@ async function onTradeContract (sym, qty, px)
     // sync create an order in the desired direction
     // check if the order
   //
+  // TODO: dispatch event for log
 
-  const order = await orders.limit(`${root}-${genId()}`, job.sym, job.qty, price);
-  if (!order) { log.fatal(`proccessIntent -> limit order not found! ${root}`, job); }
+  const price = qty > 0 ? quote.bidPrice : quote.askPrice;
+  order = await orders.limit(`${AG_PREFIX}${genId()}`, sym, qty, price);
+
+  if (!order) { log.fatal('order creation failed'); }
 
   switch (order.ordStatus) {
     case 'New': {
