@@ -63,31 +63,31 @@ async function onTradeContract (sym, qty, px)
   order = await orders.limit(`${AG_PREFIX}${genId()}`, sym, qty, price);
 
   if (!order) { log.fatal('order creation failed'); }
-
-  switch (order.ordStatus) {
-    case 'New': {
-      updateJob(job.id, {state: STATES.ORDER});
-    } break;
-
-    case 'Slipped': {
-      // wait for next frame
-    } break;
-
-    case 'Canceled': {
-      destroyJob(job);
-    } break;
-
-    case 'Overloaded': {
-      // wait a second and retry
-    } break;
-
-    case 'Duplicated':
-    case 'Error':
-    default: {
-      orders.debug();
-      log.fatal(' >>>>>>>>>>>>>>>>> this should never happen!', job, order, pending);
-    }
-  }
+  // 
+  // switch (order.ordStatus) {
+  //   case 'New': {
+  //     updateJob(job.id, {state: STATES.ORDER});
+  //   } break;
+  //
+  //   case 'Slipped': {
+  //     // wait for next frame
+  //   } break;
+  //
+  //   case 'Canceled': {
+  //     destroyJob(job);
+  //   } break;
+  //
+  //   case 'Overloaded': {
+  //     // wait a second and retry
+  //   } break;
+  //
+  //   case 'Duplicated':
+  //   case 'Error':
+  //   default: {
+  //     orders.debug();
+  //     log.fatal(' >>>>>>>>>>>>>>>>> this should never happen!', job, order, pending);
+  //   }
+  // }
 }
 
 // Interesting events:

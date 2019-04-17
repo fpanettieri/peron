@@ -106,6 +106,9 @@ async function amend (id, params)
       order.ordStatus = 'Slipped';
     }
 
+  } else if (rsp.status.code == 503) {
+    order = {clOrdID: id, ordStatus: 'Overloaded'};
+
   } else {
     if (order.error.message == INVALID_STATUS_ERR) {
       order = {clOrdID: id, ordStatus: 'Invalid'};
@@ -136,6 +139,9 @@ async function cancel (id, reason)
       order.ordStatus = 'DoubleCanceled';
     }
 
+  } else if (rsp.status.code == 503) {
+    order = {clOrdID: id, ordStatus: 'Overloaded'};
+
   } else {
     if (rsp.body.error.message == NOT_FOUND_ERR) {
       order = {clOrdID: id, ordStatus: 'NotFound'};
@@ -154,8 +160,17 @@ async function discard (id)
   options.method = 'DELETE';
 
   const rsp = await bitmex.api(options, params);
-  if (rsp.status.code != 200){ log.fatal(rsp.error); }
-  return rsp.body;
+
+  let order = null;
+  if (rsp.status.code == 200){
+    order = rsp.body;
+  } else if (rsp.status.code == 503) {
+    order = {clOrdID: id, ordStatus: 'Overloaded'};
+  } else if (rsp.status.code != 200) {
+    log.fatal(rsp.error);
+  }
+
+  return order;
 }
 
 function find (id)
