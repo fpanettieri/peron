@@ -45,6 +45,10 @@
   },
 
   "executor": {
-  
+    "max_jobs": 5,
+    "speed": 50,
+    "min_profit": 0.5,
+    "expiration": 600000,
+    "sl": 0.01
   }
 }
