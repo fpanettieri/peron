@@ -132,8 +132,13 @@ async function run ()
     await processPending (pending.shift());
   }
 
-  for (let i = jobs.length - 1; i > -1; i--) {
-    await process (jobs[i]);
+  if (overloaded) {
+    const step = burst ? cfg.executor.speed.burst : cfg.executor.speed.normal;
+    overloaded = Math.max(0, overloaded - step);
+  } else {
+    for (let i = jobs.length - 1; i > -1; i--) {
+      await process (jobs[i]);
+    }
   }
 
   setTimeout(run, getTimeout());
@@ -197,11 +202,6 @@ async function processPending (o)
 async function proccessIntent (job)
 {
   if (!quote) { return; }
-  if (overloaded) {
-    const step = burst ? cfg.executor.speed.burst : cfg.executor.speed.normal;
-    overloaded = Math.max(0, overloaded - step);
-    return;
-  }
 
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
 
@@ -252,25 +252,30 @@ async function proccessOrder (job)
   }
 
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
+
+  let canceled = null;
   let amended = null;
 
   if (job.qty > 0) {
     if (price > candle.bb_ma) {
-      await orders.cancel(order.clOrdID, 'MA Crossed');
+      canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
       amended = await orders.amend(order.clOrdID, {price: price});
     }
 
   } else {
     if (price < candle.bb_ma) {
-      await orders.cancel(order.clOrdID, 'MA Crossed');
-
+      canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
       amended = await orders.amend(order.clOrdID, {price: price});
     }
   }
 
-  await preventSlippage(amended, orders.limit);
+  if (canceled && canceled.ordStatus == 'Overloaded' || ammended && ammended.ordStatus == 'Overloaded') {
+    overloaded = OVERLOAD_STEP;
+  } else {
+    await preventSlippage(amended, orders.limit);
+  }
 }
 
 async function proccessPosition (job)
@@ -291,7 +296,11 @@ async function proccessPosition (job)
 
   if (order.price != price){
     const amended = await orders.amend(order.clOrdID, {price: price});
-    await preventSlippage(amended, orders.profit);
+    if (ammended.ordStatus == 'Overloaded') {
+      overloaded = OVERLOAD_STEP;
+    } else {
+      await preventSlippage(amended, orders.profit);
+    }
   }
 
   if (job.qty > 0 && quote.askPrice < job.sl) {
