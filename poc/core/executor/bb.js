@@ -103,7 +103,6 @@ async function onOrderUpdated (arr)
 
 async function onTradeContract (sym, qty, px)
 {
-  if (jobs.length >= cfg.executor.max_jobs) { return; }
   createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
 }
 
@@ -286,7 +285,7 @@ async function proccessPosition (job)
   const order = orders.find(root);
   if (!order){ log.fatal(`proccessPosition -> profit order not found! ${root}`, job); }
 
-  let price = safePrice(preventBounce(candle.bb_ma));
+  let price = safePrice(candle.bb_ma);
   if (job.qty > 0 && price < quote.askPrice) {
     price = quote.askPrice;
   } else if (job.qty < 1 && price > quote.bidPrice) {
@@ -401,12 +400,6 @@ async function preventSlippage (order, fn)
   const safeguard = await fn(`${root}-${genId()}`, order.symbol, direction * (order.orderQty - order.leavesQty), price);
 }
 
-
-function preventBounce (px, is_long)
-{
-  return px + (is_long ? -1 : 1) * cfg.executor.min_profit;
-}
-
 function genId ()
 {
   return `${Math.random().toString(36).substr(2, HASH_LEN)}`;
@@ -414,7 +407,7 @@ function genId ()
 
 function getTimeout ()
 {
-  const step = burst ? cfg.executor.speed.burst : cfg.executor.speed.normal;
+  const step = cfg.executor.speed;
   let timeout = step - (Date.now() % step);
   return timeout;
 }
