@@ -28,7 +28,6 @@ const jobs = [];
 let overloaded = 0;
 let pending = [];
 let timeout = null;
-let burst = false;
 
 let quote = {};
 let candle = null;
@@ -42,7 +41,7 @@ async function plug (_bb)
   bb.on('QuoteUpdated', onQuoteUpdated);
 
   bb.on('CandleAnalyzed', onCandleAnalyzed);
-  bb.on('PositionSynced', onPositionSynced);
+  // bb.on('PositionSynced', onPositionSynced);
 
   bb.on('OrderSynced', onOrderSynced);
   bb.on('OrderOpened', onOrderOpened);
@@ -63,15 +62,19 @@ function onCandleAnalyzed (c)
 
 async function onPositionSynced (arr)
 {
+  log.log('position synced');
+
   const pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { run(); return; }
 
-  const t = (new Date(pos.openingTimestamp)).getTime();
-  const id = genId();
+  // TODO: implement position synced
 
-  const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.STOP, t);
-  await createTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
-  burst = true;
+  // const t = (new Date(pos.openingTimestamp)).getTime();
+  // const id = genId();
+  //
+  // const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.STOP, t);
+  // await createTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
+  // burst = true;
 
   run();
 }
@@ -303,11 +306,9 @@ async function proccessPosition (job)
 
   if (job.qty > 0 && quote.askPrice < job.sl) {
     updateJob(job.id, {state: STATES.STOP});
-    burst = true;
 
   } else if (job.qty < 0 && quote.bidPrice > job.sl) {
     updateJob(job.id, {state: STATES.STOP});
-    burst = true;
   }
 }
 
