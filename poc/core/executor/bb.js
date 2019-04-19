@@ -171,7 +171,7 @@ async function processPending (o)
 
   let order = orders.find(o.clOrdID);
   if (!order) {
-    if (o.ordStatus != 'Canceled') { await orders.discard(o.orderID, 'Unknown Order', o, '\n\n\n'); }
+    if (o.ordStatus != 'Canceled') { await orders.discard(o.orderID); }
     return;
   }
 
@@ -327,6 +327,9 @@ async function createTakeProfit (job, sym, qty, px)
   } else {
     tp = await orders.amend(tp.clOrdID, {orderQty: -qty, price: tp_px});
   }
+
+  // TODO: handle overload
+
   await preventSlippage(tp, orders.profit);
 }
 
