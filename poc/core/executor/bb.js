@@ -19,7 +19,7 @@ const PROFIT_PREFIX = 'tp-';
 const STOP_PREFIX = 'sl-';
 const AG_PREFIX = 'ag-';
 
-const STATES = { INTENT: 0, ORDER: 1, POSITION: 2, DONE: 3 };
+const STATES = { INTENT: 0, ORDER: 1, POSITION: 2 };
 
 let bb = null;
 
@@ -159,7 +159,6 @@ async function process (job)
     case STATES.INTENT: await proccessIntent(job); break;
     case STATES.ORDER: await proccessOrder(job); break;
     case STATES.POSITION: await proccessPosition(job); break;
-    case STATES.DONE: await proccessDone(job); break;
   }
 }
 
@@ -298,14 +297,6 @@ async function proccessPosition (job)
   } else {
     await preventSlippage(amended, orders.profit);
   }
-}
-
-async function proccessDone (job)
-{
-  destroyJob(job);
-  destroyOrder(`${LIMIT_PREFIX}${AG_PREFIX}${job.id}`);
-  destroyOrder(`${PROFIT_PREFIX}${AG_PREFIX}${job.id}`);
-  destroyOrder(`${STOP_PREFIX}${AG_PREFIX}${job.id}`);
 }
 
 async function destroyOrder (root)
