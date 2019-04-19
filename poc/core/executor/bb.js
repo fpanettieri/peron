@@ -41,7 +41,7 @@ async function plug (_bb)
   bb.on('QuoteUpdated', onQuoteUpdated);
 
   bb.on('CandleAnalyzed', onCandleAnalyzed);
-  // bb.on('PositionSynced', onPositionSynced);
+  bb.on('PositionSynced', onPositionSynced);
 
   bb.on('OrderSynced', onOrderSynced);
   bb.on('OrderOpened', onOrderOpened);
@@ -281,7 +281,6 @@ async function proccessOrder (job)
 async function proccessPosition (job)
 {
   if (!quote || !candle){ return; }
-  proccessOrder(job);
 
   const root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
   const order = orders.find(root);
