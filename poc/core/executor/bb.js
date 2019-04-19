@@ -112,6 +112,7 @@ function createJob (id, sym, qty, px, state, t)
   const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now()};
   jobs.push(job);
 
+  // FIXME: remove this
   log.log('job created', JSON.stringify(job));
 
   return job;
@@ -122,6 +123,7 @@ function updateJob (id, changes)
   const idx = jobs.findIndex(j => j.id == id);
   jobs[idx] = {...jobs[idx], ...changes};
 
+  // FIXME: remove this
   log.log('job updated', JSON.stringify(job));
 
   return jobs[idx];
@@ -129,6 +131,7 @@ function updateJob (id, changes)
 
 function destroyJob (job)
 {
+  // FIXME: remove this
   log.log('job destroyed', JSON.stringify(job));
   return jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
 }
