@@ -19,7 +19,7 @@ const PROFIT_PREFIX = 'tp-';
 const STOP_PREFIX = 'sl-';
 const AG_PREFIX = 'ag-';
 
-const STATES = { INTENT: 0, ORDER: 1, POSITION: 2, STOP: 3, DONE: 4 };
+const STATES = { INTENT: 0, ORDER: 1, POSITION: 2, DONE: 3 };
 
 let bb = null;
 
@@ -67,14 +67,11 @@ async function onPositionSynced (arr)
   const pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { run(); return; }
 
-  // TODO: implement position synced
+  const t = (new Date(pos.openingTimestamp)).getTime();
+  const id = genId();
 
-  // const t = (new Date(pos.openingTimestamp)).getTime();
-  // const id = genId();
-  //
-  // const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.STOP, t);
-  // await createTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
-  // burst = true;
+  const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.POSITION, t);
+  await createTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
 
   run();
 }
