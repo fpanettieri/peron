@@ -224,12 +224,15 @@ async function proccessIntent (job)
     } break;
 
     case 'Canceled': {
+      log.warn('Intent canceled:', order);
+      orders.debug();
       destroyJob(job);
     } break;
 
     case 'Duplicated':
     case 'Error':
     default: {
+      log.warn('Intent error:', order);
       orders.debug();
       log.fatal(' >>>>>>>>>>>>>>>>> this should never happen!', job, order, pending);
     }
