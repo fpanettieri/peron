@@ -306,13 +306,6 @@ async function destroyOrder (root)
   await orders.remove(root);
 }
 
-async function updatePosition (job, order)
-{
-  let direction = job.qty > 0 ? 1 : -1;
-  await createTargets(job, job.sym, direction * (order.orderQty - order.leavesQty), order.avgPx);
-  if (job.state == STATES.ORDER) { updateJob(job.id, {state: STATES.POSITION}); }
-}
-
 async function createTargets (job, sym, qty, px)
 {
   await createTakeProfit(job, sym, qty, px);
