@@ -247,7 +247,7 @@ async function proccessOrder (job)
     return;
   }
 
-  if (Date.now() - job.created_at > cfg.executor.order.expires) {
+  if (Date.now() - job.created_at > cfg.executor.expiration) {
     await orders.cancel(order.clOrdID, 'Expired');
     return;
   }
@@ -360,7 +360,7 @@ async function createTargets (job, sym, qty, px)
 
 async function createTakeProfit (job, sym, qty, px)
 {
-  let tp_px = safePrice(px * (1 + Math.sign(qty) * cfg.executor.sl.hard));
+  let tp_px = safePrice(px * (1 + Math.sign(qty) * cfg.executor.sl));
   if (candle) { tp_px = qty > 1 ? candle.bb_upper : candle.bb_lower; }
   tp_px = safePrice(tp_px);
 
@@ -376,7 +376,7 @@ async function createTakeProfit (job, sym, qty, px)
 
 async function createStopLoss (job, sym, qty, px)
 {
-  const sl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.executor.sl.hard));
+  const sl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.executor.sl));
   const sl_root = `${STOP_PREFIX}${AG_PREFIX}${job.id}`;
   let sl = orders.find(`${sl_root}`);
   if (!sl) {
@@ -385,7 +385,9 @@ async function createStopLoss (job, sym, qty, px)
     sl = await orders.amend(sl.clOrdID, {orderQty: -qty, stopPx: sl_px});
   }
 
-  const ssl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.executor.sl.soft));
+  // TODO: handle overload
+
+  const ssl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.executor.sl));
   updateJob(job.id, {sl: ssl_px});
 }
 
