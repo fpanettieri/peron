@@ -179,16 +179,8 @@ async function processPending (o)
     return;
   }
 
-  if (prefix == LIMIT_PREFIX && order.ordStatus == 'PartiallyFilled') {
-    await updatePosition(job, order);
-  }
-
   if (order.ordStatus != 'Filled') { return; }
   switch (prefix) {
-    case LIMIT_PREFIX: {
-      await updatePosition(job, order);
-    } break;
-
     case PROFIT_PREFIX:
     case STOP_PREFIX: {
       updateJob(job.id, {state: STATES.DONE});
