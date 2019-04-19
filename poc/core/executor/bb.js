@@ -82,7 +82,7 @@ function onOrderSynced (arr)
     const o = arr[i];
 
     if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
-      log.log('ignored non-peronist order');
+      log.log('ignored unknown order');
       continue;
     }
 
