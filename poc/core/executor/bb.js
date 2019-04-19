@@ -148,7 +148,6 @@ async function process (job)
     case STATES.INTENT: await proccessIntent(job); break;
     case STATES.ORDER: await proccessOrder(job); break;
     case STATES.POSITION: await proccessPosition(job); break;
-    case STATES.STOP: await proccessStop(job); break;
     case STATES.DONE: await proccessDone(job); break;
   }
 }
@@ -288,44 +287,15 @@ async function proccessPosition (job)
   const order = orders.find(root);
   if (!order){ log.fatal(`proccessPosition -> profit order not found! ${root}`, job); }
 
-  let price = safePrice(candle.bb_ma);
-  if (job.qty > 0 && price < quote.askPrice) {
-    price = quote.askPrice;
-  } else if (job.qty < 1 && price > quote.bidPrice) {
-    price = quote.bidPrice;
-  }
-
-  if (order.price != price){
-    const amended = await orders.amend(order.clOrdID, {price: price});
-    if (ammended.ordStatus == 'Overloaded') {
-      overloaded = OVERLOAD_STEP;
-    } else {
-      await preventSlippage(amended, orders.profit);
-    }
-  }
-
-  if (job.qty > 0 && quote.askPrice < job.sl) {
-    updateJob(job.id, {state: STATES.STOP});
-
-  } else if (job.qty < 0 && quote.bidPrice > job.sl) {
-    updateJob(job.id, {state: STATES.STOP});
-  }
-}
-
-async function proccessStop (job)
-{
-  if (!quote) { return; }
-  proccessOrder(job);
-
-  const root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
-  const order = orders.find(root);
-  if (!order){ log.fatal(`proccessStop -> profit order not found! ${root}`, job); }
-
   const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
   if (order.price == price){ return; }
 
   const amended = await orders.amend(order.clOrdID, {price: price});
-  await preventSlippage(amended, orders.profit);
+  if (ammended.ordStatus == 'Overloaded') {
+    overloaded = OVERLOAD_STEP;
+  } else {
+    await preventSlippage(amended, orders.profit);
+  }
 }
 
 async function proccessDone (job)
