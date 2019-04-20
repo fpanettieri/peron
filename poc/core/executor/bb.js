@@ -126,7 +126,7 @@ function updateJob (id, changes)
   jobs[idx] = {...jobs[idx], ...changes};
 
   // FIXME: remove this
-  log.log('job updated', JSON.stringify(job));
+  log.log('job updated', JSON.stringify(jobs[idx]));
 
   return jobs[idx];
 }
