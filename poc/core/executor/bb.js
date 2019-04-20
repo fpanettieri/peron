@@ -67,6 +67,8 @@ async function onPositionSynced (arr)
   const pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { run(); return; }
 
+  log.log(pos);
+
   const t = (new Date(pos.openingTimestamp)).getTime();
   const id = genId();
 
@@ -220,6 +222,7 @@ async function proccessIntent (job)
 
     case 'Overloaded': {
       overloaded = OVERLOAD_STEP;
+      log.log('overloaded');
     } break;
 
     case 'Canceled': {
