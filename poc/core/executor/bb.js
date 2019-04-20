@@ -201,6 +201,7 @@ async function processPending (o)
 async function proccessIntent (job)
 {
   if (!quote) { return; }
+  log.log('process intent');
 
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
 
@@ -240,15 +241,18 @@ async function proccessIntent (job)
 async function proccessOrder (job)
 {
   if (!quote) { return; }
+  log.log('process order');
 
   const root = `${LIMIT_PREFIX}${AG_PREFIX}${job.id}`;
   const order = orders.find(root);
   if (!order){
+    log.log('order not found');
     if (job.state == STATES.ORDER){ destroyJob(job); }
     return;
   }
 
   if (Date.now() - job.created_at > cfg.executor.expiration) {
+    log.log('order expired');
     await orders.cancel(order.clOrdID, 'Expired');
     return;
   }
