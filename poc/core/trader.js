@@ -56,12 +56,15 @@ function open (d, c)
   const used = 1 - margin.availableMargin / margin.walletBalance;
   const usable = Math.max(max - used, 0);
 
+  // FIXME: remove this logs
   log.log(`available: ${margin.availableMargin} | wallet: ${margin.walletBalance}`)
   log.log(`max: ${max} | used: ${used} | usable: ${usable}`);
 
   if (usable < MIN_MARGIN) { return; }
 
-  const contracts = Math.ceil(usable * (d > 0 ? quote.bidPrice: quote.askPrice));
+  let m = Math.max(cfg.trader.size * margin.walletBalance, MIN_MARGIN);
+  const contracts = Math.ceil(m * STB * (d > 0 ? quote.bidPrice: quote.askPrice));
+
   log.log(`contracts: ${contracts}`);
 
   bb.emit('TradeContract', cfg.symbol, d * contracts, c.c);
