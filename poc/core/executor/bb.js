@@ -109,10 +109,8 @@ async function onTradeContract (sym, qty, px)
 
   // FIXME: testing trader margin allocation
   if (qty > 0) {
-    qty = 1;
     px = SAFE_LONG_TARGET;
   } else {
-    qty = -1;
     px = SAFE_SHORT_TARGET;
   }
 
@@ -274,7 +272,7 @@ async function proccessOrder (job)
 
   let canceled = null;
   let amended = null;
-  // 
+  //
   // if (job.qty > 0) {
   //   if (price > candle.bb_ma) {
   //     log.log('ma crossed');
