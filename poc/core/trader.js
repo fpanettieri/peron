@@ -53,19 +53,11 @@ function onOpenShort (c)
 function open (d, c)
 {
   const max = cfg.trader.positions * cfg.trader.size;
-  const used = 1 - margin.availableMargin / margin.walletBalance;
-  const usable = Math.max(max - used, 0);
-
-  // FIXME: remove this logs
-  log.log(`available: ${margin.availableMargin} | wallet: ${margin.walletBalance}`)
-  log.log(`max: ${max} | used: ${used} | usable: ${usable}`);
-
-  if (usable < MIN_MARGIN) { return; }
+  const used = margin.marginUsedPcnt;
+  if (margin.marginUsedPcnt >= max) { return; }
 
   let m = Math.max(cfg.trader.size * margin.walletBalance, MIN_MARGIN);
   const contracts = Math.ceil(m * STB * (d > 0 ? quote.bidPrice: quote.askPrice));
-
-  log.log(`contracts: ${contracts}`);
 
   bb.emit('TradeContract', cfg.symbol, d * contracts, c.c);
 }
