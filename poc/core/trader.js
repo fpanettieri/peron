@@ -55,7 +55,11 @@ function open (d, c)
   const max = cfg.trader.positions * cfg.trader.size;
   const used = 1 - margin.availableMargin / margin.walletBalance;
   const usable = Math.max(max - used, 0);
+
+  log.log(`max: ${max} | used: ${used} | usable: ${usable}`);
   if (usable <= 0) { return; }
+
+  // FIXME: this seems to not be working
 
   let m = Math.max(cfg.trader.size * margin.walletBalance, MIN_MARGIN);
   const contracts = Math.ceil(m * STB * quote.askPrice);
