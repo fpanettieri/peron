@@ -105,7 +105,8 @@ async function onOrderUpdated (arr)
 
 async function onTradeContract (sym, qty, px)
 {
-  createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
+  log.log('on trade contract')
+  // createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
   // TODO: check position, and try to exit it if the direction is different
 }
 
