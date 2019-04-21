@@ -274,32 +274,32 @@ async function proccessOrder (job)
 
   let canceled = null;
   let amended = null;
-
-  if (job.qty > 0) {
-    if (price > candle.bb_ma) {
-      log.log('ma crossed');
-      canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
-    } else if (order.price != price){
-      log.log('price changed');
-      amended = await orders.amend(order.clOrdID, {price: price});
-    }
-
-  } else {
-    if (price < candle.bb_ma) {
-      log.log('ma crossed');
-      canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
-    } else if (order.price != price){
-      log.log('price changed');
-      amended = await orders.amend(order.clOrdID, {price: price});
-    }
-  }
-
-  if (canceled && canceled.ordStatus == 'Overloaded' || amended && amended.ordStatus == 'Overloaded') {
-    overloaded = OVERLOAD_STEP;
-    log.log('overloaded');
-  } else {
-    await preventSlippage(amended, orders.limit);
-  }
+  // 
+  // if (job.qty > 0) {
+  //   if (price > candle.bb_ma) {
+  //     log.log('ma crossed');
+  //     canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
+  //   } else if (order.price != price){
+  //     log.log('price changed');
+  //     amended = await orders.amend(order.clOrdID, {price: price});
+  //   }
+  //
+  // } else {
+  //   if (price < candle.bb_ma) {
+  //     log.log('ma crossed');
+  //     canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
+  //   } else if (order.price != price){
+  //     log.log('price changed');
+  //     amended = await orders.amend(order.clOrdID, {price: price});
+  //   }
+  // }
+  //
+  // if (canceled && canceled.ordStatus == 'Overloaded' || amended && amended.ordStatus == 'Overloaded') {
+  //   overloaded = OVERLOAD_STEP;
+  //   log.log('overloaded');
+  // } else {
+  //   await preventSlippage(amended, orders.limit);
+  // }
 }
 
 async function proccessPosition (job)
