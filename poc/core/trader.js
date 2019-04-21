@@ -55,16 +55,14 @@ function open (d, c)
   const max = cfg.trader.positions * cfg.trader.size;
   const used = 1 - margin.availableMargin / margin.walletBalance;
   const usable = Math.max(max - used, 0);
+  const tradeable = Math.max(usable, MIN_MARGIN);
 
   log.log(`available: ${margin.availableMargin} | wallet: ${margin.walletBalance}`)
+  log.log(`max: ${max} | used: ${used} | usable: ${usable} | tradeable ${tradeable}`);
 
-  log.log(`max: ${max} | used: ${used} | usable: ${usable}`);
   if (usable <= 0) { return; }
 
-  // FIXME: this seems to not be working
-
-  let m = Math.max(cfg.trader.size * margin.walletBalance, MIN_MARGIN);
-  const contracts = Math.ceil(m * STB * quote.askPrice);
+  const contracts = Math.ceil(tradeable * STB * quote.askPrice);
 
   bb.emit('TradeContract', cfg.symbol, d * contracts, c.c);
 }
