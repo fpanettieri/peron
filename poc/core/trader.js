@@ -56,6 +56,8 @@ function open (d, c)
   const used = 1 - margin.availableMargin / margin.walletBalance;
   const usable = Math.max(max - used, 0);
 
+  log.log(`available: ${margin.availableMargin} | wallet: ${margin.walletBalance}`)
+
   log.log(`max: ${max} | used: ${used} | usable: ${usable}`);
   if (usable <= 0) { return; }
 
