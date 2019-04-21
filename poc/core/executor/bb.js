@@ -108,11 +108,7 @@ async function onTradeContract (sym, qty, px)
   log.log('on trade contract', sym, qty, px);
 
   // FIXME: testing trader margin allocation
-  if (qty > 0) {
-    px = SAFE_LONG_TARGET;
-  } else {
-    px = SAFE_SHORT_TARGET;
-  }
+  px += qty > 0 ? -300 : 300;
 
   createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
   // TODO: check position, and try to exit it if the direction is different
