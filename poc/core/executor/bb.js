@@ -204,6 +204,8 @@ async function processPending (o)
   switch (prefix) {
     case PROFIT_PREFIX:
     case STOP_PREFIX: {
+
+      // FIXME: done doesn't exists anymore, do the cleanup here
       updateJob(job.id, {state: STATES.DONE});
     } break;
   }
@@ -217,7 +219,9 @@ async function proccessIntent (job)
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
 
   const root = `${LIMIT_PREFIX}${AG_PREFIX}${job.id}`;
-  const order = await orders.limit(`${root}-${genId()}`, job.sym, job.qty, price);
+
+  // FIXME: use the price var instead of job.px
+  const order = await orders.limit(`${root}-${genId()}`, job.sym, job.qty, job.px);
   if (!order) { log.fatal(`proccessIntent -> limit order not found! ${root}`, job); }
 
   switch (order.ordStatus) {
