@@ -244,7 +244,6 @@ async function proccessIntent (job)
 async function proccessOrder (job)
 {
   if (!quote) { return; }
-  log.log('process order');
 
   const root = `${LIMIT_PREFIX}${AG_PREFIX}${job.id}`;
   const order = orders.find(root);
