@@ -6,7 +6,7 @@ const logger = require('../lib/logger');
 const log = new logger('core/trader');
 
 const STB = 0.00000001;
-const MIN_MARGIN = 0.0026 / STB;
+const MIN_MARGIN = 0.0026;
 
 let bb = null;
 let quote = {};
@@ -62,7 +62,8 @@ function open (d, c)
 
   if (usable <= 0) { return; }
 
-  const contracts = Math.ceil(tradeable * STB * quote.askPrice);
+  const contracts = Math.ceil(tradeable * quote.askPrice);
+  log.log(`contracts: ${contracts}`);
 
   bb.emit('TradeContract', cfg.symbol, d * contracts, c.c);
 }

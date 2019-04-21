@@ -138,7 +138,7 @@ function updateJob (id, changes)
 
 function destroyJob (job)
 {
-  // FIXME: remove this
+  // FIXME: remove this log
   log.log('job destroyed', JSON.stringify(job));
   return jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
 }
