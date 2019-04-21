@@ -106,7 +106,11 @@ async function onOrderUpdated (arr)
 async function onTradeContract (sym, qty, px)
 {
   log.log('on trade contract')
-  // createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
+
+  // FIXME: testing trader margin allocation
+  qty = 1;
+  px = 100;
+  createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
   // TODO: check position, and try to exit it if the direction is different
 }
 
