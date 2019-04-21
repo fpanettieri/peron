@@ -284,7 +284,7 @@ async function proccessOrder (job)
     }
   }
 
-  if (canceled && canceled.ordStatus == 'Overloaded' || ammended && ammended.ordStatus == 'Overloaded') {
+  if (canceled && canceled.ordStatus == 'Overloaded' || amended && amended.ordStatus == 'Overloaded') {
     overloaded = OVERLOAD_STEP;
     log.log('overloaded');
   } else {
