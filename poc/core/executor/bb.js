@@ -105,11 +105,17 @@ async function onOrderUpdated (arr)
 
 async function onTradeContract (sym, qty, px)
 {
-  log.log('on trade contract')
+  log.log('on trade contract', sym, qty, px);
 
   // FIXME: testing trader margin allocation
-  qty = 1;
-  px = 100;
+  if (qty > 0) {
+    qty = 1;
+    px = SAFE_LONG_TARGET;
+  } else {
+    qty = -1;
+    px = SAFE_SHORT_TARGET;
+  }
+
   createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
   // TODO: check position, and try to exit it if the direction is different
 }
