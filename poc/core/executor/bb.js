@@ -304,7 +304,7 @@ async function proccessPosition (job)
   if (order.price == price){ return; }
 
   const amended = await orders.amend(order.clOrdID, {price: price});
-  if (ammended.ordStatus == 'Overloaded') {
+  if (amended.ordStatus == 'Overloaded') {
     overloaded = OVERLOAD_STEP;
   } else {
     await preventSlippage(amended, orders.profit);
