@@ -170,11 +170,17 @@ async function processPending (o)
 
   let order = orders.find(o.clOrdID);
   if (!order) {
+    // FIXME: remove this log
+    log.warn('order not found', o.clOrdID);
     if (o.ordStatus != 'Canceled') { await orders.discard(o.orderID); }
     return;
   }
 
   order = orders.update(o);
+
+  // FIXME: remove this log
+  log.info('order', order.ordStatus, order.clOrdID);
+
   if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') {
     orders.remove(order.clOrdID);
   }
@@ -182,8 +188,16 @@ async function processPending (o)
   const jid = order.clOrdID.substr(6, HASH_LEN);
   const prefix = order.clOrdID.substr(0, 3);
 
+  // FIXME: remove this log
+  log.info('jid', jid);
+  log.info('prefix', prefix);
+
   const job = jobs.find(j => j.id == jid);
   if (!job) {
+
+    // FIXME: remove this log
+    log.info('job not found');
+
     await orders.cancel(order.clOrdID);
     return;
   }
@@ -192,9 +206,9 @@ async function processPending (o)
   switch (prefix) {
     case PROFIT_PREFIX:
     case STOP_PREFIX: {
-
-      // FIXME: done doesn't exists anymore, do the cleanup here
-      updateJob(job.id, {state: STATES.DONE});
+      destroyJob(job);
+      destroyOrder(`${PROFIT_PREFIX}${AG_PREFIX}${job.id}`);
+      destroyOrder(`${STOP_PREFIX}${AG_PREFIX}${job.id}`);
     } break;
   }
 }
