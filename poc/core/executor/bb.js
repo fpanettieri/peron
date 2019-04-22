@@ -378,8 +378,7 @@ async function preventSlippage (order, fn)
   const price = order.price + (order.leavesQty > 0 ? -1 : 1) * SLIPPAGE_OFFSET;
 
   let direction = order.side == 'Buy' ? 1 : -1;
-  const safeguard = await fn(`${root}-${genId()}`, order.symbol, direction * (order.orderQty - order.leavesQty), price);
-  return safeguard;
+  return await fn(`${root}-${genId()}`, order.symbol, direction * (order.orderQty - order.leavesQty), price);
 }
 
 function genId ()
