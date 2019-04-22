@@ -171,7 +171,7 @@ async function processPending (o)
   let order = orders.find(o.clOrdID);
   if (!order) {
     // FIXME: remove this log
-    log.warn('order not found', o.clOrdID);
+    log.warn('pending update => order not found', o.clOrdID);
     if (o.ordStatus != 'Canceled') { await orders.discard(o.orderID); }
     return;
   }
@@ -179,7 +179,8 @@ async function processPending (o)
   order = orders.update(o);
 
   // FIXME: remove this log
-  log.info('order', order.ordStatus, order.clOrdID);
+  log.info('order:', o.clOrdID);
+  log.info(o);
 
   if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') {
     orders.remove(order.clOrdID);
@@ -190,7 +191,6 @@ async function processPending (o)
 
   // FIXME: remove this log
   log.info('jid', jid);
-  log.info('prefix', prefix);
 
   const job = jobs.find(j => j.id == jid);
   if (!job) {
@@ -269,7 +269,7 @@ async function proccessOrder (job)
   const root = `${LIMIT_PREFIX}${AG_PREFIX}${job.id}`;
   const order = orders.find(root);
   if (!order){
-    log.log('order not found');
+    log.log('proccessOrder => order not found');
     if (job.state == STATES.ORDER){ destroyJob(job); }
     return;
   }
