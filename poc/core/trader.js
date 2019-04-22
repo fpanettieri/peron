@@ -53,8 +53,9 @@ function onOpenShort (c)
 function open (d, c)
 {
   const max = cfg.trader.positions * cfg.trader.size;
-  const used = margin.marginUsedPcnt;
-  if (margin.marginUsedPcnt >= max) { return; }
+  const used = 1 - margin.availableMargin / margin.walletBalance;
+  const usable = Math.max(max - used, 0);
+  if (usable <= 0) { return; }
 
   let m = Math.max(cfg.trader.size * margin.walletBalance, MIN_MARGIN);
   const contracts = Math.ceil(m * STB * (d > 0 ? quote.bidPrice: quote.askPrice));
