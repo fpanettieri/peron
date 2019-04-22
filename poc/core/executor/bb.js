@@ -164,7 +164,7 @@ async function run ()
 async function processPending (o)
 {
   if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
-    log.log('Ignored non-peronist order');
+    log.log('Ignored external order');
     return;
   }
 
