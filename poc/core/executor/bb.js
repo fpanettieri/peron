@@ -18,7 +18,7 @@ const PROFIT_PREFIX = 'tp-';
 const STOP_PREFIX = 'sl-';
 const AG_PREFIX = 'ag-';
 
-const STATES = { INTENT: 0, ORDER: 1, POSITION: 2 };
+const STATES = { INTENT: 0, ORDER: 1, POSITION: 2, DONE: 3 };
 
 let bb = null;
 
@@ -206,9 +206,7 @@ async function processPending (o)
   switch (prefix) {
     case PROFIT_PREFIX:
     case STOP_PREFIX: {
-      destroyJob(job);
-      destroyOrder(`${PROFIT_PREFIX}${AG_PREFIX}${job.id}`);
-      destroyOrder(`${STOP_PREFIX}${AG_PREFIX}${job.id}`);
+      updateJob(job.id, {state: STATES.DONE});
     } break;
   }
 }
@@ -219,6 +217,7 @@ async function process (job)
     case STATES.INTENT: await proccessIntent(job); break;
     case STATES.ORDER: await proccessOrder(job); break;
     case STATES.POSITION: await proccessPosition(job); break;
+    case STATES.DONE: await proccessDone(job); break;
   }
 }
 
@@ -323,6 +322,14 @@ async function proccessPosition (job)
   let amended = await orders.amend(order.clOrdID, {price: price});
   amended = await preventSlippage(amended, orders.profit);
   handleOverload(amended);
+}
+
+async function proccessDone (job)
+{
+  destroyJob(job);
+  destroyOrder(`${LIMIT_PREFIX}${AG_PREFIX}${job.id}`);
+  destroyOrder(`${PROFIT_PREFIX}${AG_PREFIX}${job.id}`);
+  destroyOrder(`${STOP_PREFIX}${AG_PREFIX}${job.id}`);
 }
 
 async function destroyOrder (root)
