@@ -231,7 +231,7 @@ async function proccessIntent (job)
 
     case 'Overloaded': {
       overloaded = OVERLOAD_STEP;
-      log.log('overloaded');
+      log.warn('overloaded');
     } break;
 
     case 'Canceled': {
