@@ -73,6 +73,8 @@ async function onPositionSynced (arr)
   const id = genId();
 
   const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.POSITION, t);
+
+  // FIXME: modify this, create a proper position
   await createTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
 
   run();
@@ -215,9 +217,7 @@ async function proccessIntent (job)
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
 
   const root = `${LIMIT_PREFIX}${AG_PREFIX}${job.id}`;
-
-  // FIXME: use the price var instead of job.px
-  const order = await orders.limit(`${root}-${genId()}`, job.sym, job.qty, job.px);
+  const order = await orders.limit(`${root}-${genId()}`, job.sym, job.qty, price);
   if (!order) { log.fatal(`proccessIntent -> limit order not found! ${root}`, job); }
 
   switch (order.ordStatus) {
@@ -309,7 +309,7 @@ async function proccessPosition (job)
 
   let amended = await orders.amend(order.clOrdID, {price: price});
   amended = await preventSlippage(amended, orders.profit);
-  handleOverload(amended)
+  handleOverload(amended);
 }
 
 async function destroyOrder (root)
