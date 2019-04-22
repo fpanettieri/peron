@@ -278,7 +278,7 @@ async function proccessOrder (job)
       log.log('ma crossed');
       canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
-      log.log('price changed');
+      log.log(`amend long order. price: ${price} order.price: ${order.price}`);
       amended = await orders.amend(order.clOrdID, {price: price});
     }
 
@@ -287,7 +287,7 @@ async function proccessOrder (job)
       log.log('ma crossed');
       canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
-      log.log('price changed');
+      log.log(`amend long order. price: ${price} order.price: ${order.price}`);
       amended = await orders.amend(order.clOrdID, {price: price});
     }
   }
