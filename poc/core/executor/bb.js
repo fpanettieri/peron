@@ -161,15 +161,6 @@ async function run ()
   setTimeout(run, getTimeout());
 }
 
-async function process (job)
-{
-  switch (job.state){
-    case STATES.INTENT: await proccessIntent(job); break;
-    case STATES.ORDER: await proccessOrder(job); break;
-    case STATES.POSITION: await proccessPosition(job); break;
-  }
-}
-
 async function processPending (o)
 {
   if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
@@ -205,6 +196,15 @@ async function processPending (o)
       // FIXME: done doesn't exists anymore, do the cleanup here
       updateJob(job.id, {state: STATES.DONE});
     } break;
+  }
+}
+
+async function process (job)
+{
+  switch (job.state){
+    case STATES.INTENT: await proccessIntent(job); break;
+    case STATES.ORDER: await proccessOrder(job); break;
+    case STATES.POSITION: await proccessPosition(job); break;
   }
 }
 
