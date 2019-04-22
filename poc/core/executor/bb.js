@@ -7,8 +7,7 @@ const logger = require('../../lib/logger');
 const log = new logger('executor/bb');
 
 const OVERLOAD_STEP = 1000;
-const SAFE_LONG_TARGET = 100;
-const SAFE_SHORT_TARGET = 100000;
+const SLIPPAGE_OFFSET = 100;
 
 const HASH_LEN = 10;
 const PREFIX_LEN = 16;
@@ -376,7 +375,7 @@ async function preventSlippage (order, fn)
   orders.remove(order.clOrdID);
 
   const root = order.clOrdID.substr(0, 16);
-  const price = order.leavesQty > 0 ? SAFE_LONG_TARGET : SAFE_SHORT_TARGET;
+  const price = order.price + (order.leavesQty > 0 ? -1 : 1) * SLIPPAGE_OFFSET;
 
   let direction = order.side == 'Buy' ? 1 : -1;
   const safeguard = await fn(`${root}-${genId()}`, order.symbol, direction * (order.orderQty - order.leavesQty), price);
