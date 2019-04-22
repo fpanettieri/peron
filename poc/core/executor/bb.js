@@ -163,6 +163,8 @@ async function run ()
 
 async function processPending (o)
 {
+  log.info('processPending');
+  
   if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
     log.log('Ignored external order');
     return;
