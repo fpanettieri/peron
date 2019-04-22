@@ -105,8 +105,11 @@ async function onOrderUpdated (arr)
 
 async function onTradeContract (sym, qty, px)
 {
-  // TODO: remove this log
   log.log('on trade contract', sym, qty, px);
+
+  // FIXME: testing trader margin allocation
+  px += (qty > 0 ? -1 : 1) * 100;
+
   createJob(genId(), sym, qty, px, STATES.INTENT, Date.now());
   // TODO: check position, and try to exit it if the direction is different
 }
@@ -213,7 +216,8 @@ async function proccessIntent (job)
 
   const root = `${LIMIT_PREFIX}${AG_PREFIX}${job.id}`;
 
-  const order = await orders.limit(`${root}-${genId()}`, job.sym, job.qty, price);
+  // FIXME: use the price var instead of job.px
+  const order = await orders.limit(`${root}-${genId()}`, job.sym, job.qty, job.px);
   if (!order) { log.fatal(`proccessIntent -> limit order not found! ${root}`, job); }
 
   switch (order.ordStatus) {
