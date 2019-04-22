@@ -292,12 +292,8 @@ async function proccessOrder (job)
     }
   }
 
-  if (canceled && canceled.ordStatus == 'Overloaded' || amended && amended.ordStatus == 'Overloaded') {
-    overloaded = OVERLOAD_STEP;
-    log.log('overloaded');
-  } else {
-    await preventSlippage(amended, orders.limit);
-  }
+  amended = await preventSlippage(amended, orders.limit);
+  handleOverload(amended);
 }
 
 async function proccessPosition (job)
@@ -311,12 +307,9 @@ async function proccessPosition (job)
   const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
   if (order.price == price){ return; }
 
-  const amended = await orders.amend(order.clOrdID, {price: price});
-  if (amended.ordStatus == 'Overloaded') {
-    overloaded = OVERLOAD_STEP;
-  } else {
-    await preventSlippage(amended, orders.profit);
-  }
+  let amended = await orders.amend(order.clOrdID, {price: price});
+  amended = await preventSlippage(amended, orders.profit);
+  handleOverload(amended)
 }
 
 async function destroyOrder (root)
@@ -370,9 +363,16 @@ async function createStopLoss (job, sym, qty, px)
   updateJob(job.id, {sl: ssl_px});
 }
 
+function handleOverload (order)
+{
+  if (!order || order.ordStatus !== 'Overloaded') { return false; }
+  overloaded = OVERLOAD_STEP;
+  return true;
+}
+
 async function preventSlippage (order, fn)
 {
-  if (!order || order.ordStatus !== 'Slipped') { return; }
+  if (!order || order.ordStatus !== 'Slipped') { return order; }
   orders.remove(order.clOrdID);
 
   const root = order.clOrdID.substr(0, 16);
@@ -380,6 +380,7 @@ async function preventSlippage (order, fn)
 
   let direction = order.side == 'Buy' ? 1 : -1;
   const safeguard = await fn(`${root}-${genId()}`, order.symbol, direction * (order.orderQty - order.leavesQty), price);
+  return safeguard;
 }
 
 function genId ()
