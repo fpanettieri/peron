@@ -183,7 +183,7 @@ async function process (job)
     case STATES.ENTRY: await proccessEntry(job); break;
     case STATES.PRE_EXIT: await proccessPreExit(job); break;
     case STATES.EXIT: await proccessExit(job); break;
-    case STATES.DONE: await proccessDone(job); break;
+    case STATES.CLEANUP: await proccessCleanup(job); break;
   }
 }
 
@@ -296,7 +296,7 @@ async function proccessExit (job)
   handleOverload(amended);
 }
 
-async function proccessDone (job)
+async function proccessCleanup (job)
 {
   destroyJob(job);
   destroyOrder(`${LIMIT_PREFIX}${AG_PREFIX}${job.id}`);
