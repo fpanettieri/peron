@@ -235,7 +235,7 @@ async function proccessEntry (job)
   const order = orders.find(root);
   if (!order){
     log.log('proccessEntry => order not found');
-    if (job.state == STATES.ENTRY){ destroyJob(job); }
+    destroyJob(job);
     return;
   }
 
