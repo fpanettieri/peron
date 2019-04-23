@@ -61,19 +61,13 @@ function onCandleAnalyzed (c)
 
 async function onPositionSynced (arr)
 {
-  log.log('position synced');
-
   const pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { run(); return; }
-
-  log.log(pos);
 
   const t = (new Date(pos.openingTimestamp)).getTime();
   const id = genId();
 
   const job = createJob(id, pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.POSITION, t);
-
-  // FIXME: modify this, create a proper position
   await createTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
 
   run();
