@@ -156,22 +156,19 @@ async function processOrders (o)
     return;
   }
 
+  // Update cached order
   order = orders.update(o);
-  if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') {
-    orders.remove(order.clOrdID);
-  }
 
   const jid = order.clOrdID.substr(6, HASH_LEN);
-  const prefix = order.clOrdID.substr(0, 3);
-
   const job = jobs.find(j => j.id == jid);
   if (!job) {
     await orders.cancel(order.clOrdID);
     return;
   }
 
-  if (order.ordStatus != 'Filled') { return; }
-  updateJob(job.id, {state: STATES.CLEANUP});
+  if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') {
+    updateJob(job.id, {state: STATES.CLEANUP});
+  }
 }
 
 async function process (job)
@@ -249,7 +246,7 @@ async function proccessEntry (job)
 
   if (job.qty > 0) {
     // FIXME: remove this testing cancel;
-    canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
+    await orders.cancel(order.clOrdID, 'MA Crossed');
 
     // if (price > candle.bb_ma) {
     //   canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
@@ -260,7 +257,7 @@ async function proccessEntry (job)
 
   } else {
     // FIXME: remove this testing cancel;
-    canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
+    await orders.cancel(order.clOrdID, 'MA Crossed');
 
     // if (price < candle.bb_ma) {
     //   canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
