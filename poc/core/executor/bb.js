@@ -226,45 +226,33 @@ async function proccessEntry (job)
   if (!quote) { return; }
 
   const root = `${LIMIT_PREFIX}${AG_PREFIX}${job.id}`;
+
   const order = orders.find(root);
   if (!order){
-    log.log('proccessEntry => order not found');
-    destroyJob(job);
+    updateJob(job.id, {state: STATES.CLEANUP});
     return;
   }
 
   if (Date.now() - job.created_at > cfg.executor.expiration) {
-    log.log('order expired');
     await orders.cancel(order.clOrdID, 'Expired');
     return;
   }
 
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
-
-  let canceled = null;
   let amended = null;
 
   if (job.qty > 0) {
-    // FIXME: remove this testing cancel;
-    await orders.cancel(order.clOrdID, 'MA Crossed');
-
-    // if (price > candle.bb_ma) {
-    //   canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
-    // } else if (order.price != price){
-    //   log.log(`amend long order. price: ${price} order.price: ${order.price}`);
-    //   amended = await orders.amend(order.clOrdID, {price: price});
-    // }
-
+    if (price > candle.bb_ma) {
+      await orders.cancel(order.clOrdID, 'MA Crossed');
+    } else if (order.price != price){
+      amended = await orders.amend(order.clOrdID, {price: price});
+    }
   } else {
-    // FIXME: remove this testing cancel;
-    await orders.cancel(order.clOrdID, 'MA Crossed');
-
-    // if (price < candle.bb_ma) {
-    //   canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
-    // } else if (order.price != price){
-    //   log.log(`amend long order. price: ${price} order.price: ${order.price}`);
-    //   amended = await orders.amend(order.clOrdID, {price: price});
-    // }
+    if (price < candle.bb_ma) {
+      await orders.cancel(order.clOrdID, 'MA Crossed');
+    } else if (order.price != price){
+      amended = await orders.amend(order.clOrdID, {price: price});
+    }
   }
 
   if (amended) {
