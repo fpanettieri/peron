@@ -311,6 +311,44 @@ async function destroyOrder (root)
   await orders.remove(root);
 }
 
+// FIXME: continue here Fabio from tomorrow
+async function createTargets (job, sym, qty, px)
+{
+  await createTakeProfit(job, sym, qty, px);
+  await createStopLoss(job, sym, qty, px);
+}
+
+async function createTakeProfit (job, sym, qty, px)
+{
+  let tp_px = safePrice(px * (1 + Math.sign(qty) * cfg.executor.sl.hard));
+  if (candle) { tp_px = qty > 1 ? candle.bb_upper : candle.bb_lower; }
+  tp_px = safePrice(tp_px);
+
+  const tp_root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
+  let tp = orders.find(tp_root);
+  if (!tp) {
+    tp = await orders.profit(`${tp_root}-${genId()}`, sym, -qty, tp_px);
+  } else {
+    tp = await orders.amend(tp.clOrdID, {orderQty: -qty, price: tp_px});
+  }
+  await preventSlippage(tp, orders.profit);
+}
+
+async function createStopLoss (job, sym, qty, px)
+{
+  const sl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.executor.sl.hard));
+  const sl_root = `${STOP_PREFIX}${AG_PREFIX}${job.id}`;
+  let sl = orders.find(`${sl_root}`);
+  if (!sl) {
+    sl = await orders.stop(`${sl_root}-${genId()}`, sym, -qty, sl_px);
+  } else {
+    sl = await orders.amend(sl.clOrdID, {orderQty: -qty, stopPx: sl_px});
+  }
+
+  const ssl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.executor.sl.soft));
+  updateJob(job.id, {sl: ssl_px});
+}
+
 function handleOverload (order)
 {
   if (!order || order.ordStatus !== 'Overloaded') { return false; }
