@@ -18,7 +18,7 @@ const PROFIT_PREFIX = 'tp-';
 const STOP_PREFIX = 'sl-';
 const AG_PREFIX = 'ag-';
 
-const STATES = { PRE_ENTRY: 0, ENTRY: 1, PRE_EXIT: 2, EXIT: 3, DONE: 4 };
+const STATES = { PRE_ENTRY: 0, ENTRY: 1, PRE_EXIT: 2, EXIT: 3, CLEANUP: 4 };
 
 let bb = null;
 
@@ -133,21 +133,19 @@ function destroyJob (job)
 async function run ()
 {
   while (pending.length > 0) {
-    await processPending (pending.shift());
+    await processOrders (pending.shift());
   }
 
   if (overloaded) {
     overloaded = Math.max(0, overloaded - cfg.executor.speed);
   } else {
-    for (let i = jobs.length - 1; i > -1; i--) {
-      await process (jobs[i]);
-    }
+    for (let i = jobs.length - 1; i > -1; i--) { await process (jobs[i]); }
   }
 
   setTimeout(run, getTimeout());
 }
 
-async function processPending (o)
+async function processOrders (o)
 {
   if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
     log.log('Ignored external order');
@@ -175,7 +173,7 @@ async function processPending (o)
   }
 
   if (order.ordStatus != 'Filled') { return; }
-  updateJob(job.id, {state: STATES.DONE});
+  updateJob(job.id, {state: STATES.CLEANUP});
 }
 
 async function process (job)
@@ -210,8 +208,7 @@ async function proccessPreEntry (job)
     } break;
 
     case 'Overloaded': {
-      overloaded = OVERLOAD_STEP;
-      log.warn('overloaded');
+      handleOverload(order);
     } break;
 
     case 'Canceled': {
@@ -238,7 +235,7 @@ async function proccessEntry (job)
   const order = orders.find(root);
   if (!order){
     log.log('proccessEntry => order not found');
-    if (job.state == STATES.ORDER){ destroyJob(job); }
+    if (job.state == STATES.ENTRY){ destroyJob(job); }
     return;
   }
 
