@@ -266,6 +266,9 @@ async function proccessPreExit (job)
   if (!quote) { return; }
 
   await createTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
+
+  // TODO: continue here
+  // check how pre entry works
 }
 
 async function proccessExit (job)
