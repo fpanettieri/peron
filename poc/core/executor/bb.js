@@ -147,10 +147,8 @@ async function run ()
 
 async function processOrders (o)
 {
-  if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
-    log.log('Ignored external order');
-    return;
-  }
+  // Ignored external order
+  if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) { return; }
 
   let order = orders.find(o.clOrdID);
   if (!order) {
@@ -253,27 +251,29 @@ async function proccessEntry (job)
     // FIXME: remove this testing cancel;
     canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
 
-    if (price > candle.bb_ma) {
-      canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
-    } else if (order.price != price){
-      log.log(`amend long order. price: ${price} order.price: ${order.price}`);
-      amended = await orders.amend(order.clOrdID, {price: price});
-    }
+    // if (price > candle.bb_ma) {
+    //   canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
+    // } else if (order.price != price){
+    //   log.log(`amend long order. price: ${price} order.price: ${order.price}`);
+    //   amended = await orders.amend(order.clOrdID, {price: price});
+    // }
 
   } else {
     // FIXME: remove this testing cancel;
     canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
 
-    if (price < candle.bb_ma) {
-      canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
-    } else if (order.price != price){
-      log.log(`amend long order. price: ${price} order.price: ${order.price}`);
-      amended = await orders.amend(order.clOrdID, {price: price});
-    }
+    // if (price < candle.bb_ma) {
+    //   canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
+    // } else if (order.price != price){
+    //   log.log(`amend long order. price: ${price} order.price: ${order.price}`);
+    //   amended = await orders.amend(order.clOrdID, {price: price});
+    // }
   }
 
-  amended = await preventSlippage(amended, orders.limit);
-  handleOverload(amended);
+  if (amended) {
+    amended = await preventSlippage(amended, orders.limit);
+    handleOverload(amended);
+  }
 }
 
 async function proccessPreExit (job)
