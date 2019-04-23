@@ -190,7 +190,6 @@ async function process (job)
 async function proccessPreEntry (job)
 {
   if (!quote) { return; }
-  log.log('process intent');
 
   let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
 
@@ -251,8 +250,10 @@ async function proccessEntry (job)
   let amended = null;
 
   if (job.qty > 0) {
+    // FIXME: remove this testing cancel;
+    canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
+
     if (price > candle.bb_ma) {
-      log.log('ma crossed');
       canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
       log.log(`amend long order. price: ${price} order.price: ${order.price}`);
@@ -260,8 +261,10 @@ async function proccessEntry (job)
     }
 
   } else {
+    // FIXME: remove this testing cancel;
+    canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
+
     if (price < candle.bb_ma) {
-      log.log('ma crossed');
       canceled = await orders.cancel(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
       log.log(`amend long order. price: ${price} order.price: ${order.price}`);
