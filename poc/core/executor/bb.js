@@ -205,18 +205,13 @@ async function proccessPreEntry (job)
       handleOverload(order);
     } break;
 
-    case 'Canceled': {
-      log.warn('Intent canceled:', order);
-      orders.debug();
-      destroyJob(job);
-    } break;
-
+    case 'Canceled':
     case 'Duplicated':
     case 'Error':
     default: {
-      log.warn('Intent error:', order);
+      log.error('Pre Entry failed', order);
       orders.debug();
-      log.fatal(' >>>>>>>>>>>>>>>>> this should never happen!', job, order, pending);
+      destroyJob(job);
     }
   }
 }
@@ -265,6 +260,14 @@ async function proccessPreExit (job)
 {
   if (!quote) { return; }
 
+  const sl = await createStopLoss(job, sym, qty, px);
+  const tp = await createTakeProfit(job, sym, qty, px);
+
+  if (sl.ordStatus == 'New' && sl.ordStatus == 'New' && ) {
+
+  }
+
+
   await createTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
 
   // TODO: continue here
@@ -302,13 +305,6 @@ async function destroyOrder (root)
 
   await orders.cancel(order.clOrdID);
   await orders.remove(root);
-}
-
-// FIXME: continue here Fabio from tomorrow
-async function createTargets (job, sym, qty, px)
-{
-  await createTakeProfit(job, sym, qty, px);
-  await createStopLoss(job, sym, qty, px);
 }
 
 async function createTakeProfit (job, sym, qty, px)
