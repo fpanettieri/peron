@@ -262,16 +262,8 @@ async function proccessPreExit (job)
 
   const sl = await createStopLoss(job, sym, qty, px);
   const tp = await createTakeProfit(job, sym, qty, px);
-
-  if (sl.ordStatus == 'New' && sl.ordStatus == 'New' && ) {
-
-  }
-
-
-  await createTargets(job, pos.symbol, pos.currentQty, pos.avgCostPrice);
-
-  // TODO: continue here
-  // check how pre entry works
+  
+  if (sl && tp) { updateJob(job.id, {state: STATES.EXIT}); }
 }
 
 async function proccessExit (job)
