@@ -65,7 +65,7 @@ async function onPositionSynced (arr)
   if (!pos || !pos.isOpen) { run(); return; }
 
   const t = (new Date(pos.openingTimestamp)).getTime();
-  const job = createJob(genId(), pos.symbol, -pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
+  const job = createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
 
   run();
 }
@@ -260,8 +260,8 @@ async function proccessPreExit (job)
 {
   if (!quote) { return; }
 
-  const sl = await createStopLoss(job, sym, qty, px);
-  const tp = await createTakeProfit(job, sym, qty, px);
+  const sl = await createStopLoss(job);
+  // const tp = await createTakeProfit(job, sym, qty, px);
 
   if (sl && tp) { updateJob(job.id, {state: STATES.EXIT}); }
 }
@@ -320,19 +320,22 @@ async function createTakeProfit (job, sym, qty, px)
   // await preventSlippage(tp, orders.profit);
 }
 
-async function createStopLoss (job, sym, qty, px)
+async function createStopLoss (job)
 {
-  throw 're implement this';
+  const sl_px = safePrice(px * (1 + -Math.sign(job.qty) * cfg.executor.sl));
+  const root = `${STOP_PREFIX}${AG_PREFIX}${job.id}`;
 
-  // const sl_px = safePrice(px * (1 + -Math.sign(qty) * cfg.executor.sl));
-  //
-  // const root = `${STOP_PREFIX}${AG_PREFIX}${job.id}`;
-  // await orders.stop(`${root}-${genId()}`, sym, -qty, sl_px);
-  //
-  // // TODO: what if the system is overloaded?
-  //
-  // sl = await preventSlippage(sl, orders.stop);
-  // handleOverload(sl);
+  let sl = orders.find(`${root}`);
+  if (!sl) {
+    sl = await orders.stop(`${root}-${genId()}`, job.sym, -job.qty, sl_px);
+  } else {
+    sl = await orders.amend(sl.clOrdID, {orderQty: -qty, stopPx: sl_px});
+  }
+
+  log.log(sl);
+  log.fatal('TEST');
+
+  return true;
 }
 
 function handleOverload (order)

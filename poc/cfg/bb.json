@@ -49,6 +49,6 @@
   "executor": {
     "speed": 50,
     "expiration": 600000,
-    "sl": 0.01
+    "sl": 0.1
   }
 }
