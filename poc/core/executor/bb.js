@@ -270,19 +270,16 @@ async function proccessExit (job)
 {
   if (!quote){ return; }
 
-  throw 're implement this';
-  // using the old soft-stop strategy
+  const root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
+  const order = orders.find(root);
+  if (!order){ log.fatal(`proccessExit -> profit order not found! ${root}`, job); }
 
-  // const root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
-  // const order = orders.find(root);
-  // if (!order){ log.fatal(`proccessPreExit -> profit order not found! ${root}`, job); }
-  //
-  // const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
-  // if (order.price == price){ return; }
-  //
-  // let amended = await orders.amend(order.clOrdID, {price: price});
-  // amended = await preventSlippage(amended, orders.profit);
-  // handleOverload(amended);
+  const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
+  if (order.price == price){ return; }
+
+  const amended = await orders.amend(order.clOrdID, {price: price});
+  amended = await preventSlippage(amended, orders.profit);
+  handleOverload(amended);
 }
 
 async function proccessCleanup (job)
