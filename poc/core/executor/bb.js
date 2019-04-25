@@ -46,7 +46,7 @@ async function plug (_bb)
   bb.on('OrderOpened', onOrderOpened);
   bb.on('OrderUpdated', onOrderUpdated);
 
-  bb.on('TradeContract', onTradeContract);
+  // bb.on('TradeContract', onTradeContract);
 }
 
 function onQuoteUpdated (arr)
@@ -64,8 +64,9 @@ async function onPositionSynced (arr)
   const pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { run(); return; }
 
-  const t = (new Date(pos.openingTimestamp)).getTime();
-  const job = createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
+  // FIXME: restore this
+  // const t = (new Date(pos.openingTimestamp)).getTime();
+  // const job = createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
 
   run();
 }
