@@ -307,7 +307,7 @@ async function createStopLoss (job)
   const px = safePrice(job.px * (1 + -Math.sign(job.qty) * cfg.executor.sl));
   const root = `${STOP_PREFIX}${AG_PREFIX}${job.id}`;
 
-  let sl = orders.find(`${root}`);
+  let sl = orders.find(root);
   if (!sl) {
     sl = await orders.stop(`${root}-${genId()}`, job.sym, -job.qty, px);
   } else {
@@ -317,20 +317,19 @@ async function createStopLoss (job)
   return sl.ordStatus == 'New';
 }
 
-async function createTakeProfit (job, sym, qty, px)
+async function createTakeProfit (job)
 {
-  let tp_px = safePrice(px * (1 + Math.sign(qty) * cfg.executor.sl));
-  if (candle) { tp_px = qty > 1 ? candle.bb_upper : candle.bb_lower; }
-  tp_px = safePrice(tp_px);
+  const px = job.qty > 0 ? quote.askPrice : quote.bidPrice;
+  const root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
 
-  const tp_root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
-  let tp = orders.find(tp_root);
+  let tp = orders.find(root);
   if (!tp) {
-    tp = await orders.profit(`${tp_root}-${genId()}`, sym, -qty, tp_px);
+    tp = await orders.profit(`${root}-${genId()}`, job.sym, -job.qty, px);
   } else {
-    tp = await orders.amend(tp.clOrdID, {orderQty: -qty, price: tp_px});
+    tp = await orders.amend(tp.clOrdID, {orderQty: -job.qty, price: px});
   }
-  await preventSlippage(tp, orders.profit);
+
+  return tp.ordStatus == 'New';
 }
 
 function handleOverload (order)
