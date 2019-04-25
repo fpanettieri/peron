@@ -46,6 +46,9 @@ async function plug (_bb)
   bb.on('OrderOpened', onOrderOpened);
   bb.on('OrderUpdated', onOrderUpdated);
 
+  bb.on('OpenLong', onBandCross);
+  bb.on('OpenShort', onBandCross);
+
   // bb.on('TradeContract', onTradeContract);
 }
 
@@ -69,6 +72,12 @@ async function onPositionSynced (arr)
   // const job = createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
 
   run();
+}
+
+async function onBandCross (p)
+{
+  log.info('OnBandCross!');
+  log.log(p);
 }
 
 function onOrderSynced (arr)
