@@ -166,6 +166,8 @@ async function processOrders (o)
   // Ignored external order
   if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) { return; }
 
+  log.log(`Order updated: ${o.clOrdID} - ${o.ordStatus}`);
+  
   let order = orders.find(o.clOrdID);
   if (!order) {
     if (o.ordStatus != 'Canceled') { await orders.discard(o.orderID); }
