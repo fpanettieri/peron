@@ -295,7 +295,7 @@ async function proccessExit (job)
   const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
   if (order.price == price){ return; }
 
-  const amended = await orders.amend(order.clOrdID, {price: price});
+  let amended = await orders.amend(order.clOrdID, {price: price});
   amended = await preventSlippage(amended, orders.profit);
   handleOverload(amended);
 }
