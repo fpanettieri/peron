@@ -28,6 +28,7 @@ let overloaded = 0;
 let pending = [];
 let timeout = null;
 
+let pos = {};
 let quote = {};
 let candle = null;
 
@@ -41,6 +42,7 @@ async function plug (_bb)
 
   bb.on('CandleAnalyzed', onCandleAnalyzed);
   bb.on('PositionSynced', onPositionSynced);
+  bb.on('PositionUpdated', onPositionUpdated);
 
   bb.on('OrderSynced', onOrderSynced);
   bb.on('OrderOpened', onOrderOpened);
@@ -64,7 +66,7 @@ function onCandleAnalyzed (c)
 
 async function onPositionSynced (arr)
 {
-  const pos = arr.find(i => i.symbol == cfg.symbol);
+  pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { run(); return; }
 
   // FIXME: restore this
@@ -72,6 +74,15 @@ async function onPositionSynced (arr)
   // const job = createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
 
   run();
+}
+
+async function onPositionUpdated (arr)
+{
+  const p = arr.find(i => i.symbol == cfg.symbol);
+  if (!p) { return; }
+  pos = {...pos, ...p}
+
+  log.log('pos.currentQty', pos.currentQty);
 }
 
 async function onBandCross (p)
