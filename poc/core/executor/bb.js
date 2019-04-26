@@ -80,15 +80,16 @@ async function onPositionUpdated (arr)
 {
   const p = arr.find(i => i.symbol == cfg.symbol);
   if (!p) { return; }
-  pos = {...pos, ...p}
-
-  log.log('pos.currentQty', pos.currentQty);
+  pos = {...pos, ...p};
 }
 
 async function onBandCross (p)
 {
   log.info('OnBandCross!');
-  log.log(p);
+  if (!pos || pos.currentQty == 0) { return; }
+
+  log.log('we should exit the position!');
+
 }
 
 function onOrderSynced (arr)
