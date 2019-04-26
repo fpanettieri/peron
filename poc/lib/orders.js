@@ -204,7 +204,7 @@ function remove (cl_id)
 
 function debug ()
 {
-  log.log(orders.map(o => o.clOrdID));
+  return orders.map(o => o.clOrdID);
 }
 
 module.exports = {

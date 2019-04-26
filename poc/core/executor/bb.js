@@ -94,6 +94,9 @@ async function onBandCross (p)
     }
   }
 
+  log.log(`jobs: ${jobs.length}`);
+  log.log(`orders: ${orders.debug()}`);
+
   const job = createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
 }
 
@@ -166,8 +169,6 @@ async function processOrders (o)
   // Ignored external order
   if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) { return; }
 
-  log.log(`Order updated: ${o.clOrdID} - ${o.ordStatus}`);
-  
   let order = orders.find(o.clOrdID);
   if (!order) {
     if (o.ordStatus != 'Canceled') { await orders.discard(o.orderID); }
@@ -176,6 +177,8 @@ async function processOrders (o)
 
   // Update cached order
   order = orders.update(o);
+
+  log.log(`Order updated: ${order.clOrdID} - ${order.ordStatus}`);
 
   const jid = order.clOrdID.substr(6, HASH_LEN);
   const job = jobs.find(j => j.id == jid);
