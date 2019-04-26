@@ -69,9 +69,8 @@ async function onPositionSynced (arr)
   pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { run(); return; }
 
-  // FIXME: restore this
-  // const t = (new Date(pos.openingTimestamp)).getTime();
-  // const job = createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
+  const t = (new Date(pos.openingTimestamp)).getTime();
+  const job = createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
 
   run();
 }
@@ -85,11 +84,9 @@ async function onPositionUpdated (arr)
 
 async function onBandCross (p)
 {
-  log.info('OnBandCross!');
   if (!pos || pos.currentQty == 0) { return; }
-
-  log.log('we should exit the position!');
-
+  const t = (new Date(pos.openingTimestamp)).getTime();
+  const job = createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
 }
 
 function onOrderSynced (arr)
