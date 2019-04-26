@@ -29,10 +29,7 @@ async function create (id, sym, qty, params)
   options.api = 'order';
   options.method = 'POST';
 
-  // FIXME: restore real call
   const rsp = await bitmex.api(options, _params);
-  // const rsp = await bitmex.overload(options, _params);
-
   let order = rsp.body;
 
   if (rsp.status.code == 200){
