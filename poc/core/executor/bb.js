@@ -86,8 +86,13 @@ async function onBandCross (p)
 {
   if (!pos || pos.currentQty == 0) { return; }
   const t = (new Date(pos.openingTimestamp)).getTime();
-  // FIXME: this should only happen once per position
-  // Might need to substract the current open positions before opening another one
+
+  for (let i = 0; i < jobs.length; i++) {
+    const j = jobs[i];
+    if (j.state != STATES.PRE_EXIT && j.state != STATES.EXIT) { return; }
+    updateJob(j.id, {state: STATES.CLEANUP});
+  }
+
   const job = createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
 }
 
