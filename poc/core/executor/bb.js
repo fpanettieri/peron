@@ -51,7 +51,7 @@ async function plug (_bb)
   bb.on('OpenLong', onBandCross);
   bb.on('OpenShort', onBandCross);
 
-  // bb.on('TradeContract', onTradeContract);
+  bb.on('TradeContract', onTradeContract);
 }
 
 function onQuoteUpdated (arr)
@@ -117,7 +117,6 @@ async function onOrderUpdated (arr)
 async function onTradeContract (sym, qty, px)
 {
   createJob(genId(), sym, qty, px, STATES.PRE_ENTRY, Date.now());
-  // TODO: check position, and try to exit it if the direction is different
 }
 
 function createJob (id, sym, qty, px, state, t)
