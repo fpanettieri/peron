@@ -18,7 +18,7 @@ const PROFIT_PREFIX = 'tp-';
 const STOP_PREFIX = 'sl-';
 const AG_PREFIX = 'ag-';
 
-const STATES = { PRE_ENTRY: 0, ENTRY: 1, PRE_EXIT: 2, EXIT: 3, CLEANUP: 4 };
+const STATES = { PRE_ENTRY: 'pre_entry', ENTRY: 'entry', PRE_EXIT: 'pre_exit', EXIT: 'exit', CLEANUP: 'cleanup' };
 
 let bb = null;
 
