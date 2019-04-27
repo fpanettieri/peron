@@ -50,7 +50,10 @@ async function api (opts, params)
   }
 
   const limit = rsp.headers['x-ratelimit-remaining'];
-  if(limit < 100) { log.warn('limit remaining', limit); }
+  if(limit < 10) {
+    log.error('rate-limit exceeded')
+    log.fatal(rsp);
+  }
 
   return rsp;
 }
