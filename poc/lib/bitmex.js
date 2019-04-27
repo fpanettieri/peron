@@ -10,6 +10,10 @@ const AUTH_EXPIRES = 30;
 
 async function api (opts, params)
 {
+  log.log(opts.method, opts.api);
+
+
+
   // ~~(n) == fast toInt
   const expires = ~~(Date.now() / 1000 + AUTH_EXPIRES);
   const data = Object.entries(params).map(([k, v]) => `${k}=${v}`).join('&');
