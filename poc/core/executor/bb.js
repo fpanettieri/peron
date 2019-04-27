@@ -94,10 +94,10 @@ async function onBandCross (p)
     }
   }
 
+  createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
+
   log.log(`jobs: ${jobs.length}`);
   log.log(`orders: ${orders.debug()}`);
-
-  const job = createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
 }
 
 function onOrderSynced (arr)
