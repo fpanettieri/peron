@@ -36,7 +36,16 @@ async function api (opts, params)
 
   const host = `https://${opts.testnet ? 'testnet' : 'www'}.bitmex.com`;
   const rsp = await https.send(`${host}${url}`, body, {method: opts.method, headers: headers});
-  rsp.body = JSON.parse(rsp.body);
+
+  try {
+    rsp.body = JSON.parse(rsp.body);
+  } catch (err) {
+    log.error('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+    log.error('REQ', body, {method: opts.method, headers: headers});
+    log.error('RSP', rsp);
+    log.error('ERR', err);
+    log.fatal('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+  }
 
   const limit = rsp.headers['x-ratelimit-remaining'];
   if(limit < 100) { log.warn('limit remaining', limit); }
