@@ -182,12 +182,11 @@ async function processOrders (o)
 
   // FIXME: remove this?
   log.log(`Order updated: ${order.clOrdID} - ${order.ordStatus}`);
-  log.log(`jobs: ${jobs.length}`);
-  log.log(`orders: ${orders.debug()}`);
 
   const jid = order.clOrdID.substr(6, HASH_LEN);
   const job = jobs.find(j => j.id == jid);
   if (!job) {
+    log.warn('job not found:', jid);
     await orders.cancel(order.clOrdID);
     return;
   }
