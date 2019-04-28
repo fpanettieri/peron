@@ -10,7 +10,8 @@ const AUTH_EXPIRES = 30;
 
 async function api (opts, params)
 {
-  log.log(opts.method, opts.api);
+  // FIXME: remove this log
+  log.log(opts.method, opts.api, params);
 
   // ~~(n) == fast toInt
   const expires = ~~(Date.now() / 1000 + AUTH_EXPIRES);
@@ -42,6 +43,7 @@ async function api (opts, params)
   try {
     rsp.body = JSON.parse(rsp.body);
   } catch (err) {
+    // FIXME: remove this?
     log.error('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     log.error('REQ', body, {method: opts.method, headers: headers});
     log.error('RSP', rsp);
@@ -51,6 +53,7 @@ async function api (opts, params)
 
   const limit = rsp.headers['x-ratelimit-remaining'];
   if(limit < 10) {
+    // FIXME: remove this?
     log.error('rate-limit exceeded')
     log.fatal(rsp);
   }

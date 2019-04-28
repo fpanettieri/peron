@@ -96,6 +96,7 @@ async function onBandCross (p)
 
   createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
 
+  // FIXME: remove this?
   log.log(`jobs: ${jobs.length}`);
   log.log(`orders: ${orders.debug()}`);
 }
@@ -106,6 +107,7 @@ function onOrderSynced (arr)
     const o = arr[i];
 
     if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
+      // FIXME: remove this?
       log.log('ignored unknown order');
       continue;
     }
@@ -178,6 +180,7 @@ async function processOrders (o)
   // Update cached order
   order = orders.update(o);
 
+  // FIXME: remove this?
   log.log(`Order updated: ${order.clOrdID} - ${order.ordStatus}`);
 
   const jid = order.clOrdID.substr(6, HASH_LEN);

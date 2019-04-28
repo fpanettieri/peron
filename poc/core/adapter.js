@@ -149,6 +149,7 @@ function onSendAdapterMsg (op, args)
 function send (msg)
 {
   if (limit < 1) {
+    // FIXME: remove this?
     log.error('limit reached, try again in a few seconds');
     return;
   }
