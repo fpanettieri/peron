@@ -10,6 +10,7 @@ const log = new logger('core/adapter');
 
 const DMS_INTERVAL = 5 * 1000;
 const DMS_TIMEOUT = 60 * 1000;
+const MIN_RATE_LIMIT = 5;
 
 let bb = null;
 let socket = null;
@@ -148,11 +149,7 @@ function onSendAdapterMsg (op, args)
 
 function send (msg)
 {
-  if (limit < 1) {
-    // FIXME: remove this?
-    log.error('limit reached, try again in a few seconds');
-    return;
-  }
+  if (limit < MIN_RATE_LIMIT) { log.fatal('rate-limit exceeded'); }
   socket.send(JSON.stringify(msg));
 }
 

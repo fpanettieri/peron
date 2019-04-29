@@ -7,6 +7,7 @@ const Logger = require('./logger');
 const log = new Logger('lib/bitmex');
 
 const AUTH_EXPIRES = 30;
+const MIN_RATE_LIMIT = 5;
 
 async function api (opts, params)
 {
@@ -34,27 +35,17 @@ async function api (opts, params)
   };
 
   const host = `https://${opts.testnet ? 'testnet' : 'www'}.bitmex.com`;
-  const rsp = await https.send(`${host}${url}`, body, {method: opts.method, headers: headers});
+  let rsp = null;
 
   try {
+    rsp = await https.send(`${host}${url}`, body, {method: opts.method, headers: headers});
     rsp.body = JSON.parse(rsp.body);
   } catch (err) {
-    // FIXME: remove this?
-    log.error('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-    log.error('REQ', body, {method: opts.method, headers: headers});
-    log.error('RSP', rsp);
-    log.error('ERR', err);
-    log.fatal('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+    log.fatal(err);
   }
 
   const limit = rsp.headers['x-ratelimit-remaining'];
-  if(limit < 10) {
-    // FIXME: remove this?
-    log.error('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-    log.error('rate-limit exceeded')
-    log.fatal(rsp);
-    log.error('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-  }
+  if(limit < MIN_RATE_LIMIT) { log.fatal('rate-limit exceeded'); }
 
   return rsp;
 }
