@@ -171,6 +171,12 @@ async function processOrders (o)
   // Ignored external order
   if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) { return; }
 
+  // FIXME: remove this?
+  log.log('----------------------------------------------------------------');
+  log.log('Order updated:');
+  log.log(o);
+  log.log('----------------------------------------------------------------');
+
   let order = orders.find(o.clOrdID);
   if (!order) {
     if (o.ordStatus != 'Canceled') { await orders.discard(o.orderID); }
@@ -179,9 +185,6 @@ async function processOrders (o)
 
   // Update cached order
   order = orders.update(o);
-
-  // FIXME: remove this?
-  log.log(`Order updated: ${order.clOrdID} - ${order.ordStatus}`);
 
   const jid = order.clOrdID.substr(6, HASH_LEN);
   const job = jobs.find(j => j.id == jid);
