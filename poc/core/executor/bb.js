@@ -327,9 +327,10 @@ async function destroyOrder (root)
 {
   const order = orders.find(root);
   if (!order) { return; }
-
-  await orders.cancel(order.clOrdID);
   await orders.remove(root);
+
+  if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') { return; }
+  await orders.cancel(order.clOrdID);
 }
 
 async function createStopLoss (job)
