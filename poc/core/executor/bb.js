@@ -207,15 +207,15 @@ async function processOrders (o)
 async function process (job)
 {
   switch (job.state){
-    case STATES.PRE_ENTRY: await proccessPreEntry(job); break;
-    case STATES.ENTRY: await proccessEntry(job); break;
-    case STATES.PRE_EXIT: await proccessPreExit(job); break;
-    case STATES.EXIT: await proccessExit(job); break;
-    case STATES.CLEANUP: await proccessCleanup(job); break;
+    case STATES.PRE_ENTRY: await processPreEntry(job); break;
+    case STATES.ENTRY: await processEntry(job); break;
+    case STATES.PRE_EXIT: await processPreExit(job); break;
+    case STATES.EXIT: await processExit(job); break;
+    case STATES.CLEANUP: await processCleanup(job); break;
   }
 }
 
-async function proccessPreEntry (job)
+async function processPreEntry (job)
 {
   if (!quote) { return; }
 
@@ -223,7 +223,7 @@ async function proccessPreEntry (job)
 
   const root = `${LIMIT_PREFIX}${AG_PREFIX}${job.id}`;
   const order = await orders.limit(`${root}-${genId()}`, job.sym, job.qty, price);
-  if (!order) { log.fatal(`proccessPreEntry -> limit order not found! ${root}`, job); }
+  if (!order) { log.fatal(`processPreEntry -> limit order not found! ${root}`, job); }
 
   switch (order.ordStatus) {
     case 'New': {
@@ -249,7 +249,7 @@ async function proccessPreEntry (job)
   }
 }
 
-async function proccessEntry (job)
+async function processEntry (job)
 {
   if (!quote) { return; }
 
@@ -289,7 +289,7 @@ async function proccessEntry (job)
   }
 }
 
-async function proccessPreExit (job)
+async function processPreExit (job)
 {
   if (!quote) { return; }
 
@@ -299,13 +299,13 @@ async function proccessPreExit (job)
   if (sl && tp) { updateJob(job.id, {state: STATES.EXIT}); }
 }
 
-async function proccessExit (job)
+async function processExit (job)
 {
   if (!quote){ return; }
 
   const root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
   const order = orders.find(root);
-  if (!order){ log.fatal(`proccessExit -> profit order not found! ${root}`, job); }
+  if (!order){ log.fatal(`processExit -> profit order not found! ${root}`, job); }
 
   const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
   if (order.price == price){ return; }
@@ -315,7 +315,7 @@ async function proccessExit (job)
   handleOverload(amended);
 }
 
-async function proccessCleanup (job)
+async function processCleanup (job)
 {
   destroyJob(job);
   destroyOrder(`${LIMIT_PREFIX}${AG_PREFIX}${job.id}`);
