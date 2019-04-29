@@ -12,6 +12,6 @@ function genId ()
 
 for (let i = 0; i < ITERATIONS; i++) {
   const id = genId();
-  console.log(`${i}\t-\t${id.length}`);
+  console.log(`${i}\t- ${id.length} => ${id}`);
   assert(id.length == 10);
 }
