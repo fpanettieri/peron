@@ -136,6 +136,7 @@ function createJob (id, sym, qty, px, state, t)
 {
   const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now()};
   jobs.push(job);
+  log.log('===============> Job Created: ', id);
   return job;
 }
 
@@ -143,11 +144,13 @@ function updateJob (id, changes)
 {
   const idx = jobs.findIndex(j => j.id == id);
   jobs[idx] = {...jobs[idx], ...changes};
+  log.log('===============> Job Updated', jobs[idx].id, jobs[idx].state);
   return jobs[idx];
 }
 
 function destroyJob (job)
 {
+  log.log('===============> Job Destroyed: ', job.id);
   return jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
 }
 
