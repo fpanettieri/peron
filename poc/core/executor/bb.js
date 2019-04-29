@@ -66,8 +66,6 @@ function onCandleAnalyzed (c)
 
 async function onPositionSynced (arr)
 {
-  log.log('################################ POSITION SYNCED');
-
   pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { run(); return; }
 
@@ -97,23 +95,13 @@ async function onBandCross (p)
   }
 
   createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
-
-  // FIXME: remove this?
-  log.log(`jobs: ${jobs.length}`);
-  log.log(`orders: ${orders.debug()}`);
 }
 
 function onOrderSynced (arr)
 {
   for (let i = 0; i < arr.length; i++) {
     const o = arr[i];
-
-    if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) {
-      // FIXME: remove this?
-      log.log('ignored unknown order');
-      continue;
-    }
-
+    if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) { continue; }
     orders.discard(arr[i].orderID);
   }
 }
@@ -138,7 +126,6 @@ function createJob (id, sym, qty, px, state, t)
 {
   const job = { id: id, sym: sym, qty: qty, px: px, state: state, t: t, created_at: Date.now()};
   jobs.push(job);
-  log.log('===============> Job Created: ', id);
   return job;
 }
 
@@ -146,13 +133,11 @@ function updateJob (id, changes)
 {
   const idx = jobs.findIndex(j => j.id == id);
   jobs[idx] = {...jobs[idx], ...changes};
-  log.log('===============> Job Updated', jobs[idx].id, jobs[idx].state);
   return jobs[idx];
 }
 
 function destroyJob (job)
 {
-  log.log('===============> Job Destroyed: ', job.id);
   return jobs.splice(jobs.findIndex(j => j.id === job.id), 1);
 }
 
@@ -175,12 +160,6 @@ async function processOrders (o)
 {
   // Ignored external order
   if (!ORDER_PREFIX_REGEX.test(o.clOrdID)) { return; }
-
-  // FIXME: remove this?
-  log.log('----------------------------------------------------------------');
-  log.log('Order updated:');
-  log.log(o);
-  log.log('----------------------------------------------------------------');
 
   let order = orders.find(o.clOrdID);
   if (!order) {
