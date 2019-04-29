@@ -66,6 +66,8 @@ function onCandleAnalyzed (c)
 
 async function onPositionSynced (arr)
 {
+  log.log('################################ POSITION SYNCED');
+
   pos = arr.find(i => i.symbol == cfg.symbol);
   if (!pos || !pos.isOpen) { run(); return; }
 
