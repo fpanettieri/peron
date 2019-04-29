@@ -410,7 +410,7 @@ function preventBounce (px, is_long)
 
 function genId ()
 {
-  return `${Math.random().toString(36).substr(2, HASH_LEN)}`;
+  return [...Array(HASH_LEN)].map(i=>(~~(Math.random()*36)).toString(36)).join('');
 }
 
 function getTimeout ()

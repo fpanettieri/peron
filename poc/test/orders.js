@@ -11,7 +11,8 @@ let order = null;
 
 function genId ()
 {
-  return `lm-ag-${Math.random().toString(36).substr(2, 12)}-0`;
+  const id = [...Array(HASH_LEN)].map(i=>(~~(Math.random()*36)).toString(36)).join('');
+  return `lm-ag-${id}-0`;
 }
 
 function sleep (ms)

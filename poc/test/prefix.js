@@ -19,7 +19,8 @@ const orders = [];
 
 function genId ()
 {
-  return `lm-ag-${Math.random().toString(36).substr(2, 10)}`;
+  const id = [...Array(HASH_LEN)].map(i=>(~~(Math.random()*36)).toString(36)).join('');
+  return `lm-ag-${id}-0`;
 }
 
 function find (id)
