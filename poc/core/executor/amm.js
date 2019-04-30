@@ -177,6 +177,7 @@ async function process (job)
     case STATES.ENTRY: await processEntry(job); break;
     case STATES.PRE_EXIT: await processPreExit(job); break;
     case STATES.EXIT: await processExit(job); break;
+    // TODO: add stop state?
     case STATES.CLEANUP: await processCleanup(job); break;
   }
 }
