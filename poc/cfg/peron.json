@@ -1,5 +1,5 @@
 {
-  "testnet": false,
+  "testnet": true,
   "timeframe": "1m",
   "symbol": "XBTUSD",
 
@@ -8,9 +8,9 @@
     "core/archivist",
     "core/chandler",
     "core/analyst",
-    "core/brain/bb",
+    "core/brain/mm",
     "core/trader",
-    "core/executor/bb"
+    "core/executor/amm"
   ],
 
   "backbone": {
@@ -42,13 +42,16 @@
   },
 
   "trader": {
-    "positions": 5,
+    "positions": 20,
     "size": 0.03
   },
 
   "executor": {
     "speed": 200,
     "expiration": 600000,
-    "sl": 0.01
+    "sl": {
+      "soft": 0.0025,
+      "hard": 0.0075
+    }
   }
 }
