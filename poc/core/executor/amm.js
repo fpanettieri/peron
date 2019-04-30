@@ -18,7 +18,7 @@ const PROFIT_PREFIX = 'tp-';
 const STOP_PREFIX = 'sl-';
 const AG_PREFIX = 'ag-';
 
-const STATES = { PRE_ENTRY: 'pre_entry', ENTRY: 'entry', PRE_EXIT: 'pre_exit', EXIT: 'exit', CLEANUP: 'cleanup' };
+const STATES = { PRE_ENTRY: 'pre_entry', ENTRY: 'entry', PRE_EXIT: 'pre_exit', EXIT: 'exit', STOP: 'stop', CLEANUP: 'cleanup' };
 
 let bb = null;
 
@@ -47,9 +47,6 @@ async function plug (_bb)
   bb.on('OrderSynced', onOrderSynced);
   bb.on('OrderOpened', onOrderOpened);
   bb.on('OrderUpdated', onOrderUpdated);
-
-  bb.on('OpenLong', onBandCross);
-  bb.on('OpenShort', onBandCross);
 
   bb.on('TradeContract', onTradeContract);
 }
@@ -82,21 +79,6 @@ async function onPositionUpdated (arr)
   pos = {...pos, ...p};
 }
 
-async function onBandCross (p)
-{
-  if (!pos || pos.currentQty == 0) { return; }
-  const t = (new Date(pos.openingTimestamp)).getTime();
-
-  for (let i = 0; i < jobs.length; i++) {
-    const j = jobs[i];
-    if (j.state == STATES.PRE_EXIT || j.state == STATES.EXIT) {
-      updateJob(j.id, {state: STATES.CLEANUP});
-    }
-  }
-
-  createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
-}
-
 function onOrderSynced (arr)
 {
   for (let i = 0; i < arr.length; i++) {
@@ -120,6 +102,11 @@ async function onOrderUpdated (arr)
 async function onTradeContract (sym, qty, px)
 {
   createJob(genId(), sym, qty, px, STATES.PRE_ENTRY, Date.now());
+
+  // TODO: create or update exit
+  // TODO: create or update stop
+
+  // createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
 }
 
 function createJob (id, sym, qty, px, state, t)
