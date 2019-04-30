@@ -1,5 +1,5 @@
 {
-  "testnet": true,
+  "testnet": false,
   "timeframe": "1m",
   "symbol": "XBTUSD",
 
