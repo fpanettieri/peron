@@ -8,7 +8,7 @@
     "core/archivist",
     "core/chandler",
     "core/analyst",
-    "core/brain/mm",
+    "core/brain/bb",
     "core/trader",
     "core/executor/bb"
   ],
@@ -43,7 +43,7 @@
 
   "trader": {
     "positions": 5,
-    "size": 0.003
+    "size": 0.03
   },
 
   "executor": {
