@@ -198,7 +198,7 @@ async function processPreEntry (job)
 {
   if (!quote) { return; }
 
-  let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
+  const price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
 
   const root = `${LIMIT_PREFIX}${AG_PREFIX}${job.id}`;
   const order = await orders.limit(`${root}-${genId()}`, job.sym, job.qty, price);

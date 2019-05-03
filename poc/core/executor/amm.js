@@ -102,11 +102,6 @@ async function onOrderUpdated (arr)
 async function onTradeContract (sym, qty, px)
 {
   createJob(genId(), sym, qty, px, STATES.PRE_ENTRY, Date.now());
-
-  // TODO: create or update exit
-  // TODO: create or update stop
-
-  // createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
 }
 
 function createJob (id, sym, qty, px, state, t)
@@ -186,7 +181,7 @@ async function processPreEntry (job)
 {
   if (!quote) { return; }
 
-  let price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
+  const price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
 
   const root = `${LIMIT_PREFIX}${AG_PREFIX}${job.id}`;
   const order = await orders.limit(`${root}-${genId()}`, job.sym, job.qty, price);
@@ -260,10 +255,22 @@ async function processPreExit (job)
 {
   if (!quote) { return; }
 
-  const sl = await createStopLoss(job);
-  const tp = await createTakeProfit(job);
+  const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
+  const root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
 
-  if (sl && tp) { updateJob(job.id, {state: STATES.EXIT}); }
+  let tp = orders.find(root);
+  if (!tp) {
+    tp = await orders.profit(`${root}-${genId()}`, job.sym, -job.qty, price);
+  } else {
+    tp = await orders.amend(tp.clOrdID, {orderQty: -job.qty, price: price});
+  }
+
+  tp = await preventSlippage(tp, orders.limit);
+  handleOverload(tp);
+
+  if (tp.ordStatus == 'New') {
+    updateJob(job.id, {state: STATES.EXIT});
+  }
 }
 
 async function processExit (job)
@@ -298,36 +305,6 @@ async function destroyOrder (root)
 
   if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') { return; }
   await orders.cancel(order.clOrdID);
-}
-
-async function createStopLoss (job)
-{
-  const px = safePrice(job.px * (1 + -Math.sign(job.qty) * cfg.executor.sl));
-  const root = `${STOP_PREFIX}${AG_PREFIX}${job.id}`;
-
-  let sl = orders.find(root);
-  if (!sl) {
-    sl = await orders.stop(`${root}-${genId()}`, job.sym, -job.qty, px);
-  } else {
-    sl = await orders.amend(sl.clOrdID, {orderQty: -job.qty, stopPx: px});
-  }
-
-  return sl.ordStatus == 'New';
-}
-
-async function createTakeProfit (job)
-{
-  const px = job.qty > 0 ? quote.askPrice : quote.bidPrice;
-  const root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
-
-  let tp = orders.find(root);
-  if (!tp) {
-    tp = await orders.profit(`${root}-${genId()}`, job.sym, -job.qty, px);
-  } else {
-    tp = await orders.amend(tp.clOrdID, {orderQty: -job.qty, price: px});
-  }
-
-  return tp.ordStatus == 'New';
 }
 
 function handleOverload (order)
