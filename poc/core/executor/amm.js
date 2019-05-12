@@ -300,7 +300,12 @@ async function processExit (job)
   const order = orders.find(root);
   if (!order){ log.fatal(`processExit -> profit order not found! ${root}`, job); }
 
-  const price = safePrice(candle.bb_ma);
+  let price = safePrice(candle.bb_ma);
+  if (job.qty > 0) {
+    price = Math.max(price, quote.askPrice);
+  } else {
+    price = Math.min(price, quote.bidPrice);
+  }
   if (order.price == price){ return; }
 
   let amended = await orders.amend(order.clOrdID, {price: price});
@@ -343,14 +348,20 @@ async function createStopLoss (job)
 
 async function createTakeProfit (job)
 {
-  const px = safePrice(candle.bb_ma);
+  let price = safePrice(candle.bb_ma);
+  if (job.qty > 0) {
+    price = Math.max(price, quote.askPrice);
+  } else {
+    price = Math.min(price, quote.bidPrice);
+  }
+
   const root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
 
   let tp = orders.find(root);
   if (!tp) {
-    tp = await orders.profit(`${root}-${genId()}`, job.sym, -job.qty, px);
+    tp = await orders.profit(`${root}-${genId()}`, job.sym, -job.qty, price);
   } else {
-    tp = await orders.amend(tp.clOrdID, {orderQty: -job.qty, price: px});
+    tp = await orders.amend(tp.clOrdID, {orderQty: -job.qty, price: price});
   }
 
   return tp.ordStatus == 'New';
