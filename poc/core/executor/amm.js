@@ -348,13 +348,14 @@ async function createStopLoss (job)
 
 async function createTakeProfit (job)
 {
-  let price = safePrice(candle.bb_ma);
+  let price = safePrice(job.px * (1 + Math.sign(job.qty) * cfg.executor.sl));
+  if (candle) { price = safePrice(candle.bb_ma); }
+
   if (job.qty > 0) {
     price = Math.max(price, quote.askPrice);
   } else {
     price = Math.min(price, quote.bidPrice);
   }
-
   const root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
 
   let tp = orders.find(root);
