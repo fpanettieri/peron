@@ -300,7 +300,7 @@ async function processExit (job)
   const order = orders.find(root);
   if (!order){ log.fatal(`processExit -> profit order not found! ${root}`, job); }
 
-  const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
+  const price = safePrice(candle.bb_ma);
   if (order.price == price){ return; }
 
   let amended = await orders.amend(order.clOrdID, {price: price});
@@ -343,7 +343,7 @@ async function createStopLoss (job)
 
 async function createTakeProfit (job)
 {
-  const px = job.qty > 0 ? quote.askPrice : quote.bidPrice;
+  const px = safePrice(candle.bb_ma);
   const root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
 
   let tp = orders.find(root);
