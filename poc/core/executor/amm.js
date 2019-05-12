@@ -48,9 +48,6 @@ async function plug (_bb)
   bb.on('OrderOpened', onOrderOpened);
   bb.on('OrderUpdated', onOrderUpdated);
 
-  bb.on('OpenLong', onBandCross);
-  bb.on('OpenShort', onBandCross);
-
   bb.on('TradeContract', onTradeContract);
 }
 
@@ -79,13 +76,27 @@ async function onPositionUpdated (arr)
 {
   const p = arr.find(i => i.symbol == cfg.symbol);
   if (!p) { return; }
+
+  log.log('==== Position Updated', p);
+
+  const exit = p.currentQty && p.currentQty != 0 && p.currentQty != pos.currentQty;
   pos = {...pos, ...p};
+  if (exit) { exitPosition(pos); }
 }
 
-async function onBandCross (p)
+async function exitPosition (pos)
 {
   if (!pos || pos.currentQty == 0) { return; }
   const t = (new Date(pos.openingTimestamp)).getTime();
+
+  log.log('==== Position Updated', p);
+
+  let found = false;
+
+  // if an order exists,
+  //   check if the qty needs to be ammended
+  // else
+  //   create a new exit
 
   for (let i = 0; i < jobs.length; i++) {
     const j = jobs[i];
@@ -94,7 +105,9 @@ async function onBandCross (p)
     }
   }
 
-  createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
+  if (!found) {
+    createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
+  }
 }
 
 function onOrderSynced (arr)
