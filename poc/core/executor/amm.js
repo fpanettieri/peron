@@ -4,7 +4,7 @@ const cfg = require('../../cfg/peron');
 const orders = require('../../lib/orders');
 const logger = require('../../lib/logger');
 
-const log = new logger('executor/amm');
+const log = new logger('executor/bb');
 
 const OVERLOAD_STEP = 1000;
 const SLIPPAGE_OFFSET = 100;
@@ -18,7 +18,7 @@ const PROFIT_PREFIX = 'tp-';
 const STOP_PREFIX = 'sl-';
 const AG_PREFIX = 'ag-';
 
-const STATES = { PRE_ENTRY: 'pre_entry', ENTRY: 'entry', PRE_EXIT: 'pre_exit', EXIT: 'exit', STOP: 'stop', CLEANUP: 'cleanup' };
+const STATES = { PRE_ENTRY: 'pre_entry', ENTRY: 'entry', PRE_EXIT: 'pre_exit', EXIT: 'exit', CLEANUP: 'cleanup' };
 
 let bb = null;
 
@@ -48,6 +48,9 @@ async function plug (_bb)
   bb.on('OrderOpened', onOrderOpened);
   bb.on('OrderUpdated', onOrderUpdated);
 
+  bb.on('OpenLong', onBandCross);
+  bb.on('OpenShort', onBandCross);
+
   bb.on('TradeContract', onTradeContract);
 }
 
@@ -76,8 +79,22 @@ async function onPositionUpdated (arr)
 {
   const p = arr.find(i => i.symbol == cfg.symbol);
   if (!p) { return; }
-  log.log('Position Updated:', p);
   pos = {...pos, ...p};
+}
+
+async function onBandCross (p)
+{
+  if (!pos || pos.currentQty == 0) { return; }
+  const t = (new Date(pos.openingTimestamp)).getTime();
+
+  for (let i = 0; i < jobs.length; i++) {
+    const j = jobs[i];
+    if (j.state == STATES.PRE_EXIT || j.state == STATES.EXIT) {
+      updateJob(j.id, {state: STATES.CLEANUP});
+    }
+  }
+
+  createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
 }
 
 function onOrderSynced (arr)
@@ -173,7 +190,6 @@ async function process (job)
     case STATES.ENTRY: await processEntry(job); break;
     case STATES.PRE_EXIT: await processPreExit(job); break;
     case STATES.EXIT: await processExit(job); break;
-    case STATES.STOP: await processStop(job); break;
     case STATES.CLEANUP: await processCleanup(job); break;
   }
 }
@@ -256,22 +272,10 @@ async function processPreExit (job)
 {
   if (!quote) { return; }
 
-  const price = job.qty > 0 ? quote.askPrice : quote.bidPrice;
-  const root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
+  const sl = await createStopLoss(job);
+  const tp = await createTakeProfit(job);
 
-  let tp = orders.find(root);
-  if (!tp) {
-    tp = await orders.profit(`${root}-${genId()}`, job.sym, -job.qty, price);
-  } else {
-    tp = await orders.amend(tp.clOrdID, {orderQty: -job.qty, price: price});
-  }
-
-  tp = await preventSlippage(tp, orders.limit);
-  handleOverload(tp);
-
-  if (tp.ordStatus == 'New') {
-    updateJob(job.id, {state: STATES.EXIT});
-  }
+  if (sl && tp) { updateJob(job.id, {state: STATES.EXIT}); }
 }
 
 async function processExit (job)
@@ -306,6 +310,36 @@ async function destroyOrder (root)
 
   if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') { return; }
   await orders.cancel(order.clOrdID);
+}
+
+async function createStopLoss (job)
+{
+  const px = safePrice(job.px * (1 + -Math.sign(job.qty) * cfg.executor.sl));
+  const root = `${STOP_PREFIX}${AG_PREFIX}${job.id}`;
+
+  let sl = orders.find(root);
+  if (!sl) {
+    sl = await orders.stop(`${root}-${genId()}`, job.sym, -job.qty, px);
+  } else {
+    sl = await orders.amend(sl.clOrdID, {orderQty: -job.qty, stopPx: px});
+  }
+
+  return sl.ordStatus == 'New';
+}
+
+async function createTakeProfit (job)
+{
+  const px = job.qty > 0 ? quote.askPrice : quote.bidPrice;
+  const root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
+
+  let tp = orders.find(root);
+  if (!tp) {
+    tp = await orders.profit(`${root}-${genId()}`, job.sym, -job.qty, px);
+  } else {
+    tp = await orders.amend(tp.clOrdID, {orderQty: -job.qty, price: px});
+  }
+
+  return tp.ordStatus == 'New';
 }
 
 function handleOverload (order)
