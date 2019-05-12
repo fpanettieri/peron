@@ -8,7 +8,7 @@
     "core/archivist",
     "core/chandler",
     "core/analyst",
-    "core/brain/mm",
+    "core/brain/bb_mm",
     "core/trader",
     "core/executor/amm"
   ],
