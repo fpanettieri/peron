@@ -300,18 +300,14 @@ async function processExit (job)
   const order = orders.find(root);
   if (!order){ log.fatal(`processExit -> profit order not found! ${root}`, job); }
 
-  let price = safePrice(candle.bb_ma);
-  if (job.qty > 0) {
-    price = Math.max(price, quote.askPrice);
-  } else {
-    price = Math.min(price, quote.bidPrice);
-  }
+  const price = calcExitPrice(job);
   if (order.price == price){ return; }
 
   let amended = await orders.amend(order.clOrdID, {price: price});
   amended = await preventSlippage(amended, orders.profit);
   handleOverload(amended);
 }
+
 
 async function processCleanup (job)
 {
@@ -348,14 +344,7 @@ async function createStopLoss (job)
 
 async function createTakeProfit (job)
 {
-  let price = safePrice(job.px * (1 + Math.sign(job.qty) * cfg.executor.sl));
-  if (candle) { price = safePrice(candle.bb_ma); }
-
-  if (job.qty > 0) {
-    price = Math.max(price, quote.askPrice);
-  } else {
-    price = Math.min(price, quote.bidPrice);
-  }
+  const price = calcExitPrice(job);
   const root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
 
   let tp = orders.find(root);
@@ -373,6 +362,14 @@ function handleOverload (order)
   if (!order || order.ordStatus !== 'Overloaded') { return false; }
   overloaded = OVERLOAD_STEP;
   return true;
+}
+
+function calcExitPrice (job)
+{
+  let price = safePrice(job.px * (1 + Math.sign(job.qty) * cfg.executor.sl));
+  if (candle) { price = safePrice(candle.bb_ma); }
+  price = job.qty > 0 ? Math.max(price, quote.askPrice) : Math.min(price, quote.bidPrice);
+  return price;
 }
 
 async function preventSlippage (order, fn)
