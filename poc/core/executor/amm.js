@@ -76,6 +76,7 @@ async function onPositionUpdated (arr)
 {
   const p = arr.find(i => i.symbol == cfg.symbol);
   if (!p) { return; }
+  log.log('Position Updated:', p);
   pos = {...pos, ...p};
 }
 
