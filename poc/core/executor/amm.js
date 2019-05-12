@@ -193,6 +193,10 @@ async function processOrders (o)
   }
 
   if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') {
+
+    log.info(`================== ORDER ${order.ordStatus} ===============`);
+    log.log('order:', order);
+
     updateJob(job.id, {state: STATES.CLEANUP});
   }
 }
@@ -332,6 +336,12 @@ async function createStopLoss (job)
   const px = safePrice(job.px * (1 + -Math.sign(job.qty) * cfg.executor.sl));
   const root = `${STOP_PREFIX}${AG_PREFIX}${job.id}`;
 
+
+  log.info('================== CREATING STOP LOSS ===============');
+  log.log('Job:', job);
+  log.log('SL PX:', px);
+
+
   let sl = orders.find(root);
   if (!sl) {
     sl = await orders.stop(`${root}-${genId()}`, job.sym, -job.qty, px);
@@ -344,14 +354,20 @@ async function createStopLoss (job)
 
 async function createTakeProfit (job)
 {
-  const price = calcExitPrice(job);
+  const px = calcExitPrice(job);
   const root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
+
+
+  log.info('================== CREATING TAKE PROFIT ===============');
+  log.log('Job:', job);
+  log.log('TP PX:', px);
+
 
   let tp = orders.find(root);
   if (!tp) {
-    tp = await orders.profit(`${root}-${genId()}`, job.sym, -job.qty, price);
+    tp = await orders.profit(`${root}-${genId()}`, job.sym, -job.qty, px);
   } else {
-    tp = await orders.amend(tp.clOrdID, {orderQty: -job.qty, price: price});
+    tp = await orders.amend(tp.clOrdID, {orderQty: -job.qty, price: px});
   }
 
   return tp.ordStatus == 'New';
