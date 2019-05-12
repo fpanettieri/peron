@@ -33,17 +33,13 @@
     "history": "20",
     "bb": {
       "periods": 20,
-      "mult": 1.7
+      "mult": 0.5
     }
   },
 
-  "brain": {
-    "skip": 0
-  },
-
   "trader": {
-    "positions": 20,
-    "size": 0.03
+    "positions": 50,
+    "size": 0.01
   },
 
   "executor": {
