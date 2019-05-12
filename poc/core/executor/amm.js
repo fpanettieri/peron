@@ -77,7 +77,7 @@ async function onPositionUpdated (arr)
   const p = arr.find(i => i.symbol == cfg.symbol);
   if (!p) { return; }
 
-  log.log('==== Position Updated', p);
+  // log.log('==== Position Updated', p);
 
   const exit = p.currentQty && p.currentQty != 0 && p.currentQty != pos.currentQty;
   pos = {...pos, ...p};
@@ -89,10 +89,11 @@ async function exitPosition (pos)
   if (!pos || pos.currentQty == 0) { return; }
   const t = (new Date(pos.openingTimestamp)).getTime();
 
-  log.log('==== Position Updated', p);
+  // log.log('==== Position Updated', p);
 
   let found = false;
 
+  // FIXME: reimplement using a more elegant solution
   // if an order exists,
   //   check if the qty needs to be ammended
   // else
@@ -105,9 +106,9 @@ async function exitPosition (pos)
     }
   }
 
-  if (!found) {
-    createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
-  }
+  // if (!found) {
+  createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
+  // }
 }
 
 function onOrderSynced (arr)
