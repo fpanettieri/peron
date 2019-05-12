@@ -20,7 +20,7 @@ function onCandleAnalyzed (c)
   previous = current;
   current = c;
   if (!previous) { return; }
-  
+
   if (c.c > c.bb_upper) {
     bb.emit('OpenShort', c);
   }
@@ -28,8 +28,6 @@ function onCandleAnalyzed (c)
   if (c.c < c.bb_lower) {
     bb.emit('OpenLong', c);
   }
-
-  skip = cfg.brain.skip;
 }
 
 module.exports = { plug: plug };
