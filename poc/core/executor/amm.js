@@ -77,7 +77,9 @@ async function onPositionUpdated (arr)
   const p = arr.find(i => i.symbol == cfg.symbol);
   if (!p) { return; }
 
-  // log.log('==== Position Updated', p);
+  log.log('================== Position Updated ==================');
+  log.log(p);
+  log.log('================== Position Updated ==================\n');
 
   const exit = p.currentQty && p.currentQty != 0 && p.currentQty != pos.currentQty;
   pos = {...pos, ...p};
@@ -196,6 +198,7 @@ async function processOrders (o)
 
     log.info(`================== ORDER ${order.ordStatus} ===============`);
     log.log('order:', order);
+    log.info(`================== ORDER ${order.ordStatus} ===============\n`);
 
     updateJob(job.id, {state: STATES.CLEANUP});
   }
@@ -340,6 +343,7 @@ async function createStopLoss (job)
   log.info('================== CREATING STOP LOSS ===============');
   log.log('Job:', job);
   log.log('SL PX:', px);
+  log.info('================== CREATING STOP LOSS ==============\n');
 
 
   let sl = orders.find(root);
@@ -361,6 +365,7 @@ async function createTakeProfit (job)
   log.info('================== CREATING TAKE PROFIT ===============');
   log.log('Job:', job);
   log.log('TP PX:', px);
+  log.info('================== CREATING TAKE PROFIT ===============\n');
 
 
   let tp = orders.find(root);
