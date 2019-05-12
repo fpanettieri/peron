@@ -77,13 +77,15 @@ async function onPositionUpdated (arr)
   const p = arr.find(i => i.symbol == cfg.symbol);
   if (!p) { return; }
 
-  log.log('================== Position Updated ==================');
-  log.log(p);
-  log.log('================== Position Updated ==================\n');
-
   const exit = p.currentQty && p.currentQty != 0 && p.currentQty != pos.currentQty;
   pos = {...pos, ...p};
-  if (exit) { exitPosition(pos); }
+  if (exit) {
+    log.log('================== POSITION UPDATED ==================');
+    log.log(p);
+    log.log('================== POSITION UPDATED ==================\n');
+
+    exitPosition(pos);
+  }
 }
 
 async function exitPosition (pos)
