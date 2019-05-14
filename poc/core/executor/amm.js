@@ -332,20 +332,21 @@ async function createStopLoss (job)
   const root = `${STOP_PREFIX}${AG_PREFIX}${job.id}`;
 
 
-  log.info('================== CREATING STOP LOSS ===============');
-  log.log('Job px:', job.px);
-  log.log('Job qty:', job.qty);
-  log.log('SL %:', cfg.executor.sl);
-  log.log('Px:', px);
-  log.info('================== CREATING STOP LOSS ==============\n');
-
-
   let sl = orders.find(root);
   if (!sl) {
     sl = await orders.stop(`${root}-${genId()}`, job.sym, -job.qty, px);
   } else {
     sl = await orders.amend(sl.clOrdID, {orderQty: -job.qty, stopPx: px});
   }
+
+  log.info('================== CREATING STOP LOSS ===============');
+  log.log('Job px:', job.px);
+  log.log('Job qty:', job.qty);
+  log.log('SL %:', cfg.executor.sl);
+  log.log('Px:', px);
+  log.info('=====================================================\n');
+  log.log(sl);
+  log.info('================== CREATING STOP LOSS ==============\n');
 
   return sl.ordStatus == 'New';
 }

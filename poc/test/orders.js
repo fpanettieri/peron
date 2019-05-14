@@ -187,7 +187,7 @@ async function amend_respawn ()
 async function stop ()
 {
   const id = genId();
-  order = await orders.stop(id, 'XBTUSD', 1, 6000);
+  order = await orders.stop(id, 'XBTUSD', -1, 6000);
   assert(order.ordStatus == 'New');
 
   log.log(order);
