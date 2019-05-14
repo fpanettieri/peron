@@ -80,10 +80,10 @@ async function onPositionUpdated (arr)
   const exit = p.currentQty && p.currentQty != 0 && p.currentQty != pos.currentQty;
   pos = {...pos, ...p};
   if (exit) {
-    log.log('================== POSITION UPDATED ==================');
-    log.log(p);
-    log.log('================== POSITION UPDATED ==================\n');
-
+    // log.log('================== POSITION UPDATED ==================');
+    // log.log(p);
+    // log.log('================== POSITION UPDATED ==================\n');
+    //
     exitPosition(pos);
   }
 }
@@ -188,9 +188,9 @@ async function processOrders (o)
 
   if (order.ordStatus == 'Canceled' || order.ordStatus == 'Filled') {
 
-    log.info(`================== ORDER ${order.ordStatus} ===============`);
-    log.log('order:', order);
-    log.info(`================== ORDER ${order.ordStatus} ===============\n`);
+    // log.info(`================== ORDER ${order.ordStatus} ===============`);
+    // log.log('order:', order);
+    // log.info(`================== ORDER ${order.ordStatus} ===============\n`);
 
     updateJob(job.id, {state: STATES.CLEANUP});
   }
@@ -339,14 +339,14 @@ async function createStopLoss (job)
     sl = await orders.amend(sl.clOrdID, {orderQty: -job.qty, stopPx: px});
   }
 
-  log.info('================== CREATING STOP LOSS ===============');
-  log.log('Job px:', job.px);
-  log.log('Job qty:', job.qty);
-  log.log('SL %:', cfg.executor.sl);
-  log.log('Px:', px);
-  log.info('=====================================================\n');
-  log.log(sl);
-  log.info('================== CREATING STOP LOSS ==============\n');
+  // log.info('================== CREATING STOP LOSS ===============');
+  // log.log('Job px:', job.px);
+  // log.log('Job qty:', job.qty);
+  // log.log('SL %:', cfg.executor.sl);
+  // log.log('Px:', px);
+  // log.info('=====================================================\n');
+  // log.log(sl);
+  // log.info('================== CREATING STOP LOSS ==============\n');
 
   return sl.ordStatus == 'New';
 }
@@ -357,10 +357,10 @@ async function createTakeProfit (job)
   const root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
 
 
-  log.info('================== CREATING TAKE PROFIT ===============');
-  log.log('Job:', job);
-  log.log('TP PX:', px);
-  log.info('================== CREATING TAKE PROFIT ===============\n');
+  // log.info('================== CREATING TAKE PROFIT ===============');
+  // log.log('Job:', job);
+  // log.log('TP PX:', px);
+  // log.info('================== CREATING TAKE PROFIT ===============\n');
 
 
   let tp = orders.find(root);
