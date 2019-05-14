@@ -79,13 +79,7 @@ async function onPositionUpdated (arr)
 
   const exit = p.currentQty && p.currentQty != 0 && p.currentQty != pos.currentQty;
   pos = {...pos, ...p};
-  if (exit) {
-    log.log('================== POSITION UPDATED ==================');
-    log.log(p);
-    log.log('================== POSITION UPDATED ==================\n');
-
-    exitPosition(pos);
-  }
+  if (exit) { exitPosition(pos); }
 }
 
 async function exitPosition (pos)
