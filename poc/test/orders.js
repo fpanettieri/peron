@@ -7,6 +7,8 @@ const orders = require('../lib/orders');
 const logger = require('../lib/logger');
 const log = new logger('test/orders');
 
+const HASH_LEN = 10;
+
 let order = null;
 
 function genId ()
