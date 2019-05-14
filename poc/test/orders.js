@@ -182,6 +182,15 @@ async function amend_respawn ()
   assert(order.ordStatus == 'Duplicated');
 }
 
+async function stop ()
+{
+  const id = genId();
+  order = await orders.stop(id, 'XBTUSD', 1, 6000);
+  assert(order.ordStatus == 'New');
+
+  log.log(order);
+}
+
 (async () => {
   try {
     // await crud();
@@ -192,12 +201,13 @@ async function amend_respawn ()
     // await cancel_non_existent();
     // await amend();
     // await double_amend();
-    await amend_slip();
+    // await amend_slip();
     // await amend_canceled();
     // await amend_non_existent();
     // await cancel_filled();
     // await amend_filled();
     // await amend_respawn();
+    await stop();
 
   } catch(err) {
     log.error(err);

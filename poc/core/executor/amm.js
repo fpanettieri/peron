@@ -93,16 +93,6 @@ async function exitPosition (pos)
   if (!pos || pos.currentQty == 0) { return; }
   const t = (new Date(pos.openingTimestamp)).getTime();
 
-  // log.log('==== Position Updated', p);
-
-  let found = false;
-
-  // FIXME: reimplement using a more elegant solution
-  // if an order exists,
-  //   check if the qty needs to be ammended
-  // else
-  //   create a new exit
-
   for (let i = 0; i < jobs.length; i++) {
     const j = jobs[i];
     if (j.state == STATES.PRE_EXIT || j.state == STATES.EXIT) {
@@ -343,8 +333,10 @@ async function createStopLoss (job)
 
 
   log.info('================== CREATING STOP LOSS ===============');
-  log.log('Job:', job);
-  log.log('SL PX:', px);
+  log.log('Job px:', job.px);
+  log.log('Job qty:', job.qty);
+  log.log('SL %:', cfg.executor.sl);
+  log.log('Px:', px);
   log.info('================== CREATING STOP LOSS ==============\n');
 
 
