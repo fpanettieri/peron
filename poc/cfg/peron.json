@@ -38,7 +38,7 @@
   },
 
   "trader": {
-    "positions": 1,
+    "positions": 50,
     "size": 0.01
   },
 
