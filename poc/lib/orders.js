@@ -83,7 +83,8 @@ async function stop (id, sym, qty, px)
 {
   return await create(id, sym, qty, {
     ordType: 'Stop',
-    execInst: 'ReduceOnly',
+    timeInForce: 'ImmediateOrCancel',
+    execInst: 'Close,LastPrice',
     stopPx: px
   });
 }
