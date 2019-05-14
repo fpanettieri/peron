@@ -186,8 +186,12 @@ async function amend_respawn ()
 
 async function stop ()
 {
-  const id = genId();
-  order = await orders.stop(id, 'XBTUSD', -1, 6000);
+  let market = await orders.market(genId(), 'XBTUSD', 1);
+  assert(market.ordStatus == 'Filled');
+
+  log.log(market);
+
+  order = await orders.stop(genId(), 'XBTUSD', -1, 6000);
   assert(order.ordStatus == 'New');
 
   log.log(order);
