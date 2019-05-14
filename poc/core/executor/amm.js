@@ -356,19 +356,16 @@ async function createTakeProfit (job)
   const px = calcExitPrice(job);
   const root = `${PROFIT_PREFIX}${AG_PREFIX}${job.id}`;
 
-
-  log.info('================== CREATING TAKE PROFIT ===============');
-  log.log('Job:', job);
-  log.log('TP PX:', px);
-  log.info('================== CREATING TAKE PROFIT ===============\n');
-
-
   let tp = orders.find(root);
   if (!tp) {
     tp = await orders.profit(`${root}-${genId()}`, job.sym, -job.qty, px);
   } else {
     tp = await orders.amend(tp.clOrdID, {orderQty: -job.qty, price: px});
   }
+
+  log.info('================== CREATING TAKE PROFIT ===============');
+  log.log(tp);
+  log.info('================== CREATING TAKE PROFIT ===============\n');
 
   return tp.ordStatus == 'New';
 }
