@@ -186,15 +186,20 @@ async function amend_respawn ()
 
 async function stop ()
 {
-  let market = await orders.market(genId(), 'XBTUSD', 1);
-  assert(market.ordStatus == 'Filled');
+  order = await orders.market(genId(), 'XBTUSD', 1);
+  assert(order.ordStatus == 'Filled');
+  log.log(order);
 
-  log.log(market);
-
-  order = await orders.stop(genId(), 'XBTUSD', -1, 6000);
+  const id = genId();
+  order = await orders.stop(id, 'XBTUSD', -1, 6000);
   assert(order.ordStatus == 'New');
 
+  order = await orders.cancel(id);
+  assert(order.ordStatus == 'Canceled');
   log.log(order);
+
+  order = await orders.market(genId(), 'XBTUSD', -1);
+  assert(order.ordStatus == 'Filled');
 }
 
 (async () => {
