@@ -184,22 +184,41 @@ async function amend_respawn ()
   assert(order.ordStatus == 'Duplicated');
 }
 
-async function stop ()
+async function stop_long ()
 {
   order = await orders.market(genId(), 'XBTUSD', 1);
   assert(order.ordStatus == 'Filled');
-  log.log(order);
 
   const id = genId();
-  order = await orders.stop(id, 'XBTUSD', -1, 6000);
+  order = await orders.stop(id, 'XBTUSD', -1, safePrice(order.price * 0.9));
   assert(order.ordStatus == 'New');
 
   order = await orders.cancel(id);
   assert(order.ordStatus == 'Canceled');
-  log.log(order);
 
   order = await orders.market(genId(), 'XBTUSD', -1);
   assert(order.ordStatus == 'Filled');
+}
+
+async function stop_short ()
+{
+  order = await orders.market(genId(), 'XBTUSD', -1);
+  assert(order.ordStatus == 'Filled');
+  
+  const id = genId();
+  order = await orders.stop(id, 'XBTUSD', 1, safePrice(order.price * 1.1));
+  assert(order.ordStatus == 'New');
+
+  order = await orders.cancel(id);
+  assert(order.ordStatus == 'Canceled');
+
+  order = await orders.market(genId(), 'XBTUSD', 1);
+  assert(order.ordStatus == 'Filled');
+}
+
+function safePrice (px)
+{
+  return Math.round(px * 2) / 2;
 }
 
 (async () => {
@@ -218,7 +237,8 @@ async function stop ()
     // await cancel_filled();
     // await amend_filled();
     // await amend_respawn();
-    await stop();
+    await stop_long();
+    await stop_short();
 
   } catch(err) {
     log.error(err);
