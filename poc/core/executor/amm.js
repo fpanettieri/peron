@@ -334,8 +334,14 @@ async function createStopLoss (job)
 
   let sl = orders.find(root);
   if (!sl) {
+    log.log('order not found, creating SL');
+    log.log('orders.stop(',`${root}-${genId()}`, job.sym, -job.qty, px, ')');
+
     sl = await orders.stop(`${root}-${genId()}`, job.sym, -job.qty, px);
   } else {
+    log.log('order found, ammending SL');
+    log.log('orders.amend(', sl.clOrdID, '{orderQty:', -job.qty, 'stopPx:', px, '}');
+
     sl = await orders.amend(sl.clOrdID, {orderQty: -job.qty, stopPx: px});
   }
 
