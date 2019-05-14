@@ -290,7 +290,6 @@ async function processExit (job)
 
   const price = calcExitPrice(job);
   if (order.price == price){ return; }
-  log.log('==> PRICE CHANGED!\n');
 
   let amended = await orders.amend(order.clOrdID, {price: price});
   amended = await preventSlippage(amended, orders.profit);
@@ -355,21 +354,9 @@ function handleOverload (order)
 
 function calcExitPrice (job)
 {
-  log.log('=> Calculating exit price');
-
   let price = safePrice(job.px * (1 + Math.sign(job.qty) * cfg.executor.sl));
-  log.log('===> -SL%', price);
-
-  if (candle) {
-    price = safePrice(candle.bb_ma);
-    log.log('===> CANDLE MA', price);
-  } else {
-    log.log('===> NO CANDLE', price);
-  }
-
+  if (candle) { price = safePrice(candle.bb_ma); }
   price = job.qty > 0 ? Math.max(price, quote.askPrice) : Math.min(price, quote.bidPrice);
-  log.log('===> SNAPPED', price);
-
   return price;
 }
 
