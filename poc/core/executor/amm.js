@@ -354,9 +354,11 @@ function handleOverload (order)
 
 function calcExitPrice (job)
 {
+  const is_long = job.qty > 0;
+
   let price = safePrice(job.px * (1 + Math.sign(job.qty) * cfg.executor.sl));
-  if (candle) { price = safePrice(candle.bb_ma); }
-  price = job.qty > 0 ? Math.max(price, quote.askPrice) : Math.min(price, quote.bidPrice);
+  if (candle) { price = preventBounce(safePrice(candle.bb_ma), is_long); }
+  price = is_long ? Math.max(price, quote.askPrice) : Math.min(price, quote.bidPrice);
   return price;
 }
 
@@ -387,6 +389,11 @@ function getTimeout ()
 function safePrice (px)
 {
   return Math.round(px * 2) / 2;
+}
+
+function preventBounce (px, is_long)
+{
+  return px + (is_long ? -1 : 1) * cfg.executor.bounce;
 }
 
 module.exports = { plug: plug };

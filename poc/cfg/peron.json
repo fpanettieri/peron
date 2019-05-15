@@ -26,7 +26,7 @@
   },
 
   "chandler": {
-    "offset": -10000
+    "offset": -2000
   },
 
   "analyst": {
@@ -38,13 +38,14 @@
   },
 
   "trader": {
-    "positions": 1,
+    "positions": 50,
     "size": 0.02
   },
 
   "executor": {
     "speed": 200,
     "expiration": 600000,
-    "sl": 0.01
+    "sl": 0.02,
+    "bounce": 0.5
   }
 }
