@@ -10,7 +10,7 @@ const log = new logger('core/adapter');
 
 const DMS_INTERVAL = 5 * 1000;
 const DMS_TIMEOUT = 60 * 1000;
-const MIN_RATE_LIMIT = 5;
+const MIN_RATE_LIMIT = 20;
 
 let bb = null;
 let socket = null;

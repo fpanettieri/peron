@@ -33,19 +33,19 @@
     "history": "20",
     "bb": {
       "periods": 20,
-      "mult": 0.5
+      "mult": 0.25
     }
   },
 
   "trader": {
     "positions": 50,
-    "size": 0.02
+    "size": 0.04
   },
 
   "executor": {
     "speed": 200,
     "expiration": 600000,
-    "sl": 0.02,
+    "sl": 0.01,
     "bounce": 0.5
   }
 }
