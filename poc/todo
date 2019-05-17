@@ -28,11 +28,6 @@
   . configure ag instances
   . show performance
 
-. Bugfixing
-  . Chandler managed to emit 2 candles somehow, triggering a 'this should never happen'
-  . Auditor  said execTime was 6002.
-    . Update: This could be caused by event nesting. The CandleClose event cascades other events, making the auditor use the old timestamp
-
 . Adapter
   . Handle multi msgs
 
@@ -170,6 +165,12 @@
   - Dynamic load and plug modules
   - Chain events config
   - RPC - WS module could be used to receive and broadcast events between different instances
+
+- Bugfixing
+  - Chandler managed to emit 2 candles somehow, triggering a 'this should never happen'
+  - Auditor  said execTime was 6002.
+    - Update: This could be caused by event nesting. The CandleClose event cascades other events, making the auditor use the old timestamp
+
 
 ===============
   IGNORE
