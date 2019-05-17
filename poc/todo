@@ -40,9 +40,6 @@
   . 'Magic' SL. After an open position, if the price breaks out again, try to close at a good price?
   . Check if we need to do anything on 'CloseX' msgs
 
-. Broker
-  . Find best interval config to update orders (1~3 secs?)
-
 . Make paths dynamic based on the proj root
   . const logger = require('../../lib/logger');
 
@@ -171,6 +168,8 @@
   - Auditor  said execTime was 6002.
     - Update: This could be caused by event nesting. The CandleClose event cascades other events, making the auditor use the old timestamp
 
+- Broker
+  - Find best interval config to update orders (1~3 secs?)
 
 ===============
   IGNORE
