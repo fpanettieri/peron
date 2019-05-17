@@ -33,7 +33,7 @@
     "history": "20",
     "bb": {
       "periods": 20,
-      "mult": 0.25
+      "mult": 0.5
     }
   },
 

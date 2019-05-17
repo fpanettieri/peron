@@ -42,6 +42,14 @@ async function api (opts, params)
     rsp = await https.send(`${host}${url}`, body, {method: opts.method, headers: headers});
     rsp.body = JSON.parse(rsp.body);
   } catch (err) {
+    log.error('========== WHAT A HORRIBLE NIGHT TO HAVE A CURSE ==============');
+    log.log('opts', opts);
+    log.log('params', params);
+    log.log('-----------------------------------------------------------------');
+    log.log(`${host}${url}`, body, {method: opts.method, headers: headers});
+    log.log('-----------------------------------------------------------------');
+    log.error('rsp', rsp);
+    log.log('-----------------------------------------------------------------');
     log.fatal(err);
   }
 
