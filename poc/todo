@@ -1,6 +1,14 @@
 ===============
   TODO
 ===============
+
+
+
+
+
+===============
+  Backlog
+===============
 . Auditor (Tracks the bot performance)
   . Improve event queueing / nesting using setImmediate / nextTick?
   . Listens to 2 events
@@ -25,9 +33,6 @@
   . Auditor  said execTime was 6002.
     . Update: This could be caused by event nesting. The CandleClose event cascades other events, making the auditor use the old timestamp
 
-===============
-  Backlog
-===============
 . Adapter
   . Handle multi msgs
 
