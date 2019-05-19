@@ -4,7 +4,7 @@ const cfg = require('../../cfg/peron');
 const orders = require('../../lib/orders');
 const logger = require('../../lib/logger');
 
-const log = new logger('executor/amm');
+const log = new logger('executor/mr');
 
 const OVERLOAD_STEP = 1000;
 const SLIPPAGE_OFFSET = 100;
