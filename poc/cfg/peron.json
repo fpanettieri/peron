@@ -37,6 +37,10 @@
     }
   },
 
+  "brain": {
+    "skip": 0
+  },
+
   "trader": {
     "positions": 50,
     "size": 0.04
