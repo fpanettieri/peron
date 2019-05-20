@@ -11,10 +11,6 @@ from_year   = input(defval = 2019, title = "From Year", minval = 2017)
 from_month  = input(defval = 5, title = "From Month", minval = 1, maxval = 12)
 from_day    = input(defval = 10, title = "From Day", minval = 1, maxval = 31)
 
-to_year     = input(defval = 2019, title = "To Year", minval = 2017)
-to_month    = input(defval = 5, title = "To Month", minval = 1, maxval = 12)
-to_day      = input(defval = 11, title = "To Day", minval = 1, maxval = 31)
-
 // === INPUT BB ===
 bb_mul  = input(2.0, minval = 0.001, maxval = 50)
 ntz_mul = input(0.7, minval = 0.001, maxval = 50)
@@ -23,7 +19,7 @@ sl      = input(1.0, title='Stop Loss %', type=float) / 100
 // === PARAMS TIME ===
 basis     = sma(src, period)
 start     = timestamp(from_year, from_month, from_day, 00, 00)
-finish    = timestamp(to_year, to_month, to_day, 23, 59)
+finish    = timestamp(from_year, from_month, from_day, 23, 59)
 window()  => time >= start and time <= finish ? true : false
 
 // === PARAMS BB ===
