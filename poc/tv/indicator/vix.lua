@@ -10,5 +10,5 @@ vix_top = (high - lowest(close, vix_prd)) / (lowest(close, vix_prd)) * 100
 vix_bot = (highest(close, vix_prd) - low) / (highest(close, vix_prd)) * 100
 
 // === PLOT ===
-plot(vix_top, color=#F1453D)
-plot(vix_bot, color=#50AD55)
+plot(vix_top, color=#F1453D, linewidth=2, style=area, transp=30)
+plot(vix_bot, color=#50AD55, linewidth=2, style=area, transp=30)
