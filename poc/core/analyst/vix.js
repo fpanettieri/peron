@@ -66,14 +66,8 @@ function analyze (o)
   const vix_min = Math.min(...vix_cs);
   const vix_max = Math.max(...vix_cs);
 
-  log.log('vix_cs', vix_cs);
-  log.log('vix_min', vix_min);
-  log.log('vix_max', vix_max);
-
   o.vix_top = (o.h - vix_min) / vix_min * 100;
   o.vix_bot = (vix_max - o.l) / vix_max * 100;
-
-  log.log(o, '\n\n');
 }
 
 module.exports = { plug: plug };
