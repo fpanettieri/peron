@@ -27,7 +27,7 @@
   },
 
   "analyst": {
-    "history": "20",
+    "history": 20,
     "ema": 20,
     "vix": {
       "periods": 20,
