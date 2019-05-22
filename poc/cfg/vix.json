@@ -7,10 +7,8 @@
     "core/adapter",
     "core/archivist",
     "core/chandler",
-    "core/analyst",
-    "core/brain/mm",
-    "core/trader",
-    "core/executor/dummy"
+    "core/analyst/vix",
+    "core/brain/rnd"
   ],
 
   "backbone": {
@@ -31,9 +29,11 @@
 
   "analyst": {
     "history": "20",
-    "bb": {
+    "ema": 20,
+    "vix": {
       "periods": 20,
-      "mult": 0.5
+      "min_vol": 0.5,
+      "max_vol": 2
     }
   },
 
