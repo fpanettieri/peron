@@ -7,7 +7,8 @@
     "core/adapter",
     "core/archivist",
     "core/chandler",
-    "core/analyst/vix"
+    "core/analyst/vix",
+    "core/brain/vix"
   ],
 
   "backbone": {
