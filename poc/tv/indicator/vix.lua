@@ -1,5 +1,4 @@
 //@version=3
-
 study("VIX", overlay=false)
 
 // === INPUT GENERAL ===

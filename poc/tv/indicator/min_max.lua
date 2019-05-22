@@ -1,5 +1,4 @@
 //@version=3
-
 study("Min/Max", overlay=true)
 
 // === INPUT GENERAL ===
