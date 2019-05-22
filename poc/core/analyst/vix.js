@@ -47,21 +47,33 @@ function onCandleClosed (c)
 
 function analyze (o)
 {
-  const ema_periods = cfg.analyst.ema;
-  if (ohlcs.length < ema_periods) { return; }
+  const ema_prd = cfg.analyst.ema;
+  const vix_prd = cfg.analyst.vix.periods;
+  if (ohlcs.length < Math.max(ema_prd, vix_prd)) { return; }
 
   // Moving Average
   o.ma = o.c;
-  for (let i = 0; i < ema_periods - 1; i++) { o.ma += ohlcs[ohlcs.length - i - 1].c; }
-  o.ma /= ema_periods;
+  for (let i = 0; i < ema_prd - 1; i++) { o.ma += ohlcs[ohlcs.length - i - 1].c; }
+  o.ma /= ema_prd;
 
   // Exponential Moving Average
-  const smooth = 2 / (ema_periods + 1);
-  const prev = ohlcs[ohlcs.length - 1].ema;
-  o.ema = prev ? (o.c - prev) * smooth + prev : o.ma;
+  const ema_smooth = 2 / (ema_prd + 1);
+  const ema_prev = ohlcs[ohlcs.length - 1].ema;
+  o.ema = ema_prev ? (o.c - ema_prev) * ema_smooth + ema_prev : o.ma;
 
   // Vix
-  log.log(o, '\n\n\n');
+  const vix_cs = ohlcs.slice(-vix_prd).map(i => i.c);
+  const vix_min = Math.min(...vix_cs);
+  const vix_max = Math.max(...vix_cs);
+
+  log.log('vix_cs', vix_cs);
+  log.log('vix_min', vix_min);
+  log.log('vix_max', vix_max);
+
+  o.vix_top = (o.h - vix_min) / vix_min * 100;
+  o.vix_bot = (vix_max - o.l) / vix_max * 100;
+
+  log.log(o, '\n\n');
 }
 
 module.exports = { plug: plug };
