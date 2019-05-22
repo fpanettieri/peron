@@ -7,8 +7,6 @@ const log = new logger('brain/rnd');
 
 let bb = null;
 
-let skip = cfg.brain.skip;
-
 function plug (_bb)
 {
   bb = _bb;
