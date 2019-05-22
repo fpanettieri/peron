@@ -7,7 +7,7 @@
     "core/adapter",
     "core/archivist",
     "core/chandler",
-    "core/analyst/bb",
+    "core/analyst",
     "core/brain/mm",
     "core/trader",
     "core/executor/dummy"
