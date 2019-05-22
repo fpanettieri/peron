@@ -50,16 +50,19 @@ function analyze (o)
   const ema_periods = cfg.analyst.ema;
   if (ohlcs.length < ema_periods) { return; }
 
-  log.log('analyzing:', o);
-  log.log('ema_periods', ema_periods);
-
   o.ma = o.c;
   for (let i = 0; i < ema_periods - 1; i++) { o.ma += ohlcs[ohlcs.length - i - 1].c; }
   o.ma /= ema_periods;
-  log.log('ma', o.ma);
 
-  const ema_mul = 2 / (ema_periods + 1);
-  log.log('EMA Mul', ema_mul);
+  const mul = 2 / (ema_periods + 1);
+  const prev_ema = ohlcs[ohlcs.length - 1].ema;
+  log.log('Prev EMA', prev_ema);
+
+  o.ema = prev_ema ? (o.c - prev_ema) * mul + prev_ema : o.c;
+
+  log.log(o);
+
+  log.log('\n\n\n');
 }
 
 module.exports = { plug: plug };

@@ -23,11 +23,11 @@
   },
 
   "chandler": {
-    "offset": -2000
+    "offset": 0
   },
 
   "analyst": {
-    "history": "20",
+    "history": "200",
     "ema": 10,
     "vix": {
       "periods": 20,
