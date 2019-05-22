@@ -3,7 +3,7 @@
 const cfg = require('../../cfg/peron');
 
 const logger = require('../../lib/logger');
-const log = new logger('brain/greedy');
+const log = new logger('brain/mm');
 
 let bb = null;
 let previous = null;
@@ -27,7 +27,7 @@ function onCandleAnalyzed (c)
   if (c.c > c.bb_ma) {
     bb.emit('OpenShort', c);
   }
-  
+
   if (c.c < c.bb_ma) {
     bb.emit('OpenLong', c);
   }
