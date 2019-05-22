@@ -1,8 +1,8 @@
 'use strict';
 
-const cfg = require('../cfg/peron');
-const utils = require('../lib/utils');
-const logger = require('../lib/logger');
+const cfg = require('../../cfg/peron');
+const utils = require('../../lib/utils');
+const logger = require('../../lib/logger');
 const log = new logger('analyst/vix');
 
 const CANDLE_STEP = utils.intervalToMs(cfg.timeframe);
