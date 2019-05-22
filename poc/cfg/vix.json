@@ -1,5 +1,5 @@
 {
-  "testnet": true,
+  "testnet": false,
   "timeframe": "1m",
   "symbol": "XBTUSD",
 
@@ -28,7 +28,7 @@
 
   "analyst": {
     "history": "20",
-    "ema": 20,
+    "ema": 10,
     "vix": {
       "periods": 20,
       "min_vol": 0.5,

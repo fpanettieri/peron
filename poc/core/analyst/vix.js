@@ -47,19 +47,18 @@ function onCandleClosed (c)
 
 function analyze (o)
 {
+  const ema_periods = cfg.analyst.ema;
+  if (ohlcs.length < ema_periods) { return; }
+
   log.log('analyzing:', o);
+  log.log('ema_periods', ema_periods);
 
-  const periods = cfg.analyst.bb.periods;
-  log.log('periods', periods);
+  o.ma = o.c;
+  for (let i = 0; i < ema_periods - 1; i++) { o.ma += ohlcs[ohlcs.length - i - 1].c; }
+  o.ma /= ema_periods;
+  log.log('ma', o.ma);
 
-  if (ohlcs.length < periods) { return; }
-
-  o.sma = o.c;
-  for (let i = 0; i < periods - 1; i++) { o.sma += ohlcs[ohlcs.length - i - 1].c; }
-  o.sma /= periods;
-  log.log('sma', o.sma);
-
-  const ema_mul = 2 / (periods + 1);
+  const ema_mul = 2 / (ema_periods + 1);
   log.log('EMA Mul', ema_mul);
 }
 
