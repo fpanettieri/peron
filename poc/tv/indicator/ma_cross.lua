@@ -9,7 +9,7 @@ smooth = input(200, minval=1, title="Cross Smooth")
 ma = ema(close, period)
 cross = crossunder(close, ma) or crossover(close, ma)
 since_cross = barssince(cross)
-smooth_cross = ema(since_cross, smooth)
+smooth_cross = sma(since_cross, smooth)
 
 // === PLOT ===
 plot(since_cross, color=green, linewidth=2, title="Since Cross")
