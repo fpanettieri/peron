@@ -48,7 +48,7 @@ function onCandleClosed (c)
 function analyze (o)
 {
   const ema_prd = cfg.analyst.ema;
-  const vix_prd = cfg.analyst.vix.periods;
+  const vix_prd = cfg.analyst.vix;
   if (ohlcs.length < Math.max(ema_prd, vix_prd)) { return; }
 
   // Moving Average

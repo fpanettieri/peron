@@ -5,6 +5,9 @@ const cfg = require('../../cfg/peron');
 const logger = require('../../lib/logger');
 const log = new logger('brain/vix');
 
+const min_vol = cfg.brain.min_vol;
+const max_vol = cfg.brain.max_vol;
+
 let bb = null;
 
 function plug (_bb)
@@ -15,9 +18,11 @@ function plug (_bb)
 
 function onCandleAnalyzed (c)
 {
-  if (Math.random() >= 0.5) {
+  if (c.c > c.ema && c.vix_top >= min_vol and c.vix_top < max_vol) {
     bb.emit('OpenShort', c);
-  } else {
+  }
+
+  if (c.c < c.ema && c.vix_bot >= min_vol && c.vix_bot < max_vol) {
     bb.emit('OpenLong', c);
   }
 }
