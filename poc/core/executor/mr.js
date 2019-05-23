@@ -251,13 +251,13 @@ async function processEntry (job)
   let amended = null;
 
   if (job.qty > 0) {
-    if (price > candle.bb_ma) {
+    if (price > candle[cfg.executor.target]) {
       await orders.cancel(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
       amended = await orders.amend(order.clOrdID, {price: price});
     }
   } else {
-    if (price < candle.bb_ma) {
+    if (price < candle[cfg.executor.target]) {
       await orders.cancel(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
       amended = await orders.amend(order.clOrdID, {price: price});
@@ -357,7 +357,7 @@ function calcExitPrice (job)
   const is_long = job.qty > 0;
 
   let price = safePrice(job.px * (1 + Math.sign(job.qty) * cfg.executor.sl));
-  if (candle) { price = preventBounce(safePrice(candle.bb_ma), is_long); }
+  if (candle) { price = preventBounce(safePrice(candle[cfg.executor.target]), is_long); }
   price = is_long ? Math.max(price, quote.askPrice) : Math.min(price, quote.bidPrice);
   return price;
 }
