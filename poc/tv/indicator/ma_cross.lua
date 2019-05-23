@@ -9,8 +9,8 @@ smooth = input(200, minval=1, title="Cross Smooth")
 ma = ema(close, period)
 cross = crossunder(close, ma) or crossover(close, ma)
 since_cross = barssince(cross)
-smooth_cross = sma(since_cross, smooth)
+smooth_cross = ema(since_cross, smooth)
 
 // === PLOT ===
-plot(since_cross, color=green)
-plot(smooth_cross, color=white)
+plot(since_cross, color=green, linewidth=2, title="Since Cross")
+plot(smooth_cross, color=white, linewidth=2, title="Avg Time")
