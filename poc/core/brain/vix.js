@@ -18,7 +18,7 @@ function plug (_bb)
 
 function onCandleAnalyzed (c)
 {
-  if (c.c > c.ema && c.vix_top >= min_vol and c.vix_top < max_vol) {
+  if (c.c > c.ema && c.vix_top >= min_vol && c.vix_top < max_vol) {
     bb.emit('OpenShort', c);
   }
 
