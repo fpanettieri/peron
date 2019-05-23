@@ -49,15 +49,17 @@ function analyze (o)
 {
   if (ohlcs.length < cfg.analyst.bb.periods) { return; }
 
-  // TODO: refactor using ES6, copy analyst/vix style
+  // Moving Average
   o.bb_ma = o.c;
   for (let i = 0; i < cfg.analyst.bb.periods - 1; i++) { o.bb_ma += ohlcs[ohlcs.length - i - 1].c; }
   o.bb_ma /= cfg.analyst.bb.periods;
 
+  // Std Dev
   o.bb_dev = Math.pow(o.c - o.bb_ma, 2);
   for (let i = 0; i < cfg.analyst.bb.periods - 1; i++) { o.bb_dev += Math.pow(ohlcs[ohlcs.length - i - 1].c - o.bb_ma, 2); }
   o.bb_dev = Math.sqrt(o.bb_dev / cfg.analyst.bb.periods);
 
+  // Bollinger Bands
   o.bb_lower = o.bb_ma - o.bb_dev * cfg.analyst.bb.mult;
   o.bb_upper = o.bb_ma + o.bb_dev * cfg.analyst.bb.mult;
 }
