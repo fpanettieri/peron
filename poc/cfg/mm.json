@@ -50,6 +50,7 @@
     "speed": 200,
     "expiration": 600000,
     "sl": 0.01,
-    "bounce": 0.5
+    "bounce": 0.5,
+    "target": "bb_ma"
   }
 }
