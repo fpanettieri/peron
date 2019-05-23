@@ -357,10 +357,10 @@ function calcEntryPrice (is_long)
 
   if (is_long) {
     price = quote.bidPrice;
-    delta = -cfg.executor.sl;
+    delta = -cfg.executor.entry;
   } else {
     price = quote.askPrice;
-    delta = cfg.executor.sl;
+    delta = cfg.executor.entry;
   }
 
   return safePrice(price * (1 + delta));

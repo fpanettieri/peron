@@ -48,6 +48,7 @@
   "executor": {
     "speed": 200,
     "expiration": 300000,
+    "entry": 0.005,
     "sl": 0.01,
     "bounce": 0.5,
     "target": "ema"
