@@ -52,9 +52,8 @@ function analyze (o)
   if (ohlcs.length < Math.max(ema_prd, vix_prd)) { return; }
 
   // Moving Average
-  o.ma = o.c;
-  for (let i = 0; i < ema_prd - 1; i++) { o.ma += ohlcs[ohlcs.length - i - 1].c; }
-  o.ma /= ema_prd;
+  const ma_cs = ohlcs.slice(-ema_prd + 1);
+  o.ma = ma_cs.reduce((acc, i) => acc + i.c, o.c) / ema_prd;
 
   // Exponential Moving Average
   const ema_smooth = 2 / (ema_prd + 1);
@@ -62,12 +61,14 @@ function analyze (o)
   o.ema = ema_prev ? (o.c - ema_prev) * ema_smooth + ema_prev : o.ma;
 
   // Vix
-  const vix_cs = ohlcs.slice(-vix_prd).map(i => i.c);
+  const vix_cs = (ohlcs.slice(-vix_prd).map(i => i.c));
   const vix_min = Math.min(...vix_cs);
   const vix_max = Math.max(...vix_cs);
 
   o.vix_top = (o.h - vix_min) / vix_min * 100;
   o.vix_bot = (vix_max - o.l) / vix_max * 100;
+
+  log.log(o, '\n\n');
 }
 
 module.exports = { plug: plug };

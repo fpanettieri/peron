@@ -49,6 +49,7 @@ function analyze (o)
 {
   if (ohlcs.length < cfg.analyst.bb.periods) { return; }
 
+  // TODO: refactor using ES6, copy analyst/vix style
   o.bb_ma = o.c;
   for (let i = 0; i < cfg.analyst.bb.periods - 1; i++) { o.bb_ma += ohlcs[ohlcs.length - i - 1].c; }
   o.bb_ma /= cfg.analyst.bb.periods;
