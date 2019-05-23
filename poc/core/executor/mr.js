@@ -94,9 +94,7 @@ async function exitPosition (pos)
     }
   }
 
-  // if (!found) {
   createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
-  // }
 }
 
 function onOrderSynced (arr)
@@ -200,7 +198,7 @@ async function processPreEntry (job)
 {
   if (!quote) { return; }
 
-  const price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
+  const price = calcEntryPrice(job.qty > 0);
 
   const root = `${LIMIT_PREFIX}${AG_PREFIX}${job.id}`;
   const order = await orders.limit(`${root}-${genId()}`, job.sym, job.qty, price);
@@ -350,6 +348,22 @@ function handleOverload (order)
   if (!order || order.ordStatus !== 'Overloaded') { return false; }
   overloaded = OVERLOAD_STEP;
   return true;
+}
+
+function calcEntryPrice (is_long)
+{
+  let price = 0;
+  let delta = 0;
+
+  if (is_long) {
+    price = quote.bidPrice;
+    delta = -cfg.executor.sl;
+  } else {
+    price = quote.askPrice;
+    delta = cfg.executor.sl;
+  }
+
+  return safePrice(price * (1 + delta));
 }
 
 function calcExitPrice (job)
