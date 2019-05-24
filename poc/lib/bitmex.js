@@ -7,8 +7,6 @@ const Logger = require('./logger');
 const log = new Logger('lib/bitmex');
 
 const AUTH_EXPIRES = 30;
-const WARN_RATE_LIMIT = 100;
-const MIN_RATE_LIMIT = 20;
 
 async function api (opts, params)
 {
@@ -53,9 +51,7 @@ async function api (opts, params)
     log.fatal(err);
   }
 
-  const limit = rsp.headers['x-ratelimit-remaining'];
-  if(limit < WARN_RATE_LIMIT) { log.warn('rate-limit:', limit); }
-  if(limit < MIN_RATE_LIMIT) { log.fatal('rate-limit exceeded'); }
+  rsp.limit = rsp.headers['x-ratelimit-remaining'];
 
   return rsp;
 }

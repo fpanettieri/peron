@@ -46,7 +46,7 @@
   },
 
   "executor": {
-    "speed": 200,
+    "speed": 50,
     "expiration": 300000,
     "entry": 0.005,
     "sl": 0.01,
