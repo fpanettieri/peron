@@ -10,7 +10,7 @@
     "core/analyst/vix",
     "core/brain/vix",
     "core/trader",
-    "core/executor/dummy"
+    "core/executor/mr"
   ],
 
   "backbone": {
@@ -26,7 +26,7 @@
   },
 
   "chandler": {
-    "offset": 0
+    "offset": -2970
   },
 
   "analyst": {
