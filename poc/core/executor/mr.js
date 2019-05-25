@@ -6,7 +6,11 @@ const logger = require('../../lib/logger');
 
 const log = new logger('executor/mr');
 
+const WARN_RATE_LIMIT = 20;
+
+const RATE_LIMIT_STEP = 5000;
 const OVERLOAD_STEP = 1000;
+
 const SLIPPAGE_OFFSET = 100;
 
 const HASH_LEN = 10;
@@ -203,18 +207,11 @@ async function processPreEntry (job)
   const root = `${LIMIT_PREFIX}${AG_PREFIX}${job.id}`;
   const order = await orders.limit(`${root}-${genId()}`, job.sym, job.qty, price);
   if (!order) { log.fatal(`processPreEntry -> limit order not found! ${root}`, job); }
+  handleOverload(order);
 
   switch (order.ordStatus) {
     case 'New': {
       updateJob(job.id, {state: STATES.ENTRY});
-    } break;
-
-    case 'Slipped': {
-      // wait for next frame
-    } break;
-
-    case 'Overloaded': {
-      handleOverload(order);
     } break;
 
     case 'Canceled':
@@ -325,6 +322,7 @@ async function createStopLoss (job)
     sl = await orders.amend(sl.clOrdID, {orderQty: -job.qty, stopPx: px});
   }
 
+  handleOverload(sl);
   return sl.ordStatus == 'New';
 }
 
@@ -340,14 +338,21 @@ async function createTakeProfit (job)
     tp = await orders.amend(tp.clOrdID, {orderQty: -job.qty, price: px});
   }
 
+  handleOverload(tp);
   return tp.ordStatus == 'New';
 }
 
 function handleOverload (order)
 {
-  if (!order || order.ordStatus !== 'Overloaded') { return false; }
-  overloaded = OVERLOAD_STEP;
-  return true;
+  if (!order) { return; }
+
+  if (order.ordStatus == 'Overloaded') {
+    overloaded = OVERLOAD_STEP;
+  }
+
+  if (order.ratelimit < WARN_RATE_LIMIT) {
+    overloaded = RATE_LIMIT_STEP;
+  }
 }
 
 function calcEntryPrice (is_long)

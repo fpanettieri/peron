@@ -31,6 +31,7 @@ async function create (id, sym, qty, params)
 
   const rsp = await bitmex.api(options, _params);
   let order = rsp.body;
+  order.ratelimit = rsp.ratelimit;
 
   if (rsp.status.code == 200){
     if (order.ordStatus == 'New') {
@@ -97,6 +98,7 @@ async function amend (id, params)
 
   const rsp = await bitmex.api(options, _params);
   let order = rsp.body;
+  order.ratelimit = rsp.ratelimit;
 
   if (rsp.status.code == 200){
     if (order.ordStatus == 'New') {
@@ -149,6 +151,7 @@ async function cancel (id, reason)
     }
   }
 
+  order.ratelimit = rsp.ratelimit;
   return order;
 }
 
@@ -169,6 +172,7 @@ async function discard (id)
     log.fatal(rsp.error);
   }
 
+  order.ratelimit = rsp.ratelimit;
   return order;
 }
 
