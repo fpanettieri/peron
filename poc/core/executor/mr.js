@@ -6,9 +6,11 @@ const logger = require('../../lib/logger');
 
 const log = new logger('executor/mr');
 
+const CRITICAL_RATE_LIMIT = 5;
 const WARN_RATE_LIMIT = 20;
 
-const RATE_LIMIT_STEP = 5000;
+const CRITICAL_RATE_STEP = 5000;
+const WARN_RATE_STEP = 1000;
 const OVERLOAD_STEP = 1000;
 
 const SLIPPAGE_OFFSET = 100;
@@ -350,8 +352,11 @@ function handleOverload (order)
     overloaded = OVERLOAD_STEP;
   }
 
-  if (order.ratelimit < WARN_RATE_LIMIT) {
-    overloaded = RATE_LIMIT_STEP;
+  if (order.ratelimit < CRITICAL_RATE_LIMIT) {
+    overloaded = CRITICAL_RATE_STEP;
+
+  } else if (order.ratelimit < WARN_RATE_LIMIT) {
+    overloaded = WARN_RATE_STEP;
   }
 }
 

@@ -52,6 +52,7 @@ async function api (opts, params)
   }
 
   rsp.ratelimit = rsp.headers['x-ratelimit-remaining'];
+  log.warn('rate-limit:', rsp.ratelimit);
 
   return rsp;
 }
