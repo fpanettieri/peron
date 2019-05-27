@@ -154,6 +154,7 @@ async function run ()
   }
 
   if (overloaded) {
+    log.log('overloaded:', overloaded);
     overloaded = Math.max(0, overloaded - cfg.executor.speed);
   } else {
     for (let i = jobs.length - 1; i > -1; i--) { await process (jobs[i]); }
@@ -348,7 +349,7 @@ function handleOverload (order)
 {
   if (!order) { return; }
 
-  if (order.ordStatus == 'Overloaded') {
+  if (order.ordStatus && order.ordStatus == 'Overloaded') {
     overloaded = OVERLOAD_STEP;
   }
 
