@@ -353,7 +353,10 @@ function handleOverload (order)
     overloaded = OVERLOAD_STEP;
   }
 
-  if (order.ratelimit < CRITICAL_RATE_LIMIT) {
+  if (order.ratelimit < 1) {
+    log.fatal('rate-limit exceeded');
+
+  } else  if (order.ratelimit < CRITICAL_RATE_LIMIT) {
     overloaded = CRITICAL_RATE_STEP;
 
   } else if (order.ratelimit < WARN_RATE_LIMIT) {
