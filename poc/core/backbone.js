@@ -23,7 +23,7 @@ class Backbone extends EventEmitter
     if (this.queue.length > 1) { return; }
 
     while (this.queue.length > 0) {
-      if (cfg.backbone.verbose) { log.log(this.queue[0]); }
+      if (cfg.backbone.verbose) { log.log(...this.queue[0]); }
       super.emit.apply(this, this.queue[0]);
       this.queue.shift();
     }
