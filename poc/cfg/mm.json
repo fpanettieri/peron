@@ -21,7 +21,7 @@
     ],
     "emit": "ConnectSocket",
     "verbose": true,
-    "ignore": ["TradeOpened", "QuoteOpened"]
+    "ignore": ["TradeOpened", "QuoteOpened", "MarginUpdated", "PositionUpdated", "OrderUpdated"]
   },
 
   "archivist": {
