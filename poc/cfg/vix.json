@@ -1,7 +1,8 @@
 {
-  "testnet": false,
+  "testnet": true,
   "timeframe": "1m",
   "symbol": "XBTUSD",
+  "name": "peron",
 
   "modules": [
     "core/adapter",
@@ -18,7 +19,8 @@
       ["SocketConnected", "DownloadHistory"],
       ["HistoryDownloaded", "WatchMarket"]
     ],
-    "emit": "ConnectSocket"
+    "emit": "ConnectSocket",
+    "verbose": false
   },
 
   "archivist": {

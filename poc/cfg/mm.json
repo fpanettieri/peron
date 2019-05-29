@@ -2,6 +2,7 @@
   "testnet": true,
   "timeframe": "1m",
   "symbol": "XBTUSD",
+  "name": "mm",
 
   "modules": [
     "core/adapter",
