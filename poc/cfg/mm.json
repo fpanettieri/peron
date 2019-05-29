@@ -20,7 +20,8 @@
       ["HistoryDownloaded", "WatchMarket"]
     ],
     "emit": "ConnectSocket",
-    "verbose": true
+    "verbose": true,
+    "ignore": ["TradeOpened", "QuoteOpened"]
   },
 
   "archivist": {
