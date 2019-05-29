@@ -1,8 +1,13 @@
 ===============
   TODO
 ===============
-. Check if the service is running
-
+. Get service name and status
+. Start | stop the process.
+. Email me when the service crashes
+. Ratio of Margin / PnL
+. Chart PnL
+. List Orphan orders
+. Cancel orphan orders
 
 ===============
   Backlog
@@ -11,7 +16,6 @@
 . Create folder structure at the start, named as the timestamp. e.g.: peron/var/
 . Create a file used to store the the ratelimit and the timestamp on each request
 . Create a file to store the pnl?
-
 
 ===============
   DONE
