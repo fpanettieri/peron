@@ -5,7 +5,13 @@ const logger = include('lib/logger');
 
 const log = new logger('executor/mm');
 
+const CRITICAL_RATE_LIMIT = 5;
+const WARN_RATE_LIMIT = 20;
+
+const CRITICAL_RATE_STEP = 5000;
+const WARN_RATE_STEP = 1000;
 const OVERLOAD_STEP = 1000;
+
 const SLIPPAGE_OFFSET = 100;
 
 const HASH_LEN = 10;
