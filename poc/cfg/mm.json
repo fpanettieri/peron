@@ -11,7 +11,7 @@
     "core/analyst/bb",
     "core/brain/mm",
     "core/trader",
-    "core/executor/mm"
+    "core/executor/dummy"
   ],
 
   "backbone": {

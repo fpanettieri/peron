@@ -11,7 +11,9 @@ function plug (_bb)
   bb = _bb;
   bb.on('ForceCrash', onForceCrash);
 
-  cfg.crasher.timeout
+  if (cfg.crasher === undefined) { cfg.crasher = {} }
+  if (cfg.crasher.timeout === undefined) { cfg.crasher.timeout = 5000 }
+
   setTimeout(onForceCrash, cfg.crasher.timeout);
 }
 

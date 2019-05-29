@@ -32,6 +32,8 @@ function forkStrategy (strategy)
   });
 
   log.log('forked', forked);
+
+  // TODO: kill child process
 }
 
 module.exports = { plug: plug };
