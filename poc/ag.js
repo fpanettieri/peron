@@ -16,6 +16,7 @@ const modules = [];
   if (cfg.modules === undefined) { cfg.modules = [] };
   if (cfg.backbone === undefined) { cfg.backbone = {} };
   if (cfg.backbone.chain === undefined) { cfg.backbone.chain = [] };
+  if (cfg.backbone.ignore === undefined) { cfg.backbone.ignore = [] };
 
   try {
     for (let i = 0; i < cfg.modules.length; i++) {

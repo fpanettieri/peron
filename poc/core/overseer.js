@@ -10,5 +10,4 @@ function plug (_bb)
   bb = _bb;
 }
 
-
 module.exports = { plug: plug };
