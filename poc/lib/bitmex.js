@@ -2,9 +2,9 @@
 
 const crypto = require('crypto');
 
-const https = require('./https');
-const Logger = require('./logger');
-const log = new Logger('lib/bitmex');
+const https = include('lib/https');
+const logger = include('lib/logger');
+const log = new logger('lib/bitmex');
 
 const AUTH_EXPIRES = 30;
 

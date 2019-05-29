@@ -1,6 +1,6 @@
 'use strict';
 
-const logger = require('../lib/logger');
+const logger = include('lib/logger');
 const log = new logger('core/trader');
 
 const STB = 0.00000001;

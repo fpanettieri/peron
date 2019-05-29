@@ -1,7 +1,7 @@
 'use strict';
 
-const utils = require('../lib/utils');
-const logger = require('../lib/logger');
+const utils = include('lib/utils');
+const logger = include('lib/logger');
 const log = new logger('core/chandler');
 
 const CLOSE_OFFSET = cfg.chandler.offset;

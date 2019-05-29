@@ -1,7 +1,7 @@
 'use strict';
 
-const orders = require('../lib/orders');
-const logger = require('../lib/logger');
+const orders = include('lib/orders');
+const logger = include('lib/logger');
 const log = new logger('test/auth');
 
 const cl_id = `ag-${Math.random().toString(36).substr(2, 8)}`;

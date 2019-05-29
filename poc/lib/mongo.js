@@ -2,10 +2,10 @@
 
 const mongodb = require('mongodb');
 
-const logger = require('./logger');
+const logger = include('lib/logger');
 const log = new logger('lib/mongo');
 
-const cfg = require('../cfg/mongo.json');
+const cfg = include('cfg/mongo.json');
 
 async function connect (cb)
 {

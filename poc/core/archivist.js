@@ -1,7 +1,7 @@
 'use strict';
 
-const bitmex = require('../lib/bitmex');
-const logger = require('../lib/logger');
+const bitmex = include('lib/bitmex');
+const logger = include('lib/logger');
 const log = new logger('core/archivist');
 
 let bb = null;

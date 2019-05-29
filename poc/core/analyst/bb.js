@@ -1,7 +1,7 @@
 'use strict';
 
-const utils = require('../../lib/utils');
-const logger = require('../../lib/logger');
+const utils = include('lib/utils');
+const logger = include('lib/logger');
 const log = new logger('analyst/bb');
 
 const CANDLE_STEP = utils.intervalToMs(cfg.timeframe);

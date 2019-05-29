@@ -1,6 +1,6 @@
 'use strict';
 
-const logger = require('../../lib/logger');
+const logger = include('lib/logger');
 const log = new logger('brain/vix');
 
 const min_vol = cfg.brain.min_vol;

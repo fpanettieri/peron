@@ -40,7 +40,7 @@
   . Check if we need to do anything on 'CloseX' msgs
 
 . Make paths dynamic based on the proj root
-  . const logger = require('../../lib/logger');
+  . const logger = include('lib/logger');
 
 . Dynamic modules loading
   . Load modules from an array in a config file

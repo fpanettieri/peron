@@ -1,7 +1,7 @@
 'use strict';
 
-const orders = require('../../lib/orders');
-const logger = require('../../lib/logger');
+const orders = include('lib/orders');
+const logger = include('lib/logger');
 
 const log = new logger('executor/mm');
 

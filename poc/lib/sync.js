@@ -1,6 +1,6 @@
 'use strict';
 
-const logger = require('./logger');
+const logger = include('lib/logger');
 const log = new logger('lib/sync');
 
 const TIMEOUT = 1000;//50;

@@ -1,8 +1,8 @@
 'use strict';
 
-const bitmex = require('../lib/bitmex');
-const Logger = require('./logger');
-const log = new Logger('lib/orders');
+const bitmex = include('lib/bitmex');
+const logger = include('lib/logger');
+const log = new logger('lib/orders');
 
 const SLIPPAGE_ERR = 'Canceled: Order had execInst of ParticipateDoNotInitiate';
 const DOUBLE_CANCEL_ERR = 'Unable to cancel order due to existing state: Canceled';

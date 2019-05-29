@@ -1,8 +1,8 @@
 'use strict';
 
 const fs = require('fs');
-const https = require('../lib/https');
-const Logger = require('../lib/logger');
+const https = include('lib/https');
+const Logger = include('lib/logger');
 const log = new Logger('tv/watchlist');
 
 const INFO_URL = 'https://api.binance.com/api/v1/exchangeInfo';

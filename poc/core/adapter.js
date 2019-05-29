@@ -3,8 +3,8 @@
 const ws = require('ws');
 const crypto = require('crypto');
 
-const bitmex = require('../lib/bitmex');
-const logger = require('../lib/logger');
+const bitmex = include('lib/bitmex');
+const logger = include('lib/logger');
 const log = new logger('core/adapter');
 
 const DMS_INTERVAL = 5 * 1000;
