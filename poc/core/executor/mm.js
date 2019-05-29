@@ -99,9 +99,7 @@ async function exitPosition (pos)
     }
   }
 
-  // if (!found) {
   createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
-  // }
 }
 
 function onOrderSynced (arr)
@@ -155,6 +153,7 @@ async function run ()
   }
 
   if (overloaded) {
+    log.log('overloaded:', overloaded);
     overloaded = Math.max(0, overloaded - cfg.executor.speed);
   } else {
     for (let i = jobs.length - 1; i > -1; i--) { await process (jobs[i]); }
@@ -205,23 +204,16 @@ async function processPreEntry (job)
 {
   if (!quote) { return; }
 
-  const price = job.qty > 0 ? quote.bidPrice : quote.askPrice;
+  const price = calcEntryPrice(job.qty > 0);
 
   const root = `${LIMIT_PREFIX}${AG_PREFIX}${job.id}`;
   const order = await orders.limit(`${root}-${genId()}`, job.sym, job.qty, price);
   if (!order) { log.fatal(`processPreEntry -> limit order not found! ${root}`, job); }
+  handleOverload(order);
 
   switch (order.ordStatus) {
     case 'New': {
       updateJob(job.id, {state: STATES.ENTRY});
-    } break;
-
-    case 'Slipped': {
-      // wait for next frame
-    } break;
-
-    case 'Overloaded': {
-      handleOverload(order);
     } break;
 
     case 'Canceled':
@@ -256,13 +248,13 @@ async function processEntry (job)
   let amended = null;
 
   if (job.qty > 0) {
-    if (price > candle.bb_ma) {
+    if (price > candle[cfg.executor.target]) {
       await orders.cancel(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
       amended = await orders.amend(order.clOrdID, {price: price});
     }
   } else {
-    if (price < candle.bb_ma) {
+    if (price < candle[cfg.executor.target]) {
       await orders.cancel(order.clOrdID, 'MA Crossed');
     } else if (order.price != price){
       amended = await orders.amend(order.clOrdID, {price: price});
@@ -332,6 +324,7 @@ async function createStopLoss (job)
     sl = await orders.amend(sl.clOrdID, {orderQty: -job.qty, stopPx: px});
   }
 
+  handleOverload(sl);
   return sl.ordStatus == 'New';
 }
 
@@ -347,14 +340,43 @@ async function createTakeProfit (job)
     tp = await orders.amend(tp.clOrdID, {orderQty: -job.qty, price: px});
   }
 
+  handleOverload(tp);
   return tp.ordStatus == 'New';
 }
 
 function handleOverload (order)
 {
-  if (!order || order.ordStatus !== 'Overloaded') { return false; }
-  overloaded = OVERLOAD_STEP;
-  return true;
+  if (!order) { return; }
+
+  if (order.ordStatus && order.ordStatus == 'Overloaded') {
+    overloaded = OVERLOAD_STEP;
+  }
+
+  if (order.ratelimit < 1) {
+    log.fatal('rate-limit exceeded');
+
+  } else  if (order.ratelimit < CRITICAL_RATE_LIMIT) {
+    overloaded = CRITICAL_RATE_STEP;
+
+  } else if (order.ratelimit < WARN_RATE_LIMIT) {
+    overloaded = WARN_RATE_STEP;
+  }
+}
+
+function calcEntryPrice (is_long)
+{
+  let price = 0;
+  let delta = 0;
+
+  if (is_long) {
+    price = quote.bidPrice;
+    delta = -cfg.executor.entry;
+  } else {
+    price = quote.askPrice;
+    delta = cfg.executor.entry;
+  }
+
+  return safePrice(price * (1 + delta));
 }
 
 function calcExitPrice (job)
