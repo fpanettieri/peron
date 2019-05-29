@@ -1,6 +1,8 @@
 ===============
   TODO
 ===============
+. Load config
+. Spawn child process
 . Get service name and status
 . Start | stop the process.
 . Email me when the service crashes
@@ -11,6 +13,7 @@
 . List Orphan orders
 . Cancel orphan orders
 . Check user events
+. Overload notification
 
 ===============
   Backlog

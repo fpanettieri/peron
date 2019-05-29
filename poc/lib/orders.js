@@ -74,7 +74,7 @@ async function profit (id, sym, qty, px)
 {
   return await create(id, sym, qty, {
     ordType: 'Limit',
-    execInst: 'ParticipateDoNotInitiate,ReduceOnly',
+    execInst: 'ParticipateDoNotInitiate',
     price: px
   });
 }
