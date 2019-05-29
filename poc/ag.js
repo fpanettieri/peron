@@ -13,7 +13,6 @@ const modules = [];
   const log = new logger(cfg.name);
   const bb = new backbone();
 
-  // Default
   if (cfg.modules === undefined) { cfg.modules = [] };
   if (cfg.backbone === undefined) { cfg.backbone = {} };
   if (cfg.backbone.chain === undefined) { cfg.backbone.chain = [] };

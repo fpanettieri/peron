@@ -5,11 +5,18 @@
   "name": "monitor",
 
   "modules": [
-    "core/adapter"
+    "core/adapter",
+    "core/overseer"
   ],
 
   "backbone": {
     "emit": "ConnectSocket",
     "verbose": true
+  },
+
+  "overseer": {
+    "strategies": [
+      "cfg/peron"
+    ]
   }
 }
