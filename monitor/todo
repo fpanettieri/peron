@@ -1,0 +1,23 @@
+===============
+  TODO
+===============
+. Check if the service is running
+
+
+===============
+  Backlog
+===============
+. Create var folder if it doesn't exists
+. Create folder structure at the start, named as the timestamp. e.g.: peron/var/
+. Create a file used to store the the ratelimit and the timestamp on each request
+. Create a file to store the pnl?
+
+
+===============
+  DONE
+===============
+
+
+===============
+  IGNORE
+===============
