@@ -1,8 +1,9 @@
 'use strict';
 
 // --- Global setup ---
-global.cfg = require(`./cfg/${process.argv[2]}`);
-global.include = function (file) { return require(`${__dirname}/${file}`); }
+global.cfg = require(`${process.argv[2]}`);
+global.base_dir = __dirname;
+global.include = function (file) { return require(`${base_dir}/${file}`); }
 
 // --- Global setup ---
 const logger = include('lib/logger');

@@ -16,7 +16,7 @@
 
   "overseer": {
     "strategies": [
-      "cfg/peron"
+      "cfg/peron.json"
     ]
   }
 }
