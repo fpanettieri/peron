@@ -1,13 +1,15 @@
 'use strict';
 
-const logger = require('./lib/logger');
-const backbone = require('./core/backbone');
+// --- Global setup ---
+global.cfg = require(`./cfg/${process.argv[2]}`);
+global.include = function (file) { return require(`${__dirname}/${file}`); }
 
+// --- Global setup ---
+const logger = include('lib/logger');
+const backbone = include('core/backbone');
 const modules = [];
 
 (async () => {
-  global.cfg = require(`./cfg/${process.argv[2]}`);
-
   const log = new logger(cfg.name);
   const bb = new backbone();
 
