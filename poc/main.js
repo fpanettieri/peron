@@ -6,7 +6,8 @@ const backbone = require('./core/backbone');
 const modules = [];
 
 (async () => {
-  const cfg = require(`./cfg/${process.argv[2]}`);
+  global.cfg = require(`./cfg/${process.argv[2]}`);
+
   const log = new logger(cfg.name);
   const bb = new backbone();
 

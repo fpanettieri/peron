@@ -1,6 +1,5 @@
 'use strict';
 
-const cfg = require('../cfg/peron');
 const bitmex = require('../lib/bitmex');
 const logger = require('../lib/logger');
 const log = new logger('core/archivist');

@@ -2,8 +2,6 @@
 
 const assert = require('assert');
 
-const cfg = require('../cfg/peron');
-const orders = require('../lib/orders');
 const logger = require('../lib/logger');
 const log = new logger('test/orders');
 
@@ -204,7 +202,7 @@ async function stop_short ()
 {
   order = await orders.market(genId(), 'XBTUSD', -1);
   assert(order.ordStatus == 'Filled');
-  
+
   const id = genId();
   order = await orders.stop(id, 'XBTUSD', 1, safePrice(order.price * 1.1));
   assert(order.ordStatus == 'New');
