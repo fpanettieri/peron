@@ -1,5 +1,5 @@
 {
-  "testnet": false,
+  "testnet": true,
   "timeframe": "1m",
   "symbol": "XBTUSD",
   "name": "monitor",
@@ -11,5 +11,5 @@
   "backbone": {
     "emit": "ConnectSocket",
     "verbose": true
-  },
+  }
 }

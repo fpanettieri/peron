@@ -13,6 +13,11 @@ const modules = [];
   const log = new logger(cfg.name);
   const bb = new backbone();
 
+  // Default
+  if (cfg.modules === undefined) { cfg.modules = [] };
+  if (cfg.backbone === undefined) { cfg.backbone = {} };
+  if (cfg.backbone.chain === undefined) { cfg.backbone.chain = [] };
+
   try {
     for (let i = 0; i < cfg.modules.length; i++) {
       const name = cfg.modules[i];
@@ -22,6 +27,7 @@ const modules = [];
       m.plug(bb);
       modules.push(m);
     }
+
 
     for (let i = 0; i < cfg.backbone.chain.length; i++) {
       const io = cfg.backbone.chain[i];
