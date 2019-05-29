@@ -19,7 +19,8 @@
       ["SocketConnected", "DownloadHistory"],
       ["HistoryDownloaded", "WatchMarket"]
     ],
-    "emit": "ConnectSocket"
+    "emit": "ConnectSocket",
+    "verbose": false
   },
 
   "archivist": {
@@ -50,6 +51,7 @@
   "executor": {
     "speed": 200,
     "expiration": 600000,
+    "entry": 0.005,
     "sl": 0.01,
     "bounce": 0.5,
     "target": "bb_ma"
