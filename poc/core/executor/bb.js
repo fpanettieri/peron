@@ -1,6 +1,5 @@
 'use strict';
 
-const cfg = require('../../cfg/peron');
 const orders = require('../../lib/orders');
 const logger = require('../../lib/logger');
 

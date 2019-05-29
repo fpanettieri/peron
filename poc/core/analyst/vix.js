@@ -1,6 +1,5 @@
 'use strict';
 
-const cfg = require('../../cfg/peron');
 const utils = require('../../lib/utils');
 const logger = require('../../lib/logger');
 const log = new logger('analyst/vix');

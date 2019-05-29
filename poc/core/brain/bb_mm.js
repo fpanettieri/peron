@@ -1,7 +1,5 @@
 'use strict';
 
-const cfg = require('../../cfg/peron');
-
 const logger = require('../../lib/logger');
 const log = new logger('brain/bb_mm');
 
