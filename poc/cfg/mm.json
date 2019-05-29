@@ -11,7 +11,7 @@
     "core/analyst/bb",
     "core/brain/mm",
     "core/trader",
-    "core/executor/dummy"
+    "core/executor/mm"
   ],
 
   "backbone": {
@@ -20,7 +20,7 @@
       ["HistoryDownloaded", "WatchMarket"]
     ],
     "emit": "ConnectSocket",
-    "verbose": false
+    "verbose": true
   },
 
   "archivist": {

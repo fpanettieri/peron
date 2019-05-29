@@ -8,7 +8,6 @@ let bb = null;
 function plug (_bb)
 {
   bb = _bb;
-
 }
 
 
