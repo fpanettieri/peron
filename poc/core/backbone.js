@@ -2,7 +2,7 @@
 
 const EventEmitter = require('events');
 const logger = require('../lib/logger');
-const log = new logger('lib/backbone');
+const log = new logger('core/backbone');
 
 class Backbone extends EventEmitter
 {

@@ -1,7 +1,7 @@
 'use strict';
 
 const logger = require('./lib/logger');
-const backbone = require('./lib/backbone');
+const backbone = require('./core/backbone');
 
 const modules = [];
 

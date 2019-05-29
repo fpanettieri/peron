@@ -19,7 +19,8 @@
       ["SocketConnected", "DownloadHistory"],
       ["HistoryDownloaded", "WatchMarket"]
     ],
-    "emit": "ConnectSocket"
+    "emit": "ConnectSocket",
+    "verbose": false
   },
 
   "archivist": {

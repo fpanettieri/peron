@@ -1,0 +1,15 @@
+{
+  "testnet": false,
+  "timeframe": "1m",
+  "symbol": "XBTUSD",
+  "name": "monitor",
+
+  "modules": [
+    "core/adapter"
+  ],
+
+  "backbone": {
+    "emit": "ConnectSocket",
+    "verbose": true
+  },
+}
