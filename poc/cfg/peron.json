@@ -1,1 +1,57 @@
-vix.json
+{
+  "testnet": false,
+  "timeframe": "1m",
+  "symbol": "XBTUSD",
+  "name": "peron",
+
+  "modules": [
+    "core/adapter",
+    "core/archivist",
+    "core/chandler",
+    "core/analyst/vix",
+    "core/brain/vix",
+    "core/trader",
+    "core/executor/mr"
+  ],
+
+  "backbone": {
+    "chain": [
+      ["SocketConnected", "DownloadHistory"],
+      ["HistoryDownloaded", "WatchMarket"]
+    ],
+    "emit": "ConnectSocket"
+  },
+
+  "archivist": {
+    "history": "200"
+  },
+
+  "chandler": {
+    "offset": -2970
+  },
+
+  "analyst": {
+    "history": 20,
+    "ema": 20,
+    "vix": 20
+  },
+
+  "brain": {
+    "min_vol": 0.5,
+    "max_vol": 2
+  },
+
+  "trader": {
+    "positions": 20,
+    "size": 0.05
+  },
+
+  "executor": {
+    "speed": 50,
+    "expiration": 300000,
+    "entry": 0.005,
+    "sl": 0.01,
+    "bounce": 0.5,
+    "target": "ema"
+  }
+}

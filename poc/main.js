@@ -1,16 +1,13 @@
 'use strict';
 
-const cfg = require('./cfg/peron');
-
 const logger = require('./lib/logger');
 const backbone = require('./lib/backbone');
 
 const modules = [];
 
 (async () => {
-  const log = new logger(`peron`);
-  log.info('peronizando');
-
+  const cfg = require(`./cfg/${process.argv[2]}`);
+  const log = new logger(cfg.name);
   const bb = new backbone();
 
   try {
@@ -34,5 +31,5 @@ const modules = [];
   } catch (err) {
     log.fatal(err);
   }
-  
+
 })();
