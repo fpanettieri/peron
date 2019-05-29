@@ -6,7 +6,8 @@
 
   "modules": [
     "core/adapter",
-    "core/overseer"
+    "core/overseer",
+    "core/crasher"
   ],
 
   "backbone": {
@@ -17,6 +18,11 @@
   "overseer": {
     "strategies": [
       "cfg/peron.json"
-    ]
+    ],
+    "detach": false
+  },
+
+  "crasher": {
+    "timeout": 3000
   }
 }

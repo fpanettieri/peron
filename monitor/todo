@@ -1,9 +1,8 @@
 ===============
   TODO
 ===============
-. Load config
 . Spawn child process
-. Get service name and status
+-> . Get service name and status
 . Start | stop the process.
 . Email me when the service crashes
 . Ratio of Margin / PnL
@@ -26,7 +25,7 @@
 ===============
   DONE
 ===============
-
+- Load config
 
 ===============
   IGNORE

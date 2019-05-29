@@ -11,13 +11,14 @@ const backbone = include('core/backbone');
 const modules = [];
 
 (async () => {
-  const log = new logger(cfg.name);
-  const bb = new backbone();
-
   if (cfg.modules === undefined) { cfg.modules = [] };
   if (cfg.backbone === undefined) { cfg.backbone = {} };
   if (cfg.backbone.chain === undefined) { cfg.backbone.chain = [] };
   if (cfg.backbone.ignore === undefined) { cfg.backbone.ignore = [] };
+  if (process.send === undefined) { process.send = function () {} };
+
+  const log = new logger(cfg.name);
+  const bb = new backbone();
 
   try {
     for (let i = 0; i < cfg.modules.length; i++) {

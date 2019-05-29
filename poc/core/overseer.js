@@ -20,7 +20,16 @@ function plug (_bb)
 function forkStrategy (strategy)
 {
   log.log('forking strategy', strategy);
-  const forked = cp.fork(`${base_dir}/ag`, [`${base_dir}/${strategy}`], { cwd: base_dir });
+  const s_cfg_file = `${base_dir}/${strategy}`;
+  const s_cfg = require(`${base_dir}/${strategy}`);
+  const forked = cp.fork(`${base_dir}/ag`, [`${base_dir}/${strategy}`], {
+    cwd: base_dir,
+    detached: cfg.overseer.detach
+  });
+
+  forked.on('message', (m) => {
+    console.log('PARENT got message:', m);
+  });
 
   log.log('forked', forked);
 }
