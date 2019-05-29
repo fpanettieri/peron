@@ -5,6 +5,7 @@
 . Start | stop the process.
 . Email me when the service crashes
 . Ratio of Margin / PnL
+  . Check previous days
 . Chart PnL
 . List Orphan orders
 . Cancel orphan orders
