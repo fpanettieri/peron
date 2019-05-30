@@ -17,7 +17,7 @@
 
   "overseer": {
     "strategies": [
-      "cfg/peron.json"
+      "cfg/mm.json"
     ],
     "detach": false
   },

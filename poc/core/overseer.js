@@ -31,7 +31,7 @@ function forkStrategy (strategy)
     console.log('PARENT got message:', m);
   });
 
-  log.log('forked', forked);
+  // log.log('forked', forked);
 
   // TODO: kill child process
 }
