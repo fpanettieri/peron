@@ -15,7 +15,7 @@
   },
 
   "overseer": {
-    "strategies": [
+    "procs": [
       "cfg/mm.json"
     ],
     "detach": false,

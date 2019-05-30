@@ -12,7 +12,7 @@ async function list_procs ()
 
   const w = new ws('ws://localhost:9090');
   w.on('open', () => { w.send(JSON.stringify(req)); });
-  w.on('message', (data) => { log.log('response', data); });
+  w.on('message', (data) => { log.log(JSON.parse(data)); });
 }
 
 (async () => {
