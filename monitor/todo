@@ -1,9 +1,14 @@
 ===============
   TODO
 ===============
-. Spawn child process
--> . Get service name and status
-. Start | stop the process.
+- Spawn child process
+- Get service name and status
+> Dispatch msgs
+  . Get list of process
+  . Check process status
+  . Stop process
+  . Start process
+  
 . Email me when the service crashes
 . Ratio of Margin / PnL
   . Check previous days

@@ -28,20 +28,15 @@ function plug (_bb)
 
 function forkStrategy (strategy)
 {
-  log.log('forking strategy', strategy);
-  log.log('fork options', { cwd: base_dir, detached: cfg.overseer.detach });
-
   const cfg_file = `${base_dir}/${strategy}`;
   const proc = cp.fork(`${base_dir}/ag`, [cfg_file], { cwd: base_dir, detached: cfg.overseer.detach });
-  strategies.push({ cfg: require(cfg_file), proc: proc );
-
-  log.log('strategies', strategies);
+  strategies.push({ cfg: require(cfg_file), proc: proc });
 }
 
 function handleConnection (conn)
 {
   conn.on('message', function incoming(message) {
-    console.log('received: %s', message);
+    console.log('\n\n\n\n\nreceived: %s', message);
   });
 
   conn.send('hi!');
