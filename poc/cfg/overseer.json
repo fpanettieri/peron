@@ -19,7 +19,7 @@
       "cfg/mm.json"
     ],
     "detach": false,
-    "port": 9132
+    "port": 9090
   },
 
   "crasher": {

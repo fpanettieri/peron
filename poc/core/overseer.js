@@ -35,11 +35,23 @@ function forkStrategy (strategy)
 
 function handleConnection (conn)
 {
-  conn.on('message', function incoming(message) {
-    console.log('\n\n\n\n\nreceived: %s', message);
-  });
+  conn.on('message', (msg) => dispatchMessage(msg, conn));
+  conn.send('[ag]');
+}
 
-  conn.send('hi!');
+function dispatchMessage (msg, conn)
+{
+  const json = JSON.parse(msg);
+  switch (json.op) {
+    case 'ListProcs': listProcs(conn); break
+
+    default: log.error('unknown op', json.op);
+  }
+}
+
+function listProcs (conn)
+{
+  conn.send(JSON.stringify(strategies));
 }
 
 module.exports = { plug: plug };
