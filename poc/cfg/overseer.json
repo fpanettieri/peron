@@ -17,7 +17,7 @@
 
   "overseer": {
     "strategies": [
-      {"name": "Market Maker", "config": "cfg/mm.json"}
+      "cfg/mm.json"
     ],
     "detach": false,
     "port": 9132

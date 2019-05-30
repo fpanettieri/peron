@@ -31,14 +31,11 @@ function forkStrategy (strategy)
   log.log('forking strategy', strategy);
   log.log('fork options', { cwd: base_dir, detached: cfg.overseer.detach });
 
-  const proc = cp.fork(`${base_dir}/ag`, [`${base_dir}/${strategy}`], { cwd: base_dir, detached: cfg.overseer.detach });
-  strategies.push(proc);
+  const cfg_file = `${base_dir}/${strategy}`;
+  const proc = cp.fork(`${base_dir}/ag`, [cfg_file], { cwd: base_dir, detached: cfg.overseer.detach });
+  strategies.push({ cfg: require(cfg_file), proc: proc );
 
-  proc.on('message', (m) => { console.log('PARENT got message:', m); });
-
-  log.log('proc', proc);
-
-  // TODO: kill child process
+  log.log('strategies', strategies);
 }
 
 function handleConnection (conn)
