@@ -19,10 +19,11 @@
     "strategies": [
       "cfg/mm.json"
     ],
-    "detach": false
+    "detach": false,
+    "port": 9132
   },
 
   "crasher": {
-    "timeout": 20000
+    "timeout": 30000
   }
 }
