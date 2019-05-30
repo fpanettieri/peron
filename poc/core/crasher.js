@@ -19,7 +19,7 @@ function plug (_bb)
 
 function onForceCrash ()
 {
-  log.fatal('R2r sends his regards');
+  log.fatal('Forced crash');
 }
 
 module.exports = { plug: plug };

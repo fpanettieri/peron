@@ -30,7 +30,6 @@ const modules = [];
       modules.push(m);
     }
 
-
     for (let i = 0; i < cfg.backbone.chain.length; i++) {
       const io = cfg.backbone.chain[i];
       log.log(`chaining ${io[0]} => ${io[1]}`);
