@@ -19,6 +19,7 @@ function plug (_bb)
   if (cfg.overseer.strategies === undefined) { cfg.overseer.strategies = [] }
   if (cfg.overseer.port === undefined) { cfg.overseer.port = 8033 }
 
+  // TODO: SSL support => https://www.npmjs.com/package/ws
   wss = new ws.Server({ port: cfg.overseer.port });
   wss.on('connection', handleConnection);
 

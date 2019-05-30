@@ -57,5 +57,9 @@
     "sl": 0.01,
     "bounce": 0.5,
     "target": "bb_ma"
+  },
+
+  "crasher": {
+    "timeout": 20000
   }
 }
