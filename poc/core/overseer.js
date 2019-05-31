@@ -50,7 +50,8 @@ function dispatchMessage (msg, conn)
 
 function listProcs (conn)
 {
-  const ps = procs.map((p) => p.cfg);
+  const ps = procs.map((p, idx) => p.cfg);
+  // TODO: append pid to the returned object
   conn.send(JSON.stringify(ps));
 }
 

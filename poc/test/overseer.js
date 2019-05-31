@@ -8,11 +8,18 @@ const log = new logger('test/overseer');
 
 async function list_procs ()
 {
-  const req = {op: 'ListProcs'};
+  const rsp = await send_req({op: 'ListProcs'});
+  log.log(rsp);
+}
 
-  const w = new ws('ws://localhost:9090');
-  w.on('open', () => { w.send(JSON.stringify(req)); });
-  w.on('message', (data) => { log.log(JSON.parse(data)); });
+async function send_req (req)
+{
+  return new Promise(function(resolve, reject) {
+    const w = new ws('ws://localhost:9090');
+    w.on('open', () => { w.send(JSON.stringify(req)); });
+    w.on('message', (data) => { resolve(JSON.parse(data)); });
+    w.on('error', reject);
+  });
 }
 
 (async () => {
