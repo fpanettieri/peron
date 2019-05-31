@@ -1,6 +1,11 @@
 ===============
   TODO
 ===============
+. Chart
+
+===============
+  Backlog
+===============
 - Spawn child process
 - Get service name and status
 > Dispatch msgs
@@ -19,9 +24,6 @@
 . Check user events
 . Overload notification
 
-===============
-  Backlog
-===============
 . Create var folder if it doesn't exists
 . Create folder structure at the start, named as the timestamp. e.g.: peron/var/
 . Create a file used to store the the ratelimit and the timestamp on each request
