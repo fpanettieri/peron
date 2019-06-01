@@ -12,7 +12,10 @@ async function load_local_execs ()
   const execs = require('../doc/executions.js');
   log.log('execs count:', execs.length);
 
-  const acc = execs.reduce((acc, e) => acc + e.homeNotional, 0);
+  // const list = execs.map(e => e.execCost); 
+  execs.forEach(e => log.log(e.execCost));
+
+  const acc = execs.reduce((acc, e) => acc - e.execCost, 0);
   log.log(acc);
 }
 
