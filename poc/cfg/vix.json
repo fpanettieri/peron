@@ -3,6 +3,7 @@
   "timeframe": "1m",
   "symbol": "XBTUSD",
   "name": "peron",
+  "cooldown": 50,
 
   "modules": [
     "core/adapter",
