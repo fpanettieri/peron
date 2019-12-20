@@ -8,7 +8,7 @@
     "core/adapter",
     "core/brain/manual",
     "core/trader",
-    "core/executor/dummy"
+    "core/executor/manual"
   ],
 
   "backbone": {
