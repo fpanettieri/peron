@@ -1,0 +1,31 @@
+{
+  "testnet": true,
+  "timeframe": "1m",
+  "symbol": "XBTUSD",
+  "name": "manual",
+
+  "modules": [
+    "core/adapter",
+    "core/brain/manual",
+    "core/trader",
+    "core/executor/dummy"
+  ],
+
+  "backbone": {
+    "emit": "ConnectSocket",
+    "verbose": true,
+  },
+
+  "trader": {
+    "positions": 10,
+    "size": 0.05
+  },
+
+  "executor": {
+    "speed": 200,
+    "expiration": 600000,
+    "entry": 0.005,
+    "sl": 0.01,
+    "bounce": 0.5
+  }
+}

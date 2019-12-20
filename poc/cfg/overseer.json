@@ -2,7 +2,7 @@
   "testnet": true,
   "timeframe": "1m",
   "symbol": "XBTUSD",
-  "name": "monitor",
+  "name": "overseer",
 
   "modules": [
     "core/adapter",
@@ -16,13 +16,9 @@
 
   "overseer": {
     "procs": [
-      "cfg/mm.json"
+      "cfg/manual.json"
     ],
     "detach": false,
     "port": 9090
-  },
-
-  "crasher": {
-    "timeout": 30000
   }
 }

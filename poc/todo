@@ -1,7 +1,10 @@
 ===============
   TODO
 ===============
-
+. Manual Trading
+  . Listen to specific key shortcuts
+  . Emit OpenLong(usd)
+  . Emit OpenShort(usd)
 
 ===============
   Backlog
