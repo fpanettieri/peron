@@ -19,8 +19,6 @@ const modules = [];
   if (cfg.backbone.ignore === undefined) { cfg.backbone.ignore = [] };
   if (process.send === undefined) { process.send = function () {} };
 
-  debugger;
-
   const log = new logger(cfg.name);
   const bb = new backbone();
 
