@@ -13,7 +13,11 @@
 
   "backbone": {
     "emit": "ConnectSocket",
-    "verbose": true,
+    "verbose": true
+  },
+
+  "brain": {
+    "port": 9090
   },
 
   "trader": {
