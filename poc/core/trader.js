@@ -48,7 +48,7 @@ function onOpenShort (c)
   open(-1, c);
 }
 
-function open (d, c)
+function open (d, px)
 {
   const max = cfg.trader.positions * cfg.trader.size;
   const used = 1 - margin.availableMargin / margin.walletBalance;
@@ -58,7 +58,7 @@ function open (d, c)
   let m = Math.max(cfg.trader.size * margin.walletBalance, MIN_MARGIN);
   const contracts = Math.ceil(m * STB * (d > 0 ? quote.bidPrice: quote.askPrice));
 
-  bb.emit('TradeContract', cfg.symbol, d * contracts, c.c);
+  bb.emit('TradeContract', cfg.symbol, d * contracts, px);
 }
 
 module.exports = { plug: plug };

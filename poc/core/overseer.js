@@ -42,7 +42,7 @@ function dispatchMessage (msg, conn)
 {
   const json = JSON.parse(msg);
   switch (json.op) {
-    case 'ListProcs': listProcs(conn); break
+    case 'ListProcs': listProcs(conn); break;
 
     default: log.error('unknown op', json.op);
   }

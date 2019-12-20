@@ -17,11 +17,11 @@ function plug (_bb)
 function onCandleAnalyzed (c)
 {
   if (c.c > c.ema && c.vix_top >= min_vol && c.vix_top < max_vol) {
-    bb.emit('OpenShort', c);
+    bb.emit('OpenShort', c.c);
   }
 
   if (c.c < c.ema && c.vix_bot >= min_vol && c.vix_bot < max_vol) {
-    bb.emit('OpenLong', c);
+    bb.emit('OpenLong', c.c);
   }
 }
 

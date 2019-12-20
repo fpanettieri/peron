@@ -14,9 +14,9 @@ function plug (_bb)
 function onCandleAnalyzed (c)
 {
   if (Math.random() >= 0.5) {
-    bb.emit('OpenShort', c);
+    bb.emit('OpenShort', c.c);
   } else {
-    bb.emit('OpenLong', c);
+    bb.emit('OpenLong', c.c);
   }
 }
 

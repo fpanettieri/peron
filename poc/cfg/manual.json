@@ -13,6 +13,9 @@
 
   "backbone": {
     "emit": "ConnectSocket",
+    "chain": [
+      ["SocketConnected", "WatchMarket"]
+    ],
     "verbose": true
   },
 
@@ -29,7 +32,7 @@
     "speed": 200,
     "expiration": 600000,
     "entry": 0.005,
-    "sl": 0.01,
+    "sl": 0.02,
     "bounce": 0.5
   }
 }

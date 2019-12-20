@@ -23,11 +23,11 @@ function onCandleAnalyzed (c)
   if (skip--) { return; }
 
   if (c.c > c.bb_upper) {
-    bb.emit('OpenShort', c);
+    bb.emit('OpenShort', c.c);
   }
 
   if (c.c < c.bb_lower) {
-    bb.emit('OpenLong', c);
+    bb.emit('OpenLong', c.c);
   }
 
   skip = cfg.brain.skip;
