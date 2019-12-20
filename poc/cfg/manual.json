@@ -20,7 +20,7 @@
   },
 
   "brain": {
-    "port": 9090
+    "port": 9669
   },
 
   "trader": {

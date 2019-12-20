@@ -48,12 +48,12 @@ async function plug (_bb)
 
   // FIXME: removed candle
   // bb.on('CandleAnalyzed', onCandleAnalyzed);
-  // bb.on('PositionSynced', onPositionSynced);
-  // bb.on('PositionUpdated', onPositionUpdated);
-  //
-  // bb.on('OrderSynced', onOrderSynced);
-  // bb.on('OrderOpened', onOrderOpened);
-  // bb.on('OrderUpdated', onOrderUpdated);
+  bb.on('PositionSynced', onPositionSynced);
+  bb.on('PositionUpdated', onPositionUpdated);
+
+  bb.on('OrderSynced', onOrderSynced);
+  bb.on('OrderOpened', onOrderOpened);
+  bb.on('OrderUpdated', onOrderUpdated);
 
   bb.on('TradeContract', onTradeContract);
 }
