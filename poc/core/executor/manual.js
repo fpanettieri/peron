@@ -69,11 +69,6 @@ function onCandleAnalyzed (c)
 async function onPositionSynced (arr)
 {
   pos = arr.find(i => i.symbol == cfg.symbol);
-  if (!pos || !pos.isOpen) { run(); return; }
-
-  const t = (new Date(pos.openingTimestamp)).getTime();
-  const job = createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
-
   run();
 }
 
@@ -81,25 +76,7 @@ async function onPositionUpdated (arr)
 {
   const p = arr.find(i => i.symbol == cfg.symbol);
   if (!p) { return; }
-
-  const exit = p.currentQty && p.currentQty != 0 && p.currentQty != pos.currentQty;
   pos = {...pos, ...p};
-  if (exit) { exitPosition(pos); }
-}
-
-async function exitPosition (pos)
-{
-  if (!pos || pos.currentQty == 0) { return; }
-  const t = (new Date(pos.openingTimestamp)).getTime();
-
-  for (let i = 0; i < jobs.length; i++) {
-    const j = jobs[i];
-    if (j.state == STATES.PRE_EXIT || j.state == STATES.EXIT) {
-      updateJob(j.id, {state: STATES.CLEANUP});
-    }
-  }
-
-  createJob(genId(), pos.symbol, pos.currentQty, pos.avgCostPrice, STATES.PRE_EXIT, t);
 }
 
 function onOrderSynced (arr)
