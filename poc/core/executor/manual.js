@@ -3,7 +3,7 @@
 const orders = include('lib/orders');
 const logger = include('lib/logger');
 
-const log = new logger('executor/mr');
+const log = new logger('executor/manual');
 
 const CRITICAL_RATE_LIMIT = 5;
 const WARN_RATE_LIMIT = 20;
@@ -127,9 +127,10 @@ async function onOrderUpdated (arr)
   pending = pending.concat(arr);
 }
 
-async function onTradeContract (sym, qty, px)
+async function onTradeContract (sym, qty)
 {
-  log.warn('onTradeContract', sym, qty, px);
+  log.warn('onTradeContract', sym, qty);
+  const px = qty > 0 ? quote.bidPrice - SLIPPAGE_OFFSET : quote.askPrice + SLIPPAGE_OFFSET;
   createJob(genId(), sym, qty, px, STATES.PRE_ENTRY, Date.now());
 }
 
