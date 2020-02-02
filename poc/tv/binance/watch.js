@@ -1,27 +1,25 @@
 'use strict';
 
 const fs = require('fs');
-const https = include('lib/https');
-const Logger = include('lib/logger');
-const log = new Logger('tv/watchlist');
+const https = require('./https');
 
 const INFO_URL = 'https://api.binance.com/api/v1/exchangeInfo';
 const BTC_REGEX = /BTC$/;
-const OUT_FILE = 'doc/binance_watch.txt';
+const OUT_FILE = './binance_watch.txt';
 
 (async () => {
-  log.info('updating watchlist');
+  console.info('updating watchlist');
 
-  log.info('fetching symbols');
+  console.info('fetching symbols');
   const rsp = await https.send(INFO_URL, null, {method: 'GET'});
   const json = JSON.parse(rsp.body);
 
-  log.info('updating list');
+  console.info('updating list');
   const symbols = json.symbols.map(i => `BINANCE:${i.symbol}`);
   const btc_sym = symbols.filter(s => BTC_REGEX.test(s));
 
-  log.info('writing file');
+  console.info('writing file');
   fs.writeFileSync(OUT_FILE, `BITMEX:XBTUSD,${btc_sym.join(',')}`);
 
-  log.info('watchlist updated');
+  console.info('watchlist updated');
 })();
